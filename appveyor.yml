@@ -8,7 +8,7 @@ configuration: Debug
 platform: Any CPU
 dotnet_csproj:
   patch: true
-  file: 'UKSF-Launcher\UKSF-Launcher.csproj'
+  file: '**\*.csproj'
   version: '{version}'
   package_version: '{version}'
 before_build:
