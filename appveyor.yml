@@ -20,11 +20,11 @@ before_build:
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
+after_build:
+- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\bin\Debug\UKSF-Launcher.exe
 artifacts:
   - path: UKSF-Launcher.zip
     name: UKSF-Launcher
-before_deploy:
-- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\bin\Debug\UKSF-Launcher.exe
 deploy:
 - provider: FTP
   host: ftp.uk-sf.com
