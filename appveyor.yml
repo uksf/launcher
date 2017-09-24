@@ -5,6 +5,8 @@ branches:
 image: Visual Studio 2017
 configuration: Debug
 platform: Any CPU
+before_build:
+  - nuget restore
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
