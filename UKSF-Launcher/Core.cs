@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Windows;
 using UKSF_Launcher.Utility;
@@ -27,28 +26,22 @@ namespace UKSF_Launcher {
                 Update();
             }
             if (UPDATER) {
-                UpdateUpdater();
+                File.Delete(Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             }
         }
 
         private void Update() {
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/UKSF-Launcher.zip", Path.Combine(Environment.CurrentDirectory, "update.zip"));
-            ZipFile.ExtractToDirectory(Path.Combine(Environment.CurrentDirectory, "update.zip"), Path.Combine(Environment.CurrentDirectory, "update"));
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             Process updater = new Process();
             try {
                 updater.StartInfo.UseShellExecute = false;
-                updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe");
+                updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "Updater.exe");
                 updater.StartInfo.CreateNoWindow = true;
                 updater.Start();
                 Application.Current.Shutdown();
             } catch (Exception exception) {
                 Error(exception);
             }
-        }
-
-        private void UpdateUpdater() {
-            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "update"), true);
-            File.Delete(Path.Combine(Environment.CurrentDirectory, "update.zip"));
         }
 
         public static void Error(Exception exception) {
