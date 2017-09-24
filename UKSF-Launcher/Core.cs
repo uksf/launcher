@@ -38,7 +38,7 @@ namespace UKSF_Launcher {
             try {
                 updater.StartInfo.UseShellExecute = false;
                 updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe");
-                updater.StartInfo.CreateNoWindow = false;
+                updater.StartInfo.CreateNoWindow = true;
                 updater.Start();
                 Application.Current.Shutdown();
             } catch (Exception exception) {
