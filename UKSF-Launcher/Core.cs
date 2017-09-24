@@ -38,7 +38,7 @@ namespace UKSF_Launcher {
             try {
                 updater.StartInfo.UseShellExecute = false;
                 updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe");
-                updater.StartInfo.CreateNoWindow = true;
+                updater.StartInfo.CreateNoWindow = false;
                 updater.Start();
                 Application.Current.Shutdown();
             } catch (Exception exception) {
@@ -49,6 +49,7 @@ namespace UKSF_Launcher {
         private void UpdateUpdater() {
             File.Move(Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe"), Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "update"), true);
+            File.Delete(Path.Combine(Environment.CurrentDirectory, "update.zip"));
         }
 
         public static void Error(Exception exception) {

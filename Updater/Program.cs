@@ -10,7 +10,9 @@ namespace Updater {
 
             string[] oldFiles = Directory.GetFiles(Directory.GetParent(update).FullName);
             foreach (string file in oldFiles) {
-                File.Delete(file);
+                if (!file.Contains("Updater.exe") && !file.Contains("update")) {
+                    File.Delete(file);
+                }
             }
 
             string[] newFiles = Directory.EnumerateFiles(update).Where(file => Path.GetFileName(file) != "Updater.exe").ToArray();
