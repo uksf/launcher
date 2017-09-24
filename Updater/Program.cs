@@ -7,6 +7,7 @@ namespace Updater {
     class Program {
         static void Main(string[] args) {
             string update = Path.Combine(Environment.CurrentDirectory);
+            Console.WriteLine(update);
 
             string[] oldFiles = Directory.GetFiles(Directory.GetParent(update).FullName);
             foreach (string file in oldFiles) {
