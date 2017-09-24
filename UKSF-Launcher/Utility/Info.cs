@@ -13,5 +13,7 @@ namespace UKSF_Launcher.Utility {
         public static string FORMAT_DATE = "yyyy-MM-dd__HH-mm-ss";
         public static string FORMAT_TIME = "HH:mm:ss";
         public static string HASHSPACE = "\n#############################################";
+
+        public static bool UPDATER = false;
     }
 }

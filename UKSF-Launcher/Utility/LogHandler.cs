@@ -16,7 +16,7 @@ namespace UKSF_Launcher.Utility {
         private void CreateLogFile() {
             Console.WriteLine(LOGS);
             Directory.CreateDirectory(LOGS);
-            string[] logFiles = new DirectoryInfo(LOGS).GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).Select(f => f.Name).ToArray();
+            string[] logFiles = new DirectoryInfo(LOGS).GetFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
             if (logFiles.Length > 9) {
                 Console.WriteLine(LOGS + "/" + logFiles.Last());
                 File.Delete(LOGS + "/" + logFiles.Last());

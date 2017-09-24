@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Net;
 using System.Windows;
 using UKSF_Launcher.Utility;
 
@@ -15,8 +18,37 @@ namespace UKSF_Launcher {
         }
 
         private void UpdateCheck() {
-            FileVersionInfo version = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName);
-            LogHandler.LogSeverity(Severity.INFO, "Current version: " + version.FileVersion);
+            Version currentVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+            Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/version"));
+            LogHandler.LogSeverity(Severity.INFO, "Current version: " + currentVersion);
+            LogHandler.LogSeverity(Severity.INFO, "Latest version: " + latestVersion);
+            if (currentVersion < latestVersion) {
+                LogHandler.LogSeverity(Severity.INFO, "Updating to " + latestVersion);
+                Update();
+            }
+            if (UPDATER) {
+                UpdateUpdater();
+            }
+        }
+
+        private void Update() {
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/UKSF-Launcher.zip", Path.Combine(Environment.CurrentDirectory, "update.zip"));
+            ZipFile.ExtractToDirectory(Path.Combine(Environment.CurrentDirectory, "update.zip"), Path.Combine(Environment.CurrentDirectory, "update"));
+            Process updater = new Process();
+            try {
+                updater.StartInfo.UseShellExecute = false;
+                updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe");
+                updater.StartInfo.CreateNoWindow = true;
+                updater.Start();
+                Application.Current.Shutdown();
+            } catch (Exception exception) {
+                Error(exception);
+            }
+        }
+
+        private void UpdateUpdater() {
+            File.Move(Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe"), Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "update"), true);
         }
 
         public static void Error(Exception exception) {

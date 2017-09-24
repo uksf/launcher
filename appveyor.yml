@@ -21,7 +21,7 @@ build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 after_build:
-- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\bin\Debug\UKSF-Launcher.exe
+- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\bin\Debug\UKSF-Launcher.exe %APPVEYOR_BUILD_FOLDER%\Updater\bin\Debug\Updater.exe
 artifacts:
   - path: UKSF-Launcher.zip
     name: UKSF-Launcher
