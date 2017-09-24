@@ -16,11 +16,11 @@ build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 artifacts:
-  - path: UKSF-Launcher.exe
+  - path: UKSF-Launcher/bin/Debug/UKSF-Launcher.exe
     name: UKSF-Launcher
-  - path: Updater.exe
+  - path: Updater/bin/Debug/Updater.exe
     name: Updater
-  - path: VersionUpdater.exe
+  - path: VersionUpdater/bin/Debug/VersionUpdater.exe
     name: VersionUpdater
 deploy:
 - provider: FTP
