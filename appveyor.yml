@@ -9,15 +9,18 @@ build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 after_build:
-- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\bin\Debug\UKSF-Launcher.exe
+- cmd: 7z a UKSF-Launcher.zip %APPVEYOR_BUILD_FOLDER%\bin\Debug\UKSF-Launcher.exe
+artifacts:
+  - path: UKSF-Launcher.zip
+    name: UKSF-Launcher
 deploy:
 - provider: FTP
-  host: uk-sf.com
+  host: ftp.uk-sf.com
   protocol: ftp
   username: main
   password:
     secure: 1k1dPMXwKdh+kVVv5GxYyA==
   folder: /wamp/www/uksfnew/public/launcher
-  application: UKSF-Launcher.zip
+  artifact: UKSF-Launcher
   on:
     branch: release
