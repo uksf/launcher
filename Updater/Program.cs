@@ -12,7 +12,8 @@ namespace Updater {
             string[] oldFiles = Directory.GetFiles(Directory.GetParent(update).FullName);
             foreach (string file in oldFiles) {
                 if (!file.Contains("Updater.exe") && !file.Contains("update")) {
-                    File.Delete(file);
+                    //File.Delete(file);
+                    File.Move(file, file + "OLD");
                 }
             }
 
@@ -26,6 +27,9 @@ namespace Updater {
             launcher.StartInfo.Arguments = "-u";
             launcher.Start();
             //Environment.Exit(0);
+            while(true) {
+
+            }
         }
     }
 }
