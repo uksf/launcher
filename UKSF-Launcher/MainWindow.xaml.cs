@@ -2,14 +2,18 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using UKSF_Launcher.Utility;
 
-namespace UKSF_L {
+namespace UKSF_Launcher {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow: Window {
         public MainWindow() {
             InitializeComponent();
+
+            new LogHandler();
+            new Core();
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs args) {
