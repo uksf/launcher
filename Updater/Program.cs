@@ -25,7 +25,7 @@ namespace Updater {
             launcher.StartInfo.FileName = Path.Combine(Directory.GetParent(update).FullName, "UKSF-Launcher.exe");
             launcher.StartInfo.Arguments = "-u";
             launcher.Start();
-            Environment.Exit(0);
+            //Environment.Exit(0);
         }
     }
 }
