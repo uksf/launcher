@@ -1,28 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace UKSF_L
-{
+namespace UKSF_L {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow: Window
-    {
-        public MainWindow()
-        {
+    public partial class MainWindow: Window {
+        public MainWindow() {
             InitializeComponent();
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs args) {
+            if (args.ChangedButton == MouseButton.Left) {
+                Application.Current.MainWindow.DragMove();
+            }
+        }
+
+        private void ButtonClose_Clicked(object sender, RoutedEventArgs args) {
+            Application.Current.Shutdown();
+        }
+
+        private void ButtonMinimize_Clicked(object sender, RoutedEventArgs args) {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void ButtonSettings_Clicked(object sender, RoutedEventArgs args) {
+            var main = (Grid) FindName("Main");
+            var settings = (Grid) FindName("Settings");
+            if (main.Visibility == Visibility.Visible) {
+                main.Visibility = Visibility.Hidden;
+                settings.Visibility = Visibility.Visible;
+            }
+            else {
+                main.Visibility = Visibility.Visible;
+                settings.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void ButtonPlay_Clicked(object sender, RoutedEventArgs args) {
+            Console.WriteLine("PRESSED");
         }
     }
 }

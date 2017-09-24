@@ -3,10 +3,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UKSF_L"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Height="350"
+        Width="350"
+        Background="{StaticResource UKSF.General.Background}">
+    <Grid x:Name="RootWindow">
+        <Grid x:Name="TitleBar" Width="350" Height="25"  VerticalAlignment="Top" Background="{StaticResource UKSF.General.BackgroundDark}" MouseDown="TitleBar_MouseDown">
+            <Button x:Name="ButtonClose" Width="25" Click="ButtonClose_Clicked" HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+                <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="/Resources/Icons/Close.png"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/Resources/Icons/CloseH.png"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+            <Button x:Name="ButtonMinimize" Width="25" Click="ButtonMinimize_Clicked" HorizontalAlignment="Right" Margin="0,0,25,0" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+                <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="/Resources/Icons/Minimize.png"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/Resources/Icons/MinimizeH.png"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+            <Button x:Name="ButtonSettings" Width="25" Click="ButtonSettings_Clicked" HorizontalAlignment="Left" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+                <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="/Resources/Icons/Settings.png"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/Resources/Icons/SettingsH.png"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+            <Label FontSize="18" FontFamily="Arial" FontWeight="Bold" Foreground="{StaticResource UKSF.General.Foreground}" Content="UKSF Launcher" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="350" Margin="0,0,0,0" Padding="0,0,0,0" Panel.ZIndex="0"/>
+        </Grid>
+        <Grid x:Name="Main" Visibility="Visible">
+            <Image Source="/Resources/Icons/uksfbadge.png" HorizontalAlignment="Center" Height="200" VerticalAlignment="Top" Width="200" Margin="0,50,0,0"/>
+            <Button x:Name="ButtonPlay" Content="Play" Width="100" Click="ButtonPlay_Clicked" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Panel.ZIndex="1" Margin="0,275,0,0" Style="{StaticResource UKSF.Button}"/>
+        </Grid>
+        <Grid x:Name="Settings" Visibility="Hidden">
+            <Image Source="/Resources/Icons/Settings.png" HorizontalAlignment="Center" Height="200" VerticalAlignment="Center" Width="200"/>
+        </Grid>
     </Grid>
 </Window>
