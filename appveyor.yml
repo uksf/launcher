@@ -30,7 +30,7 @@ deploy:
   password:
     secure: 1k1dPMXwKdh+kVVv5GxYyA==
   folder: /wamp/www/uksfnew/public/launcher
-  artifact: UKSF-Launcher Updater VersionUpdater
+  artifact: UKSF-Launcher,Updater,VersionUpdater
   on:
     branch: release
 after_deploy:
