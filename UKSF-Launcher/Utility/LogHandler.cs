@@ -7,12 +7,6 @@ using static UKSF_Launcher.Utility.Info;
 namespace UKSF_Launcher.Utility {
     class LogHandler {
 
-        public enum Severity {
-            INFO,
-            WARNING,
-            ERROR
-        }
-
         private static string logFile;
 
         public LogHandler() {

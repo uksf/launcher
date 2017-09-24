@@ -24,3 +24,5 @@ deploy:
   artifact: UKSF-Launcher
   on:
     branch: release
+after_deploy:
+- cmd: '%APPVEYOR_BUILD_FOLDER%\PostDeployment\bin\Debug\PostDeployment.exe'
