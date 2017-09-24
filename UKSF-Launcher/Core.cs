@@ -18,7 +18,7 @@ namespace UKSF_Launcher {
 
         private void UpdateCheck() {
             Version currentVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
-            Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/version"));
+            Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
             LogHandler.LogSeverity(Severity.INFO, "Current version: " + currentVersion);
             LogHandler.LogSeverity(Severity.INFO, "Latest version: " + latestVersion);
             if (currentVersion < latestVersion) {
@@ -31,7 +31,7 @@ namespace UKSF_Launcher {
         }
 
         private void Update() {
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             Process updater = new Process();
             try {
                 updater.StartInfo.UseShellExecute = false;

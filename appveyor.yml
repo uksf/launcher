@@ -16,11 +16,11 @@ build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 artifacts:
-  - path: UKSF-Launcher.exe
+  - path: release\UKSF-Launcher.exe
     name: UKSF-Launcher
-  - path: Updater.exe
+  - path: release\Updater.exe
     name: Updater
-  - path: VersionUpdater.exe
+  - path: release\VersionUpdater.exe
     name: VersionUpdater
 deploy:
 - provider: FTP
@@ -34,4 +34,4 @@ deploy:
   on:
     branch: release
 after_deploy:
-- cmd: '%APPVEYOR_BUILD_FOLDER%\PostDeployment.exe'
+- cmd: '%APPVEYOR_BUILD_FOLDER%\release\PostDeployment.exe'
