@@ -17,16 +17,22 @@ namespace VersionUpdater {
                 writer.Write(newVersion);
             }
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher"), true);*/
-            string newVersion = "0.0.0.25";
+
+            string newVersion = "0.0.0.30";
             Process.Start("git", "clone -q --branch=release git@github.com:uksf/launcher.git").WaitForExit();
             string repository = Path.Combine(Environment.CurrentDirectory, "launcher");
             foreach (string file in Directory.EnumerateFiles(repository, "AssemblyInfo.cs", SearchOption.AllDirectories)) {
                 File.WriteAllText(file, Regex.Replace(File.ReadAllText(file), @"(\[assembly: AssemblyVersion\(""[0-9]*.[0-9]*.[0-9]*.[0-9]*""\)\])", "[assembly: AssemblyVersion(\"" + newVersion + "\")]"));
                 File.WriteAllText(file, Regex.Replace(File.ReadAllText(file), @"(\[assembly: AssemblyFileVersion\(""[0-9]*.[0-9]*.[0-9]*.[0-9]*""\)\])", "[assembly: AssemblyFileVersion(\"" + newVersion + "\")]"));
-            }            
+            }
+            Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
+            Process.Start("git", "checkout origin/master").WaitForExit();
             Process.Start("git", "add -A").WaitForExit();
             Process.Start("git", @"commit -m ""Updated version""").WaitForExit();
-            Process.Start("git", "push git@github.com:uksf/launcher").WaitForExit();
+            Process.Start("git", "push origin master").WaitForExit();
+
+            Directory.SetCurrentDirectory(Directory.GetParent(Environment.CurrentDirectory).FullName);
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
         }
     }
 }
