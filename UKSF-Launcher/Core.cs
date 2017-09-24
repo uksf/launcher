@@ -47,7 +47,6 @@ namespace UKSF_Launcher {
         }
 
         private void UpdateUpdater() {
-            File.Move(Path.Combine(Environment.CurrentDirectory, "update", "Updater.exe"), Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "update"), true);
             File.Delete(Path.Combine(Environment.CurrentDirectory, "update.zip"));
         }
