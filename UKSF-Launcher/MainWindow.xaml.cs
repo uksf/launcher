@@ -12,7 +12,6 @@ namespace UKSF_Launcher {
         public MainWindow() {
             InitializeComponent();
 
-            new LogHandler();
             new Core();
         }
 

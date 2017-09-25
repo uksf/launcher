@@ -6,6 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="UKSF.Colour.White" R="255" G="255" B="255" A="255"/>
+            <Color x:Key="UKSF.Colour.Grey" R="175" G="175" B="175" A="255"/>
+            <Color x:Key="UKSF.Colour.DarkGrey" R="100" G="100" B="100" A="255"/>
             <Color x:Key="UKSF.Colour.Black" R="0" G="0" B="0" A="255"/>
             <Color x:Key="UKSF.Colour.Transparent" R="0" G="0" B="0" A="0"/>
             <Color x:Key="UKSF.Colour.Background" R="45" G="45" B="45" A="255"/>
@@ -15,17 +17,33 @@
             <Color x:Key="UKSF.Colour.Foreground" R="222" G="154" B="37" A="255"/>
             <Color x:Key="UKSF.Colour.ForegroundDark" R="222" G="106" B="20" A="255"/>
 
-            <SolidColorBrush x:Key="UKSF.General.Background" Color="{StaticResource UKSF.Colour.Background}"/>
-            <SolidColorBrush x:Key="UKSF.General.BackgroundDark" Color="{StaticResource UKSF.Colour.BackgroundDark}"/>
-            <SolidColorBrush x:Key="UKSF.General.Foreground" Color="{StaticResource UKSF.Colour.Foreground}"/>
-            <SolidColorBrush x:Key="UKSF.Button.Background" Color="{StaticResource UKSF.Colour.BackgroundDark}"/>
-            <SolidColorBrush x:Key="UKSF.Button.Foreground" Color="{StaticResource UKSF.Colour.Foreground}"/>
-            <SolidColorBrush x:Key="UKSF.Button.ForegroundDark" Color="{StaticResource UKSF.Colour.ForegroundDark}"/>
+            <SolidColorBrush x:Key="UKSF.White" Color="{StaticResource UKSF.Colour.White}"/>
+            <SolidColorBrush x:Key="UKSF.Grey" Color="{StaticResource UKSF.Colour.Grey}"/>
+            <SolidColorBrush x:Key="UKSF.DarkGrey" Color="{StaticResource UKSF.Colour.DarkGrey}"/>
+            <SolidColorBrush x:Key="UKSF.Black" Color="{StaticResource UKSF.Colour.Black}"/>
+            <SolidColorBrush x:Key="UKSF.Transparent" Color="{StaticResource UKSF.Colour.Transparent}"/>
+            <SolidColorBrush x:Key="UKSF.Background" Color="{StaticResource UKSF.Colour.Background}"/>
+            <SolidColorBrush x:Key="UKSF.BackgroundLight" Color="{StaticResource UKSF.Colour.BackgroundLight}"/>
+            <SolidColorBrush x:Key="UKSF.BackgroundDark" Color="{StaticResource UKSF.Colour.BackgroundDark}"/>
+            <SolidColorBrush x:Key="UKSF.BackgroundDarker" Color="{StaticResource UKSF.Colour.BackgroundDarker}"/>
+            <SolidColorBrush x:Key="UKSF.Foreground" Color="{StaticResource UKSF.Colour.Foreground}"/>
+            <SolidColorBrush x:Key="UKSF.ForegroundDark" Color="{StaticResource UKSF.Colour.ForegroundDark}"/>
+
+            <Style x:Key="UKSF.Focus">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Stroke="Transparent"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <Style x:Key="UKSF.Button" TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="{StaticResource UKSF.Button.Background}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource UKSF.Button.Background}"/>
-                <Setter Property="Foreground" Value="{StaticResource UKSF.Button.Foreground}"/>
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Background" Value="{StaticResource UKSF.BackgroundDark}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundDark}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.Foreground}"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="FontFamily" Value="Arial"/>
@@ -35,12 +53,50 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
                             <Border
-                                x:Name="Border" BorderThickness="1" Background="{StaticResource UKSF.Button.Background}" BorderBrush="{StaticResource UKSF.Button.Background}">
+                                x:Name="Border" BorderThickness="1" Background="{StaticResource UKSF.BackgroundDark}" BorderBrush="{StaticResource UKSF.BackgroundDark}">
                                 <ContentPresenter x:Name="ContentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource UKSF.Button.ForegroundDark}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.ForegroundDark}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="UKSF.CheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Background" Value="{StaticResource UKSF.BackgroundDarker}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundDarker}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.Grey}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <BulletDecorator Background="Transparent">
+                                <BulletDecorator.Bullet>
+                                    <Border x:Name="Border" Width="14" Height="14" CornerRadius="0" Background="{StaticResource UKSF.BackgroundDarker}" BorderThickness="1" BorderBrush="{StaticResource UKSF.BackgroundDarker}">
+                                        <Path Width="14" Height="14" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource UKSF.Foreground}" StrokeThickness="2" Data="F1 M 1.068732,7.26838L 4.03345,9.95443L 10.58127,2.120569"/>
+                                    </Border>
+                                </BulletDecorator.Bullet>
+                                <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
+                            </BulletDecorator>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="false">
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.White}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource UKSF.DarkGrey}"/>
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource UKSF.DarkGrey}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.DarkGrey}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

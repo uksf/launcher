@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace UKSF_Launcher.Utility {
     public class Info {
@@ -14,6 +15,7 @@ namespace UKSF_Launcher.Utility {
         public static string FORMAT_TIME = "HH:mm:ss";
         public static string HASHSPACE = "\n#############################################";
 
+        public static bool AUTOUPDATE = true;
         public static bool UPDATER = false;
     }
 }

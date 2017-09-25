@@ -9,11 +9,7 @@ namespace UKSF_Launcher.Utility {
 
         private static string logFile;
 
-        public LogHandler() {
-            CreateLogFile();
-        }
-
-        private void CreateLogFile() {
+        public static void StartLogging() {
             Console.WriteLine(LOGS);
             Directory.CreateDirectory(LOGS);
             string[] logFiles = new DirectoryInfo(LOGS).GetFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
