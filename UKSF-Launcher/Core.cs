@@ -23,6 +23,7 @@ namespace UKSF_Launcher {
             LogHandler.LogSeverity(Severity.INFO, "Latest version: " + latestVersion);
 #if FORCEUPDATE
             currentVersion = Version.Parse("0.0.0");
+            LogHandler.LogSeverity(Severity.INFO, "Force version: " + currentVersion);
 #endif
             if (currentVersion < latestVersion) {
                 LogHandler.LogSeverity(Severity.INFO, "Updating to " + latestVersion);
@@ -39,7 +40,7 @@ namespace UKSF_Launcher {
             try {
                 updater.StartInfo.UseShellExecute = false;
                 updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "Updater.exe");
-                updater.StartInfo.CreateNoWindow = true;
+                updater.StartInfo.CreateNoWindow = false;
                 updater.Start();
                 Application.Current.Shutdown();
             } catch (Exception exception) {

@@ -71,7 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugForceUpdate|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugForceUpdate\</OutputPath>
+    <OutputPath>..\release\</OutputPath>
     <DefineConstants>TRACE;DEBUG;FORCEUPDATE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
