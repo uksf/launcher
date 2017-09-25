@@ -21,6 +21,9 @@ namespace UKSF_Launcher {
             Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
             LogHandler.LogSeverity(Severity.INFO, "Current version: " + currentVersion);
             LogHandler.LogSeverity(Severity.INFO, "Latest version: " + latestVersion);
+#if FORCEUPDATE
+            currentVersion = Version.Parse("0.0.0");
+#endif
             if (currentVersion < latestVersion) {
                 LogHandler.LogSeverity(Severity.INFO, "Updating to " + latestVersion);
                 Update();
