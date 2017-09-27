@@ -6,6 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="UKSF.Colour.White" R="255" G="255" B="255" A="255"/>
+            <Color x:Key="UKSF.Colour.LightGrey" R="200" G="200" B="200" A="255"/>
             <Color x:Key="UKSF.Colour.Grey" R="175" G="175" B="175" A="255"/>
             <Color x:Key="UKSF.Colour.DarkGrey" R="100" G="100" B="100" A="255"/>
             <Color x:Key="UKSF.Colour.Black" R="0" G="0" B="0" A="255"/>
@@ -18,6 +19,7 @@
             <Color x:Key="UKSF.Colour.ForegroundDark" R="222" G="106" B="20" A="255"/>
 
             <SolidColorBrush x:Key="UKSF.White" Color="{StaticResource UKSF.Colour.White}"/>
+            <SolidColorBrush x:Key="UKSF.LightGrey" Color="{StaticResource UKSF.Colour.LightGrey}"/>
             <SolidColorBrush x:Key="UKSF.Grey" Color="{StaticResource UKSF.Colour.Grey}"/>
             <SolidColorBrush x:Key="UKSF.DarkGrey" Color="{StaticResource UKSF.Colour.DarkGrey}"/>
             <SolidColorBrush x:Key="UKSF.Black" Color="{StaticResource UKSF.Colour.Black}"/>
@@ -39,10 +41,31 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="UKSF.ContainerBorder" TargetType="{x:Type Border}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundDarker}"/>
+                <Setter Property="Padding" Value="2,2,2,2"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Margin" Value="0,1,0,1"/>
+            </Style>
+
+            <Style x:Key="UKSF.SettingsLabel" TargetType="{x:Type Label}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.Grey}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Padding" Value="2,2,2,2"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
             <Style x:Key="UKSF.Button" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
-                <Setter Property="Background" Value="{StaticResource UKSF.BackgroundDark}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundDark}"/>
                 <Setter Property="Foreground" Value="{StaticResource UKSF.Foreground}"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -66,22 +89,67 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="UKSF.TabButton" TargetType="{x:Type Button}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.DarkGrey}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border
+                                x:Name="Border" BorderThickness="1" Background="{StaticResource UKSF.BackgroundDark}" BorderBrush="{StaticResource UKSF.BackgroundDark}">
+                                <ContentPresenter x:Name="ContentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="Border" Value="{StaticResource UKSF.BackgroundLight}"/>
+                                    <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource UKSF.BackgroundLight}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.Grey}"/>
+                                    <Setter Property="FontSize" Value="25"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" TargetName="Border" Value="{StaticResource UKSF.Background}"/>
+                                    <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource UKSF.Background}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.Foreground}"/>
+                                    <Setter Property="FontSize" Value="26"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="UKSF.Textbox" TargetType="{x:Type TextBox}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.Black}"/>
+                <Setter Property="Background" Value="{StaticResource UKSF.White}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundLight}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+
             <Style x:Key="UKSF.CheckBox" TargetType="{x:Type CheckBox}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
-                <Setter Property="Background" Value="{StaticResource UKSF.BackgroundDarker}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource UKSF.BackgroundDarker}"/>
                 <Setter Property="Foreground" Value="{StaticResource UKSF.Grey}"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="FontFamily" Value="Arial"/>
-                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontSize" Value="16"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type CheckBox}">
                             <BulletDecorator Background="Transparent">
                                 <BulletDecorator.Bullet>
-                                    <Border x:Name="Border" Width="14" Height="14" CornerRadius="0" Background="{StaticResource UKSF.BackgroundDarker}" BorderThickness="1" BorderBrush="{StaticResource UKSF.BackgroundDarker}">
-                                        <Path Width="14" Height="14" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource UKSF.Foreground}" StrokeThickness="2" Data="F1 M 1.068732,7.26838L 4.03345,9.95443L 10.58127,2.120569"/>
+                                    <Border x:Name="Border" Width="16" Height="16" CornerRadius="0" Background="{StaticResource UKSF.BackgroundDarker}" BorderThickness="1" BorderBrush="{StaticResource UKSF.BackgroundDarker}">
+                                        <Path Width="16" Height="16" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource UKSF.Foreground}" StrokeThickness="2" Data="F1 M 1.068732,9L 5.03345,12L 13,1.120569"/>
                                     </Border>
                                 </BulletDecorator.Bullet>
                                 <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
@@ -97,6 +165,76 @@
                                     <Setter TargetName="Border" Property="Background" Value="{StaticResource UKSF.DarkGrey}"/>
                                     <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource UKSF.DarkGrey}"/>
                                     <Setter Property="Foreground" Value="{StaticResource UKSF.DarkGrey}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ControlTemplate x:Key="UKSF.ComboBoxToggleButton" TargetType="ToggleButton">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="2" Name="Border" BorderBrush="{StaticResource UKSF.BackgroundLight}" BorderThickness="1" Background="{StaticResource UKSF.White}"/>
+                    <Border Grid.Column="1" Margin="1,1,1,1" BorderBrush="{StaticResource UKSF.BackgroundLight}" Name="ButtonBorder" BorderThickness="0" Background="{StaticResource UKSF.White}"/>
+                    <Path Name="Arrow" Grid.Column="1" Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z" HorizontalAlignment="Center" Fill="{StaticResource UKSF.BackgroundLight}" VerticalAlignment="Center"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="UIElement.IsMouseOver" Value="True">
+                        <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{StaticResource UKSF.LightGrey}"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <Style x:Key="UKSF.ComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="Height" Value="23"/>
+                <Setter Property="Padding" Value="3,0,0,0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+
+            <Style x:Key="UKSF.ComboBox" TargetType="{x:Type ComboBox}">
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="UIElement.SnapsToDevicePixels" Value="True"/>
+                <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True"/>
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="TextElement.Foreground" Value="{StaticResource UKSF.Black}"/>
+                <Setter Property="FrameworkElement.FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton Name="ToggleButton" Grid.Column="2" ClickMode="Press" Focusable="False" IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Template="{StaticResource UKSF.ComboBoxToggleButton}"/>
+                                <ContentPresenter Name="ContentSite" Margin="4,3,25,2" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding ComboBox.SelectionBoxItem}" ContentTemplate="{TemplateBinding ComboBox.SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+                                <TextBox Name="PART_EditableTextBox" Margin="0,2,25,2" IsReadOnly="{TemplateBinding IsReadOnly}" Visibility="Hidden" Background="{StaticResource UKSF.Transparent}" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="True">
+                                    <TextBox.Template>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Name="PART_ContentHost" Focusable="False"/>
+                                        </ControlTemplate>
+                                    </TextBox.Template>
+                                </TextBox>
+                                <Popup Name="Popup" Placement="Bottom" Focusable="False" AllowsTransparency="True" IsOpen="{TemplateBinding ComboBox.IsDropDownOpen}" PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}">
+                                        <Border Name="DropDownBorder" Background="{StaticResource UKSF.White}" Margin="0,0,0,0" BorderThickness="1" BorderBrush="{StaticResource UKSF.BackgroundLight}"/>
+                                        <ScrollViewer Margin="1" SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="ItemsControl.HasItems" Value="False">
+                                    <Setter Property="FrameworkElement.MinHeight" TargetName="DropDownBorder" Value="20"/>
+                                </Trigger>
+                                <Trigger Property="ItemsControl.IsGrouping" Value="True">
+                                    <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

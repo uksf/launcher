@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-using static UKSF_Launcher.Utility.Info;
+using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
     /// <summary>
@@ -10,14 +10,15 @@ namespace UKSF_Launcher {
     public partial class App: Application {
 
         void App_Startup(object sender, StartupEventArgs e) {
+            bool updated = false;
+
             for (int i = 0; i != e.Args.Length; ++i) {
                 if (e.Args[i] == "-u") {
-                    UPDATER = true;
+                    updated = true;
                 }
             }
 
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            new Core(updated);
         }
 
         private void Application_Exit(object sender, EventArgs args) {

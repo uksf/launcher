@@ -4,26 +4,27 @@ using System.IO;
 using System.Net;
 using System.Windows;
 
-using static UKSF_Launcher.Utility.Info;
+using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
     class UpdateHandler {
 
-        public static void UpdateCheck() {
+        public static void UpdateCheck(bool updated) {
             if (!AUTOUPDATE) return;
+            LogHandler.LogHashSpace();
             Version currentVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
             Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
-            LogHandler.LogSeverity(Severity.INFO, "Current version: " + currentVersion);
-            LogHandler.LogSeverity(Severity.INFO, "Latest version: " + latestVersion);
+            LogHandler.LogInfo("Current version: " + currentVersion);
+            LogHandler.LogInfo("Latest version: " + latestVersion);
 #if FORCEUPDATE
             currentVersion = Version.Parse("0.0.0");
             LogHandler.LogSeverity(Severity.INFO, "Force version: " + currentVersion);
 #endif
             if (currentVersion < latestVersion) {
-                LogHandler.LogSeverity(Severity.INFO, "Updating to " + latestVersion);
+                LogHandler.LogInfo("Updating to " + latestVersion);
                 Update();
             }
-            if (UPDATER) {
+            if (updated) {
                 File.Delete(Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             }
         }

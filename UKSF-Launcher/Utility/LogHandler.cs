@@ -2,10 +2,15 @@
 using System.IO;
 using System.Linq;
 
-using static UKSF_Launcher.Utility.Info;
+using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
     class LogHandler {
+
+        private static string LOGS = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/UKSF-Launcher";
+        private const string FORMAT_DATE = "yyyy-MM-dd__HH-mm-ss";
+        private const string FORMAT_TIME = "HH:mm:ss";
+        private const string HASHSPACE = "\n#############################################";
 
         private static string logFile;
 
@@ -23,7 +28,7 @@ namespace UKSF_Launcher.Utility {
             } catch (Exception e) {
                 Console.WriteLine("Log file not created: " + logFile + ". " + e.Message);
             }
-            LogSeverity(Severity.INFO, "Log Created");
+            LogInfo("Log Created");
         }
 
         private static void LogToFile(string message) {
@@ -43,15 +48,22 @@ namespace UKSF_Launcher.Utility {
             LogToFile(message);
         }
 
-        public static void LogHashSpace(Severity severity, string message) {
-            Console.WriteLine(message);
+        public static void LogHashSpace() {
             LogNoTime(HASHSPACE);
+        }
+
+        public static void LogHashSpaceMessage(Severity severity, string message) {
+            LogHashSpace();
             LogSeverity(severity, message);
+        }
+
+        public static void LogInfo(string message) {
+            LogSeverity(Severity.INFO, message);
         }
 
         public static void CloseLog() {
             LogNoTime(HASHSPACE);
-            LogSeverity(Severity.INFO, "Closing Log");
+            LogInfo("Closing Log");
         }
     }
 }

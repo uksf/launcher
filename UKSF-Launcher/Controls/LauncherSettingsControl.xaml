@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="UKSF_Launcher.LauncherSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="428" d:DesignWidth="500">
+    <StackPanel Margin="10,10,10,10">
+        <Border Width="480" Height="50" Style="{StaticResource UKSF.ContainerBorder}">
+            <Grid>
+                <Label Content="Game Executable" Height="18" Style="{StaticResource UKSF.SettingsLabel}"/>
+                <TextBox x:Name="LauncherSettingsGameExecutable" Text="TextBox" Width="395" Height="25" Style="{StaticResource UKSF.Textbox}"/>
+                <Button Content="Browse" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Height="25" FontSize="18" Style="{StaticResource UKSF.Button}"/>
+            </Grid>
+        </Border>
+        <Border Width="480" Height="50" Style="{StaticResource UKSF.ContainerBorder}">
+            <Grid>
+                <Label Content="Mod Download Location" Height="18" Style="{StaticResource UKSF.SettingsLabel}"/>
+                <TextBox x:Name="LauncherSettingsDownloadLocation" Text="TextBox" Width="395" Height="25" Style="{StaticResource UKSF.Textbox}"/>
+                <Button Content="Browse" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Height="25" FontSize="18" Style="{StaticResource UKSF.Button}"/>
+            </Grid>
+        </Border>
+        <Border Width="480" Height="50" Style="{StaticResource UKSF.ContainerBorder}">
+            <Grid>
+                <Label Content="Profile" Height="18" Style="{StaticResource UKSF.SettingsLabel}"/>
+                <ComboBox x:Name="LauncherSettingsProfile" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="175" Height="25" SelectionChanged="LauncherSettingsProfile_Selected" RenderTransformOrigin="0.35,0.484" Style="{StaticResource UKSF.ComboBox}">
+                </ComboBox>
+            </Grid>
+        </Border>
+        <Grid>
+            <CheckBox x:Name="LauncherSettingsAutoupdate" Content="Auto-update" Click="CheckBoxAUTOUPDATE_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource UKSF.CheckBox}"/>
+        </Grid>
+    </StackPanel>
+</UserControl>
