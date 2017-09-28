@@ -17,12 +17,12 @@ namespace UKSF_Launcher {
     /// <summary>
     /// Interaction logic for MainControl.xaml
     /// </summary>
-    public partial class MainControl : UserControl {
-        public MainControl() {
+    public partial class Main_MainControl : UserControl {
+        public Main_MainControl() {
             InitializeComponent();
         }
 
-        private void ButtonPlay_Clicked(object sender, RoutedEventArgs args) {
+        private void Main_MainControl_ButtonPlay_Click(object sender, RoutedEventArgs args) {
             Console.WriteLine("PRESSED");
         }
     }

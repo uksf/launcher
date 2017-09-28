@@ -98,61 +98,97 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="UI\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\GameSettingsControl.xaml.cs">
-      <DependentUpon>GameSettingsControl.xaml</DependentUpon>
+    <Compile Include="UI\Dialog\Dialog_MainControl.xaml.cs">
+      <DependentUpon>Dialog_MainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\Dialog_TitleBarControl.xaml.cs">
+      <DependentUpon>Dialog_TitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTS_TitleBarControl.xaml.cs">
+      <DependentUpon>FTS_TitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTS_Window.xaml.cs">
+      <DependentUpon>FTS_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\Dialog_Window.xaml.cs">
+      <DependentUpon>Dialog_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\Settings\Settings_GameControl.xaml.cs">
+      <DependentUpon>Settings_GameControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core.cs" />
-    <Compile Include="Controls\MainControl.xaml.cs">
-      <DependentUpon>MainControl.xaml</DependentUpon>
+    <Compile Include="UI\Main\Main_MainControl.xaml.cs">
+      <DependentUpon>Main_MainControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SettingsControl.xaml.cs">
-      <DependentUpon>SettingsControl.xaml</DependentUpon>
+    <Compile Include="UI\Main\Main_SettingsControl.xaml.cs">
+      <DependentUpon>Main_SettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TitleBarControl.xaml.cs">
-      <DependentUpon>TitleBarControl.xaml</DependentUpon>
+    <Compile Include="UI\Main\Main_TitleBarControl.xaml.cs">
+      <DependentUpon>Main_TitleBarControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LauncherSettingsControl.xaml.cs">
-      <DependentUpon>LauncherSettingsControl.xaml</DependentUpon>
+    <Compile Include="UI\Main\Settings\Settings_LauncherControl.xaml.cs">
+      <DependentUpon>Settings_LauncherControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game\GameHandler.cs" />
     <Compile Include="Game\ProfileHandler.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Utility\LogHandler.cs" />
     <Compile Include="Utility\SettingsHandler.cs" />
+    <Compile Include="Utility\SetupHandler.cs" />
     <Compile Include="Utility\UpdateHandler.cs" />
-    <Page Include="Controls\GameSettingsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\MainControl.xaml">
+    <Page Include="UI\Dialog\Dialog_MainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\LauncherSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="UI\Dialog\Dialog_TitleBarControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Page Include="UI\FTS\FTS_TitleBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\FTS\FTS_Window.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Dialog\Dialog_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Main\Settings\Settings_GameControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\Main_MainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Main\Settings\Settings_LauncherControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Main\Main_Window.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="UI\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="UI\Main\Main_Window.xaml.cs">
+      <DependentUpon>Main_Window.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\SettingsControl.xaml">
+    <Page Include="UI\Main\Main_SettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\TitleBarControl.xaml">
+    <Page Include="UI\Main\Main_TitleBarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,8 +255,6 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\Watermark.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

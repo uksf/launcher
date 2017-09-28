@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="UKSF_Launcher.TitleBarControl"
+﻿<UserControl x:Class="UKSF_Launcher.Main_TitleBarControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="36" d:DesignWidth="500">
-    <Grid Height="36" VerticalAlignment="Top" Background="{StaticResource UKSF.BackgroundDark}" MouseDown="TitleBar_MouseDown">
-        <Button x:Name="ButtonClose" Width="36" Click="ButtonClose_Click" HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+    <Grid Height="36" VerticalAlignment="Top" Background="{StaticResource UKSF.BackgroundDark}" MouseDown="Main_TitleBarControl_MouseDown">
+        <Button x:Name="Main_TitleBarControl_ButtonClose" Width="36" Click="Main_TitleBarControl_ButtonClose_Click" HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
@@ -20,7 +20,7 @@
                 </Image.Style>
             </Image>
         </Button>
-        <Button x:Name="ButtonMinimize" Width="36" Click="ButtonMinimize_Click" HorizontalAlignment="Right" Margin="0,0,36,0" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+        <Button x:Name="Main_TitleBarControl_ButtonMinimize" Width="36" Click="Main_TitleBarControl_ButtonMinimize_Click" HorizontalAlignment="Right" Margin="0,0,36,0" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
@@ -34,7 +34,7 @@
                 </Image.Style>
             </Image>
         </Button>
-        <Button x:Name="ButtonSettings" Width="36" Click="ButtonSettings_Click" HorizontalAlignment="Left" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
+        <Button x:Name="Main_TitleBarControl_ButtonSettings" Width="36" Click="Main_TitleBarControl_ButtonSettings_Click" HorizontalAlignment="Left" Panel.ZIndex="1" Style="{StaticResource UKSF.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">

@@ -7,20 +7,25 @@ namespace UKSF_Launcher.Utility {
 
         private const string REGISTRY = @"SOFTWARE\UKSF-Launcher";
 
-        private static RegistryKey registry;
-
         public static void ReadSettings() {
             LogHandler.LogHashSpace();
-            registry = Registry.CurrentUser.OpenSubKey(REGISTRY, true);
-            if (registry == null) {
-                registry = Registry.CurrentUser.CreateSubKey(REGISTRY, true);
-            }
-            
-            AUTOUPDATE = ParseSetting("AUTOUPDATE", true);
+
+            // Settings
+            FIRSTTIMESETUPDONE = ParseSetting("FIRSTTIMESETUPDONE", false);
+            AUTOUPDATELAUNCHER = ParseSetting("AUTOUPDATELAUNCHER", true);
             PROFILE = ParseSetting("PROFILE", "");
         }
 
+        private static RegistryKey GetRegistryKey() {
+            RegistryKey registry = Registry.CurrentUser.OpenSubKey(REGISTRY, true);
+            if (registry == null) {
+                registry = Registry.CurrentUser.CreateSubKey(REGISTRY, true);
+            }
+            return registry;
+        }
+
         public static string ReadSetting(string name, object defaultValue) {
+            RegistryKey registry = GetRegistryKey();
             object value = registry.GetValue(name);
             if (value == null) {
                 value = defaultValue;
@@ -31,6 +36,7 @@ namespace UKSF_Launcher.Utility {
         }
 
         public static object WriteSetting(string name, object value) {
+            RegistryKey registry = GetRegistryKey();
             LogHandler.LogInfo("Writing setting '" + name + "': " + value);
             registry.SetValue(name, value);
             return value;
@@ -46,6 +52,13 @@ namespace UKSF_Launcher.Utility {
 
         public static bool ParseSetting(string name, bool defaultValue) {
             return bool.Parse(ReadSetting(name, defaultValue));
+        }
+
+        public static void DeleteSetting(string name) {
+            RegistryKey registry = GetRegistryKey();
+            if (registry.GetValue(name) != null) {
+                registry.DeleteValue(name);
+            }
         }
     }
 }

@@ -10,8 +10,11 @@ namespace UKSF_Launcher {
             ERROR
         }
 
+        public static Version VERSION = Version.Parse("0.0.0");
+
         //Settings
-        public static bool AUTOUPDATE = true;
+        public static bool FIRSTTIMESETUPDONE = false;
+        public static bool AUTOUPDATELAUNCHER = true;
         public static string PROFILE = "";
 
         //Game

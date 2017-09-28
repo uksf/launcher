@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.Windows;
 using UKSF_Launcher.Utility;
 
@@ -13,7 +14,7 @@ namespace UKSF_Launcher.Game {
             LogHandler.LogHashSpace();
             RegistryKey gameKey = Registry.LocalMachine.OpenSubKey(REGISTRY);
             if (gameKey == null) {
-                MessageBoxResult result = MessageBox.Show("We can't find your installation of Arma 3.\nEnsure it is marked as installed in steam.\n\nIf Arma 3 is installed, press 'Ok' and locate the installation folder in the explorer that appears.", "Arma 3 Not Installed", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                MessageBoxResult result = Dialog_Window.Show("Arma 3 Not Installed", "We can't find your installation of Arma 3.\nEnsure it is marked as installed in steam.\n\nIf Arma 3 is installed, press 'Ok' and locate the installation folder in the explorer that appears.", Dialog_Window.DialogBoxType.OKCancel);
                 if (result == MessageBoxResult.OK) {
                     using (System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog()) {
                         if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK) {

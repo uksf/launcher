@@ -10,17 +10,17 @@ namespace UKSF_Launcher.Utility {
     class UpdateHandler {
 
         public static void UpdateCheck(bool updated) {
-            if (!AUTOUPDATE) return;
             LogHandler.LogHashSpace();
-            Version currentVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+            VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+            LogHandler.LogInfo("Current version: " + VERSION);
+            if (!AUTOUPDATELAUNCHER) return;
             Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
-            LogHandler.LogInfo("Current version: " + currentVersion);
             LogHandler.LogInfo("Latest version: " + latestVersion);
 #if FORCEUPDATE
             currentVersion = Version.Parse("0.0.0");
             LogHandler.LogSeverity(Severity.INFO, "Force version: " + currentVersion);
 #endif
-            if (currentVersion < latestVersion) {
+            if (VERSION < latestVersion) {
                 LogHandler.LogInfo("Updating to " + latestVersion);
                 Update();
             }

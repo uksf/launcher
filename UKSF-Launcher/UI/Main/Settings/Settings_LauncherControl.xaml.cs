@@ -9,39 +9,43 @@ using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
     /// <summary>
-    /// Interaction logic for LauncherSettingsControl.xaml
+    /// Interaction logic for Settings_LauncherControl.xaml
     /// </summary>
-    public partial class LauncherSettingsControl : UserControl {
+    public partial class Settings_LauncherControl : UserControl {
 
         private List<CustomComboBoxItem> items;
 
-        public LauncherSettingsControl() {
+        public Settings_LauncherControl() {
             InitializeComponent();
 
-            LauncherSettingsAutoupdate.IsChecked = AUTOUPDATE;
+            Settings_LauncherControl_Version.Content = "Version: " + VERSION.ToString();
+            Settings_LauncherControl_Autoupdate.IsChecked = AUTOUPDATELAUNCHER;
 
             items = new List<CustomComboBoxItem>();
             AddProfiles();
         }
 
-        private void CheckBoxAUTOUPDATE_Click(object sender, RoutedEventArgs e) {
-            AUTOUPDATE = (bool)SettingsHandler.WriteSetting("AUTOUPDATE", LauncherSettingsAutoupdate.IsChecked);
+        private void Settings_LauncherControl_CheckBoxAUTOUPDATE_Click(object sender, RoutedEventArgs e) {
+            AUTOUPDATELAUNCHER = (bool)SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", Settings_LauncherControl_Autoupdate.IsChecked);
         }
 
-        private void LauncherSettingsProfile_Selected(object sender, RoutedEventArgs e) {
-            PROFILE = (string)SettingsHandler.WriteSetting("PROFILE", items.ElementAt(LauncherSettingsProfile.SelectedIndex).ItemProfile.Name);
+        private void Settings_LauncherControl_ProfileSelected(object sender, RoutedEventArgs e) {
+            string profile = items.ElementAt(Settings_LauncherControl_Profile.SelectedIndex).ItemProfile.Name;
+            if (PROFILE != profile) {
+                PROFILE = (string)SettingsHandler.WriteSetting("PROFILE", profile);
+            }
         }
 
         private void AddProfiles() {
-            LauncherSettingsProfile.Items.Clear();
+            Settings_LauncherControl_Profile.Items.Clear();
             List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfiles();
             foreach (ProfileHandler.Profile profile in profiles) {
                 CustomComboBoxItem item = new CustomComboBoxItem(profile, FindResource("UKSF.ComboBoxItem") as Style);
                 items.Add(item);
-                LauncherSettingsProfile.Items.Add(item);
+                Settings_LauncherControl_Profile.Items.Add(item);
 
                 if (profile.Name == PROFILE) {
-                    LauncherSettingsProfile.SelectedIndex = profiles.IndexOf(profile);
+                    Settings_LauncherControl_Profile.SelectedIndex = profiles.IndexOf(profile);
                 }
             }
 
@@ -49,7 +53,9 @@ namespace UKSF_Launcher {
                 ProfileHandler.Profile profile = ProfileHandler.FindUKSFProfile(profiles);
                 if (profile != null) {
                     PROFILE = profile.Name;
-                    LauncherSettingsProfile.SelectedIndex = profiles.IndexOf(profile);
+                    Settings_LauncherControl_Profile.SelectedIndex = profiles.IndexOf(profile);
+                } else {
+
                 }
             }
         }

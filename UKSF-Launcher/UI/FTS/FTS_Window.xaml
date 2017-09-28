@@ -1,20 +1,19 @@
-﻿<Window
+﻿<Window x:Class="UKSF_Launcher.FTS_Window"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UKSF_Launcher" x:Class="UKSF_Launcher.MainWindow"
+        xmlns:local="clr-namespace:UKSF_Launcher"
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        Height="500"
+        Height="350"
         Width="500"
-        Background="{StaticResource UKSF.Background}">
-    <Grid x:Name="RootControl">
-        <local:TitleBarControl x:Name="TitleBarControl" Margin="0,0,0,464"/>
-        <local:MainControl x:Name="MainControl"/>
-        <local:SettingsControl x:Name="SettingsControl" Margin="0,36,0,0"/>
+        Background="{StaticResource UKSF.Background}"
+        BorderBrush="{StaticResource UKSF.BackgroundDarker}">
+    <Grid>
+        <local:FTS_TitleBarControl x:Name="FTS_TitleBarControl" Margin="0,0,0,314"/>
     </Grid>
 </Window>
