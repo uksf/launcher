@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="214" d:DesignWidth="500">
-    <Grid Background="{StaticResource UKSF.BackgroundDark}">
+    <Grid Background="{StaticResource UKSF.Background}">
         <TextBlock x:Name="Dialog_MainControl_TextBlock" Text="Dialog" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="165" Width="480" Foreground="{StaticResource UKSF.Grey}"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button x:Name="Dialog_MainControl_ButtonOK" Content="OK" Click="Dialog_MainControl_Button_Click" Margin="0,0,10,10" Style="{StaticResource UKSF.DialogButton}"/>

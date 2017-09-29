@@ -11,18 +11,30 @@ namespace UKSF_Launcher {
             InitializeComponent();
         }
 
+        public static readonly RoutedEvent Main_TitleBarControl_MouseDown_Event = EventManager.RegisterRoutedEvent("Main_TitleBarControl_MouseDown_Event", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Main_TitleBarControl));
+        public static readonly RoutedEvent Main_TitleBarControl_ButtonMinimizeClick_Event = EventManager.RegisterRoutedEvent("Main_TitleBarControl_ButtonMinimizeClick_Event", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(Main_TitleBarControl));
+
+        public event RoutedEventHandler Main_TitleBarControl_MouseDown_EventHandler {
+            add { AddHandler(Main_TitleBarControl_MouseDown_Event, value); }
+            remove { RemoveHandler(Main_TitleBarControl_MouseDown_Event, value); }
+        }
+        public event RoutedEventHandler Main_TitleBarControl_ButtonMinimizeClick_EventHandler {
+            add { AddHandler(Main_TitleBarControl_ButtonMinimizeClick_Event, value); }
+            remove { RemoveHandler(Main_TitleBarControl_ButtonMinimizeClick_Event, value); }
+        }
+
         private void Main_TitleBarControl_MouseDown(object sender, MouseButtonEventArgs args) {
             if (args.ChangedButton == MouseButton.Left) {
-                Application.Current.MainWindow.DragMove();
+                RaiseEvent(new RoutedEventArgs(Main_TitleBarControl_MouseDown_Event));
             }
         }
 
         private void Main_TitleBarControl_ButtonClose_Click(object sender, RoutedEventArgs args) {
-            Application.Current.Shutdown();
+            Core.ShutDown();
         }
 
         private void Main_TitleBarControl_ButtonMinimize_Click(object sender, RoutedEventArgs args) {
-            Window.GetWindow(this).WindowState = WindowState.Minimized;
+            RaiseEvent(new RoutedEventArgs(Main_TitleBarControl_ButtonMinimizeClick_Event));
         }
 
         private void Main_TitleBarControl_ButtonSettings_Click(object sender, RoutedEventArgs args) {

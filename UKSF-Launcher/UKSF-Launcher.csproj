@@ -108,6 +108,9 @@
     <Compile Include="UI\Dialog\Dialog_TitleBarControl.xaml.cs">
       <DependentUpon>Dialog_TitleBarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\FTS\FTS_MainControl.xaml.cs">
+      <DependentUpon>FTS_MainControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\FTS\FTS_TitleBarControl.xaml.cs">
       <DependentUpon>FTS_TitleBarControl.xaml</DependentUpon>
     </Compile>
@@ -136,6 +139,7 @@
     <Compile Include="Game\GameHandler.cs" />
     <Compile Include="Game\ProfileHandler.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="UI\SafeWindow.cs" />
     <Compile Include="Utility\LogHandler.cs" />
     <Compile Include="Utility\SettingsHandler.cs" />
     <Compile Include="Utility\SetupHandler.cs" />
@@ -147,6 +151,10 @@
     <Page Include="UI\Dialog\Dialog_TitleBarControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTS_MainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\FTS\FTS_TitleBarControl.xaml">
       <SubType>Designer</SubType>

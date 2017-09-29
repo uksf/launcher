@@ -1,4 +1,4 @@
-﻿<Window x:Class="UKSF_Launcher.Main_Window"
+﻿<local:SafeWindow x:Class="UKSF_Launcher.Main_Window"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,10 +11,12 @@
         AllowsTransparency="True"
         Height="500"
         Width="500"
-        Background="{StaticResource UKSF.Background}">
+        Background="{StaticResource UKSF.Background}"
+        BorderBrush="{StaticResource UKSF.BackgroundLight}"
+        BorderThickness="1">
     <Grid>
         <local:Main_TitleBarControl x:Name="Main_TitleBarControl" Margin="0,0,0,464"/>
         <local:Main_MainControl x:Name="Main_MainControl"/>
         <local:Main_SettingsControl x:Name="Main_SettingsControl" Margin="0,36,0,0"/>
     </Grid>
-</Window>
+</local:SafeWindow>

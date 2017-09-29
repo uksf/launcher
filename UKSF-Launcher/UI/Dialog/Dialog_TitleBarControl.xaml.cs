@@ -25,7 +25,7 @@ namespace UKSF_Launcher {
         }
 
         private void Dialog_TitleBarControl_ButtonClose_Click(object sender, RoutedEventArgs args) {
-            Application.Current.Shutdown();
+            Core.ShutDown();
         }
     }
 }

@@ -18,7 +18,6 @@ namespace UKSF_Launcher {
             add { AddHandler(Dialog_MainControl_ButtonOKClick_Event, value); }
             remove { RemoveHandler(Dialog_MainControl_ButtonOKClick_Event, value); }
         }
-
         public event RoutedEventHandler Dialog_MainControl_ButtonCancel_Click_EventHandler {
             add { AddHandler(Dialog_MainControl_ButtonCancelClick_Event, value); }
             remove { RemoveHandler(Dialog_MainControl_ButtonCancelClick_Event, value); }

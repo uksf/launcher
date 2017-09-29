@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.Windows;
 using UKSF_Launcher.Utility;
 
@@ -20,11 +19,11 @@ namespace UKSF_Launcher.Game {
                         if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                             GAME_LOCATION = folderBrowser.SelectedPath;
                         } else {
-                            Application.Current.Shutdown();
+                            Core.ShutDown();
                         }
                     }
                 } else {
-                    Application.Current.Shutdown();
+                    Core.ShutDown();
                 }
             } else {
                 GAME_LOCATION = gameKey.GetValue("main", "").ToString();

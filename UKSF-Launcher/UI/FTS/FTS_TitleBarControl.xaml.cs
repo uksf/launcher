@@ -11,7 +11,7 @@ namespace UKSF_Launcher {
             InitializeComponent();
         }
 
-        public static readonly RoutedEvent FTS_TitleBarControl_MouseDown_Event = EventManager.RegisterRoutedEvent("TitleBarMouseDownEvent", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FTS_TitleBarControl));
+        public static readonly RoutedEvent FTS_TitleBarControl_MouseDown_Event = EventManager.RegisterRoutedEvent("FTS_TitleBarControl_MouseDown_Event", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FTS_TitleBarControl));
 
         public event RoutedEventHandler FTS_TitleBarControl_MouseDown_EventHandler {
             add { AddHandler(FTS_TitleBarControl_MouseDown_Event, value); }
@@ -25,7 +25,7 @@ namespace UKSF_Launcher {
         }
 
         private void FTS_TitleBarControl_ButtonClose_Click(object sender, RoutedEventArgs args) {
-            Application.Current.Shutdown();
+            Core.ShutDown();
         }
     }
 }

@@ -17,8 +17,8 @@ namespace UKSF_Launcher.Utility {
             Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
             LogHandler.LogInfo("Latest version: " + latestVersion);
 #if FORCEUPDATE
-            currentVersion = Version.Parse("0.0.0");
-            LogHandler.LogSeverity(Severity.INFO, "Force version: " + currentVersion);
+            VERSION = Version.Parse("0.0.0");
+            LogHandler.LogSeverity(Severity.INFO, "Force version: " + VERSION);
 #endif
             if (VERSION < latestVersion) {
                 LogHandler.LogInfo("Updating to " + latestVersion);
@@ -37,7 +37,7 @@ namespace UKSF_Launcher.Utility {
                 updater.StartInfo.FileName = Path.Combine(Environment.CurrentDirectory, "Updater.exe");
                 updater.StartInfo.CreateNoWindow = false;
                 updater.Start();
-                Application.Current.Shutdown();
+                Core.ShutDown();
             }
             catch (Exception exception) {
                 Core.Error(exception);

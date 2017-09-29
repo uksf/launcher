@@ -1,8 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using UKSF_Launcher.Utility;
-
-using static UKSF_Launcher.Global;
+﻿using System.Windows.Controls;
 
 namespace UKSF_Launcher {
     /// <summary>

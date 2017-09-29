@@ -4,7 +4,7 @@ namespace UKSF_Launcher {
     /// <summary>
     /// Interaction logic for Dialog_Window.xaml
     /// </summary>
-    public partial class Dialog_Window : Window {
+    public partial class Dialog_Window : SafeWindow {
 
         public enum DialogBoxType {
             OK,
@@ -16,6 +16,7 @@ namespace UKSF_Launcher {
 
         public Dialog_Window() {
             InitializeComponent();
+
             AddHandler(Dialog_TitleBarControl.Dialog_TitleBarControl_MouseDown_Event, new RoutedEventHandler(TitleBar_MouseDown));
             AddHandler(Dialog_MainControl.Dialog_MainControl_ButtonOKClick_Event, new RoutedEventHandler(ButtonOK_Click));
             AddHandler(Dialog_MainControl.Dialog_MainControl_ButtonCancelClick_Event, new RoutedEventHandler(ButtonCancel_Click));

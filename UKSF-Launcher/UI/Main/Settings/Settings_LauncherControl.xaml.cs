@@ -1,10 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.Utility;
-
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
