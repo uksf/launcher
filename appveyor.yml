@@ -14,7 +14,7 @@ before_build:
 - ps: >-
     nuget restore
 
-    & ${env:CommonProgramFiles(x86)}'\Microsoft Shared\TextTemplating\14.0\TextTransform.exe' '%APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\Properties\Version.tt'
+    & ${env:CommonProgramFiles(x86)}'\Microsoft Shared\TextTemplating\14.0\TextTransform.exe' 'C:\projects\launcher\UKSF-Launcher\Properties\Version.tt'
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
