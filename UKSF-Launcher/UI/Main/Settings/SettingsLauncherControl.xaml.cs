@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.Utility;
+using static UKSF_Launcher.UI.SettingsLauncherControl;
 
 namespace UKSF_Launcher.UI.Main.Settings {
     /// <summary>
@@ -17,6 +17,9 @@ namespace UKSF_Launcher.UI.Main.Settings {
 
             SettingsLauncherControlVersion.Content = "Version: " + Global.VERSION;
             SettingsLauncherControlAutoupdate.IsChecked = Global.AUTOUPDATELAUNCHER;
+
+            SettingsLauncherControlGameExecutable.Text = Global.GAME_LOCATION;
+            SettingsLauncherControlDownloadLocation.Text = Global.MOD_LOCATION;
 
             _items = new List<CustomComboBoxItem>();
             AddProfiles();
@@ -50,16 +53,6 @@ namespace UKSF_Launcher.UI.Main.Settings {
             if (ProfileHandler.FindUksfProfile(profiles) == null) return;
             Global.PROFILE = ProfileHandler.FindUksfProfile(profiles).Name;
             SettingsLauncherControlProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
-        }
-
-        public class CustomComboBoxItem : ComboBoxItem {
-            public CustomComboBoxItem(ProfileHandler.Profile itemProfile, Style style) {
-                ItemProfile = itemProfile;
-                Content = ItemProfile.DisplayName;
-                Style = style;
-            }
-
-            public ProfileHandler.Profile ItemProfile { get; }
         }
     }
 }

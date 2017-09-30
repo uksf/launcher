@@ -154,6 +154,7 @@
     <Compile Include="UI\Main\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\CustomComboBoxItem.cs" />
     <Compile Include="UI\Main\Settings\SettingsGameControl.xaml.cs">
       <DependentUpon>SettingsGameControl.xaml</DependentUpon>
     </Compile>

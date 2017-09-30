@@ -98,7 +98,7 @@ namespace UKSF_Launcher.UI.FTS {
             LogHandler.LogInfo("Finishing first time setup");
             Global.GAME_LOCATION = (string) SettingsHandler.WriteSetting("GAME_LOCATION", FtsGameExeControl.FtsGameExeControlTextBoxLocation.Text);
             Global.MOD_LOCATION = (string)SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
-            Global.PROFILE = (string)SettingsHandler.WriteSetting("PROFILE", FtsProfileControl.FtsProfileControlDropdownProfile.SelectionBoxItem);
+            Global.PROFILE = (string)SettingsHandler.WriteSetting("PROFILE", ((SettingsLauncherControl.CustomComboBoxItem)FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
             RaiseEvent(new RoutedEventArgs(FTS_MAIN_CONTROL_FINISH_EVENT));
         }
 

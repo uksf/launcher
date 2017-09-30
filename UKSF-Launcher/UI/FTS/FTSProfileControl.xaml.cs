@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
-using UKSF_Launcher.UI.Main.Settings;
+using static UKSF_Launcher.UI.SettingsLauncherControl;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
@@ -20,7 +20,7 @@ namespace UKSF_Launcher.UI.FTS {
                                                                Global.NL + "You may skip this step if you do not wish to create a new profile. (Not recommended)";
 
         private static FtsProfileControl _instance;
-        private List<SettingsLauncherControl.CustomComboBoxItem> _items;
+        private List<CustomComboBoxItem> _items;
         private string _profile = "";
 
         public FtsProfileControl() {
@@ -62,11 +62,11 @@ namespace UKSF_Launcher.UI.FTS {
         }
 
         private void AddProfiles() {
-            _items = new List<SettingsLauncherControl.CustomComboBoxItem>();
+            _items = new List<CustomComboBoxItem>();
             FtsProfileControlDropdownProfile.Items.Clear();
             List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfiles();
             foreach (ProfileHandler.Profile profile in profiles) {
-                SettingsLauncherControl.CustomComboBoxItem item = new SettingsLauncherControl.CustomComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
+                CustomComboBoxItem item = new CustomComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
                 _items.Add(item);
                 FtsProfileControlDropdownProfile.Items.Add(item);
             }

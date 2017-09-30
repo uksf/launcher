@@ -17,6 +17,7 @@ namespace UKSF_Launcher.UI.FTS {
 
         private void FTS_Finish(object sender, RoutedEventArgs args) {
             LogHandler.LogInfo("First time setup finished");
+            Global.FIRSTTIMESETUPDONE = (bool)SettingsHandler.WriteSetting("FIRSTTIMESETUPDONE", true);
             Close();
         }
     }
