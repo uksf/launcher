@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 
 namespace VersionUpdater {
-    class Program {
-        static void Main(string[] args) {
+    internal class Program {
+        private static void Main() {
             string newVersion = FileVersionInfo.GetVersionInfo(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe")).FileVersion;
             string versionFile = Path.Combine(Environment.CurrentDirectory, "version");
             if (!File.Exists(versionFile)) {

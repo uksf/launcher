@@ -1,10 +1,8 @@
 ﻿using Microsoft.Win32;
-
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
-    class SettingsHandler {
-
+    internal class SettingsHandler {
         private const string REGISTRY = @"SOFTWARE\UKSF-Launcher";
 
         public static void ReadSettings() {
@@ -20,13 +18,7 @@ namespace UKSF_Launcher.Utility {
             PROFILE = ParseSetting("PROFILE", "");
         }
 
-        private static RegistryKey GetRegistryKey() {
-            RegistryKey registry = Registry.CurrentUser.OpenSubKey(REGISTRY, true);
-            if (registry == null) {
-                registry = Registry.CurrentUser.CreateSubKey(REGISTRY, true);
-            }
-            return registry;
-        }
+        private static RegistryKey GetRegistryKey() => Registry.CurrentUser.OpenSubKey(REGISTRY, true) ?? Registry.CurrentUser.CreateSubKey(REGISTRY, true);
 
         public static string ReadSetting(string name, object defaultValue) {
             RegistryKey registry = GetRegistryKey();
@@ -46,17 +38,11 @@ namespace UKSF_Launcher.Utility {
             return value;
         }
 
-        public static string ParseSetting(string name, string defaultValue) {
-            return ReadSetting(name, defaultValue);
-        }
+        public static string ParseSetting(string name, string defaultValue) => ReadSetting(name, defaultValue);
 
-        public static int ParseSetting(string name, int defaultValue) {
-            return int.Parse(ReadSetting(name, defaultValue));
-        }
+        public static int ParseSetting(string name, int defaultValue) => int.Parse(ReadSetting(name, defaultValue));
 
-        public static bool ParseSetting(string name, bool defaultValue) {
-            return bool.Parse(ReadSetting(name, defaultValue));
-        }
+        public static bool ParseSetting(string name, bool defaultValue) => bool.Parse(ReadSetting(name, defaultValue));
 
         public static void DeleteSetting(string name) {
             RegistryKey registry = GetRegistryKey();

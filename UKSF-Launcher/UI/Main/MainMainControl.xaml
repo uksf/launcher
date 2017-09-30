@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="UKSF_Launcher.UI.Main.MainMainControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="464" d:DesignWidth="500"
+             Visibility="Visible">
+    <Grid>
+        <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
+               HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
+               RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" Panel.ZIndex="0" />
+        <Button x:Name="MainMainControlButtonPlay" Content="Play" Width="232" Click="MainMainControlButtonPlay_Click"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="50" Margin="0,0,0,100" Panel.ZIndex="1"
+                Style="{StaticResource Uksf.Button}" />
+    </Grid>
+</UserControl>

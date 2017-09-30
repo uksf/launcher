@@ -1,0 +1,23 @@
+﻿<ui:SafeWindow x:Class="UKSF_Launcher.UI.Main.MainWindow"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:ui="clr-namespace:UKSF_Launcher.UI"
+               xmlns:main="clr-namespace:UKSF_Launcher.UI.Main"
+               mc:Ignorable="d"
+               WindowStyle="None"
+               WindowStartupLocation="CenterScreen"
+               ResizeMode="NoResize"
+               AllowsTransparency="True"
+               Height="500"
+               Width="500"
+               Background="{StaticResource Uksf.Background}"
+               BorderBrush="{StaticResource Uksf.BackgroundLight}"
+               BorderThickness="1">
+    <Grid>
+        <main:MainTitleBarControl x:Name="MainTitleBarControl" Margin="0,0,0,464" />
+        <main:MainMainControl x:Name="MainMainControl" />
+        <main:MainSettingsControl x:Name="MainSettingsControl" Margin="0,36,0,0" />
+    </Grid>
+</ui:SafeWindow>

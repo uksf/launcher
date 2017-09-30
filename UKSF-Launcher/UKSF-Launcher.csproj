@@ -102,130 +102,139 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UI\Dialog\Dialog_MainControl.xaml.cs">
-      <DependentUpon>Dialog_MainControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Dialog\Dialog_TitleBarControl.xaml.cs">
-      <DependentUpon>Dialog_TitleBarControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_ModLocationControl.xaml.cs">
-      <DependentUpon>FTS_ModLocationControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_GameExeControl.xaml.cs">
-      <DependentUpon>FTS_GameExeControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_MainControl.xaml.cs">
-      <DependentUpon>FTS_MainControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_ProfileControl.xaml.cs">
-      <DependentUpon>FTS_ProfileControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_TitleBarControl.xaml.cs">
-      <DependentUpon>FTS_TitleBarControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FTS\FTS_Window.xaml.cs">
-      <DependentUpon>FTS_Window.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Dialog\Dialog_Window.xaml.cs">
-      <DependentUpon>Dialog_Window.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Main\Settings\Settings_GameControl.xaml.cs">
-      <DependentUpon>Settings_GameControl.xaml</DependentUpon>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Version.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Version.tt</DependentUpon>
     </Compile>
     <Compile Include="Core.cs" />
-    <Compile Include="UI\Main\Main_MainControl.xaml.cs">
-      <DependentUpon>Main_MainControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Main\Main_SettingsControl.xaml.cs">
-      <DependentUpon>Main_SettingsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Main\Main_TitleBarControl.xaml.cs">
-      <DependentUpon>Main_TitleBarControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Main\Settings\Settings_LauncherControl.xaml.cs">
-      <DependentUpon>Settings_LauncherControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Game\GameHandler.cs" />
     <Compile Include="Game\ProfileHandler.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="UI\Dialog\DialogMainControl.xaml.cs">
+      <DependentUpon>DialogMainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\DialogTitleBarControl.xaml.cs">
+      <DependentUpon>DialogTitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSGameExeControl.xaml.cs">
+      <DependentUpon>FTSGameExeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSMainControl.xaml.cs">
+      <DependentUpon>FTSMainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSModLocationControl.xaml.cs">
+      <DependentUpon>FTSModLocationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSProfileControl.xaml.cs">
+      <DependentUpon>FTSProfileControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSProfileSelectionControl.xaml.cs">
+      <DependentUpon>FTSProfileSelectionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSTitleBarControl.xaml.cs">
+      <DependentUpon>FTSTitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTSWindow.xaml.cs">
+      <DependentUpon>FTSWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\MainMainControl.xaml.cs">
+      <DependentUpon>MainMainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\MainSettingsControl.xaml.cs">
+      <DependentUpon>MainSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\MainTitleBarControl.xaml.cs">
+      <DependentUpon>MainTitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\Settings\SettingsGameControl.xaml.cs">
+      <DependentUpon>SettingsGameControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Main\Settings\SettingsLauncherControl.xaml.cs">
+      <DependentUpon>SettingsLauncherControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\SafeWindow.cs" />
     <Compile Include="Utility\LogHandler.cs" />
     <Compile Include="Utility\SettingsHandler.cs" />
     <Compile Include="Utility\SetupHandler.cs" />
     <Compile Include="Utility\UpdateHandler.cs" />
-    <Page Include="UI\Dialog\Dialog_MainControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Dialog\Dialog_TitleBarControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\FTS\FTS_ModLocationControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\FTS\FTS_GameExeControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\FTS\FTS_MainControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\FTS\FTS_ProfileControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\FTS\FTS_TitleBarControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\FTS\FTS_Window.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Dialog\Dialog_Window.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Main\Settings\Settings_GameControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Main\Main_MainControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Main\Settings\Settings_LauncherControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Main\Main_Window.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="UI\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Main\Main_Window.xaml.cs">
-      <DependentUpon>Main_Window.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="UI\Main\Main_SettingsControl.xaml">
+    <Page Include="UI\Dialog\DialogMainControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Dialog\DialogTitleBarControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Dialog\DialogWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSGameExeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSMainControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSModLocationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSProfileControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSProfileSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Main\Main_TitleBarControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="UI\FTS\FTSTitleBarControl.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTSWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\MainMainControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\MainSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\MainTitleBarControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\Settings\SettingsGameControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Main\Settings\SettingsLauncherControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -284,5 +293,17 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\Watermark.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Version.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Version.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe" "E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher\Properties\Version.tt"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

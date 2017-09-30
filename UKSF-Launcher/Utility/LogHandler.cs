@@ -1,18 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
-    class LogHandler {
-
-        private static string LOGS = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/UKSF-Launcher";
+    internal class LogHandler {
         private const string FORMAT_DATE = "yyyy-MM-dd__HH-mm-ss";
         private const string FORMAT_TIME = "HH:mm:ss";
         private const string HASHSPACE = "\n#############################################";
 
-        private static string logFile;
+        private static readonly string LOGS = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/UKSF-Launcher";
+
+        private static string _logFile;
 
         public static void StartLogging() {
             Console.WriteLine(LOGS);
@@ -22,17 +21,17 @@ namespace UKSF_Launcher.Utility {
                 Console.WriteLine(LOGS + "/" + logFiles.Last());
                 File.Delete(LOGS + "/" + logFiles.Last());
             }
-            logFile = LOGS + "/L__" + DateTime.Now.ToString(FORMAT_DATE) + ".log";
+            _logFile = LOGS + "/L__" + DateTime.Now.ToString(FORMAT_DATE) + ".log";
             try {
-                File.Create(logFile).Close();
+                File.Create(_logFile).Close();
             } catch (Exception e) {
-                Console.WriteLine("Log file not created: " + logFile + ". " + e.Message);
+                Console.WriteLine("Log file not created: " + _logFile + ". " + e.Message);
             }
             LogInfo("Log Created");
         }
 
         private static void LogToFile(string message) {
-            using (StreamWriter writer = new StreamWriter(logFile, true)) {
+            using (StreamWriter writer = new StreamWriter(_logFile, true)) {
                 writer.WriteLine(message);
             }
         }

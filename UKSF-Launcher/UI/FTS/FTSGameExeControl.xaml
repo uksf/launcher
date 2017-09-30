@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="UKSF_Launcher.UI.FTS.FtsGameExeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="25" d:DesignWidth="454">
+    <Grid Width="454">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="FtsGameExeControlTextBoxLocation" IsReadOnly="True" VerticalAlignment="Top"
+                 HorizontalAlignment="Stretch" Height="25" Grid.Column="0" Style="{StaticResource Uksf.Textbox}" />
+        <Button x:Name="FtsGameExeControlButtonBrowse" Click="FTSGameExeControlButtonBrowse_Click" Content="Browse"
+                VerticalAlignment="Top" Height="25" Margin="10,0,0,0" Grid.Column="1"
+                Style="{StaticResource Uksf.DialogButton}" />
+    </Grid>
+</UserControl>

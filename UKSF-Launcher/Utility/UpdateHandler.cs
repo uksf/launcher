@@ -2,13 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Windows;
-
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
-    class UpdateHandler {
-
+    internal class UpdateHandler {
         public static void UpdateCheck(bool updated) {
             LogHandler.LogHashSpace();
             VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
@@ -17,7 +14,7 @@ namespace UKSF_Launcher.Utility {
             Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
             LogHandler.LogInfo("Latest version: " + latestVersion);
 #if FORCEUPDATE
-            VERSION = Version.Parse("0.0.0");
+            VERSION = Version.Parse("0.0.0.0");
             LogHandler.LogSeverity(Severity.INFO, "Force version: " + VERSION);
 #endif
             if (VERSION < latestVersion) {
@@ -38,8 +35,7 @@ namespace UKSF_Launcher.Utility {
                 updater.StartInfo.CreateNoWindow = false;
                 updater.Start();
                 Core.ShutDown();
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Core.Error(exception);
             }
         }

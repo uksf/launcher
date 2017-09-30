@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Windows;
-using UKSF_Launcher.Game;
+using UKSF_Launcher.UI.Main;
 using UKSF_Launcher.Utility;
-
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
-    class Core {
-
-        public Core(bool updated) {
+    internal static class Core {
+        public static void Start(bool updated) {
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             LogHandler.StartLogging();
@@ -20,7 +18,7 @@ namespace UKSF_Launcher {
                 SetupHandler.FirstTimeSetup();
             }
 
-            Main_Window mainWindow = new Main_Window();
+            MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
             mainWindow.Activate();
             mainWindow.Focus();
@@ -32,14 +30,15 @@ namespace UKSF_Launcher {
             } else {
                 Application.Current.Shutdown();
             }
-            return;
         }
 
         public static void Error(Exception exception) {
-            var error = exception.Message + "\n" + exception.StackTrace;
+            string error = exception.Message + "\n" + exception.StackTrace;
             LogHandler.LogSeverity(Severity.ERROR, error);
             Clipboard.SetDataObject(error, true);
-            MessageBoxResult result = Dialog_Window.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error, Dialog_Window.DialogBoxType.OK);
+            MessageBoxResult result =
+                UI.Dialog.DialogWindow.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error,
+                                  UI.Dialog.DialogWindow.DialogBoxType.OK);
             if (result == MessageBoxResult.OK) {
                 ShutDown();
             }
