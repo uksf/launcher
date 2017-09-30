@@ -11,9 +11,10 @@ cache:
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
-  - ps:
-  nuget restore
-  & ${env:CommonProgramFiles(x86)}'\Microsoft Shared\TextTemplating\14.0\TextTransform.exe' '%APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\Properties\Version.tt'
+- ps: >-
+    nuget restore
+
+    & ${env:CommonProgramFiles(x86)}'\Microsoft Shared\TextTemplating\14.0\TextTransform.exe' '%APPVEYOR_BUILD_FOLDER%\UKSF-Launcher\Properties\Version.tt'
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
