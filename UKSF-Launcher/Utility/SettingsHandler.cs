@@ -10,9 +10,13 @@ namespace UKSF_Launcher.Utility {
         public static void ReadSettings() {
             LogHandler.LogHashSpace();
 
-            // Settings
+            // Launcher
             FIRSTTIMESETUPDONE = ParseSetting("FIRSTTIMESETUPDONE", false);
             AUTOUPDATELAUNCHER = ParseSetting("AUTOUPDATELAUNCHER", true);
+
+            // Games
+            GAME_LOCATION = ParseSetting("GAME_LOCATION", "");
+            MOD_LOCATION = ParseSetting("MOD_LOCATION", "");
             PROFILE = ParseSetting("PROFILE", "");
         }
 

@@ -16,8 +16,6 @@ namespace UKSF_Launcher {
             SettingsHandler.ReadSettings();
             UpdateHandler.UpdateCheck(updated);
 
-            GameHandler.CheckGameInstalled();
-
             if (!FIRSTTIMESETUPDONE) {
                 SetupHandler.FirstTimeSetup();
             }

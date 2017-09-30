@@ -108,8 +108,17 @@
     <Compile Include="UI\Dialog\Dialog_TitleBarControl.xaml.cs">
       <DependentUpon>Dialog_TitleBarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\FTS\FTS_ModLocationControl.xaml.cs">
+      <DependentUpon>FTS_ModLocationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTS_GameExeControl.xaml.cs">
+      <DependentUpon>FTS_GameExeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\FTS\FTS_MainControl.xaml.cs">
       <DependentUpon>FTS_MainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FTS\FTS_ProfileControl.xaml.cs">
+      <DependentUpon>FTS_ProfileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FTS\FTS_TitleBarControl.xaml.cs">
       <DependentUpon>FTS_TitleBarControl.xaml</DependentUpon>
@@ -152,7 +161,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\FTS\FTS_ModLocationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\FTS\FTS_GameExeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\FTS\FTS_MainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\FTS\FTS_ProfileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,6 +284,5 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\Watermark.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

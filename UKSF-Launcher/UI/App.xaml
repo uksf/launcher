@@ -1,11 +1,15 @@
 ﻿<Application x:Class="UKSF_Launcher.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              Startup="App_Startup"
              ShutdownMode="OnExplicitShutdown"
              Exit="Application_Exit">
     <Application.Resources>
         <ResourceDictionary>
+            <sys:String x:Key="String_GameExeControl_Textblock_Confirm" xml:space="preserve">We have found your Arma 3 Installation and chosen the best exe for you.&#13;&#13;Please confirm this is correct below, then press 'Next'.</sys:String>
+            <sys:String x:Key="String_GameExeControl_Textblock_Find" xml:space="preserve">We cannot find your Arma 3 Installation.&#13;Please select the game executable you wish to use.&#13;&#13;By default this is: 'C:\Program Files (x86)\Steam\SteamApps\Common\Arma 3'</sys:String>
+
             <Color x:Key="UKSF.Colour.White" R="255" G="255" B="255" A="255"/>
             <Color x:Key="UKSF.Colour.LightGrey" R="200" G="200" B="200" A="255"/>
             <Color x:Key="UKSF.Colour.Grey" R="175" G="175" B="175" A="255"/>
@@ -65,6 +69,17 @@
                 <Setter Property="FontFamily" Value="Arial"/>
                 <Setter Property="FontSize" Value="12"/>
                 <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
+            <Style x:Key="UKSF.TextBlock" TargetType="{x:Type TextBlock}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource UKSF.Focus}"/>
+                <Setter Property="Foreground" Value="{StaticResource UKSF.Grey}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Padding" Value="10,10,10,10"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
             <Style x:Key="UKSF.Button" TargetType="{x:Type Button}">
@@ -146,6 +161,11 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Foreground" Value="{StaticResource UKSF.ForegroundDark}"/>
                                 </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="{StaticResource UKSF.DarkGrey}"/>
+                                    <Setter Property="Background" TargetName="Border" Value="{StaticResource UKSF.BackgroundDark}"/>
+                                    <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource UKSF.BackgroundDark}"/>
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -162,7 +182,7 @@
                 <Setter Property="HorizontalAlignment" Value="Left"/>
                 <Setter Property="VerticalAlignment" Value="Bottom"/>
                 <Setter Property="FontFamily" Value="Arial"/>
-                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontSize" Value="12"/>
             </Style>
 
             <Style x:Key="UKSF.CheckBox" TargetType="{x:Type CheckBox}">

@@ -1,34 +1,35 @@
 ﻿using Microsoft.Win32;
-using System.Windows;
-using UKSF_Launcher.Utility;
-
-using static UKSF_Launcher.Global;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace UKSF_Launcher.Game {
     class GameHandler {
 
         private const string REGISTRY = @"SOFTWARE\WOW6432Node\bohemia interactive\arma 3";
 
-        public static void CheckGameInstalled() {
-            LogHandler.LogHashSpace();
+        public static string GetGameInstallation() {
+            string location = "";
             RegistryKey gameKey = Registry.LocalMachine.OpenSubKey(REGISTRY);
-            if (gameKey == null) {
-                MessageBoxResult result = Dialog_Window.Show("Arma 3 Not Installed", "We can't find your installation of Arma 3.\nEnsure it is marked as installed in steam.\n\nIf Arma 3 is installed, press 'Ok' and locate the installation folder in the explorer that appears.", Dialog_Window.DialogBoxType.OKCancel);
-                if (result == MessageBoxResult.OK) {
-                    using (System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog()) {
-                        if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                            GAME_LOCATION = folderBrowser.SelectedPath;
-                        } else {
-                            Core.ShutDown();
-                        }
+            if (gameKey != null) {
+                string install = gameKey.GetValue("main", "").ToString();
+                if (Directory.Exists(install)) {
+                    string exe = Path.Combine(install, Global.IS64BIT ? "arma3_x64.exe" : "arma3.exe");
+                    if (File.Exists(exe)) {
+                        location = exe;
                     }
-                } else {
-                    Core.ShutDown();
                 }
-            } else {
-                GAME_LOCATION = gameKey.GetValue("main", "").ToString();
             }
-            LogHandler.LogInfo("Arma 3 location: " + GAME_LOCATION);
+            return location;
+        }
+
+        public static bool CheckDriveSpace(string path) {
+            string driveLetter = Path.GetPathRoot(path);
+            DriveInfo info = DriveInfo.GetDrives().Where(drive => drive.Name.Equals(driveLetter)).ElementAt(0);
+            if (info.AvailableFreeSpace >= Global.REQUIREDSPACE) {
+                return true;
+            }
+            return false;
         }
     }
 }
