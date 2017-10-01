@@ -36,13 +36,13 @@ namespace VersionUpdater {
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
 
-            Thread.Sleep(1000);
+            /*Thread.Sleep(1000);
             Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
             Thread.Sleep(1000);
             Process.Start("git", @"push")?.WaitForExit();
             
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
-            Thread.Sleep(1000);
+            Thread.Sleep(1000);*/
             //Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
         }
     }
