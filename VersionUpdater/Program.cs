@@ -38,7 +38,7 @@ namespace VersionUpdater {
             Process.Start("git", @"git commit -am ""VersionUpdater - Updated version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
-            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
+            //Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
         }
     }
 }
