@@ -3,7 +3,7 @@ using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
-    ///     Interaction logic for FTS_MainControl.xaml
+    ///     Interaction logic for FtsMainControl.xaml
     /// </summary>
     public partial class FtsMainControl {
         public static readonly RoutedEvent FTS_MAIN_CONTROL_TITLE_EVENT =
@@ -20,6 +20,10 @@ namespace UKSF_Launcher.UI.FTS {
 
         private int _windowIndex;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates new FtsMainControl object.
+        /// </summary>
         public FtsMainControl() {
             InitializeComponent();
 
@@ -30,16 +34,31 @@ namespace UKSF_Launcher.UI.FTS {
             UpdateControls();
         }
 
+        /// <summary>
+        ///     Triggered by eventhandler to update title text.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">MouseDown arguments</param>
         private void FTSMainControlTitle_Update(object sender, RoutedEventArgs args) {
             StringRoutedEventArgs stringArgs = (StringRoutedEventArgs) args;
             FtsMainControlTitle.Content = stringArgs.Text;
         }
 
+        /// <summary>
+        ///     Triggered by eventhandler to update description text.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">MouseDown arguments</param>
         private void FTSMainControlDescription_Update(object sender, RoutedEventArgs args) {
             StringRoutedEventArgs stringArgs = (StringRoutedEventArgs) args;
             FtsMainControlDescription.Text = stringArgs.Text;
         }
 
+        /// <summary>
+        ///     Triggered by eventhandler to update warning text and show/hide warning.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">MouseDown arguments</param>
         private void FTSMainControlWarning_Update(object sender, RoutedEventArgs args) {
             WarningRoutedEventArgs warningArgs = (WarningRoutedEventArgs) args;
             FtsMainControlWarningText.Visibility = warningArgs.Visibility;
@@ -53,7 +72,12 @@ namespace UKSF_Launcher.UI.FTS {
             }
         }
 
-        private void FTSMainControlButtonProgress_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when next/back button is clicked. Increments/decrements index and updates controls.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSMainControlButtonProgress_Click(object sender, RoutedEventArgs args) {
             if (Equals(sender, FtsMainControlButtonNext)) {
                 _windowIndex++;
             } else {
@@ -62,6 +86,9 @@ namespace UKSF_Launcher.UI.FTS {
             UpdateControls();
         }
 
+        /// <summary>
+        ///     Updates controls and progress buttons based on current index.
+        /// </summary>
         private void UpdateControls() {
             switch (_windowIndex) {
                 case 0:
@@ -94,15 +121,26 @@ namespace UKSF_Launcher.UI.FTS {
             }
         }
 
-        private void FTSMainControlButtonFinish_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when finish button is clicked. Gets all setup values and writes them to the settings registry.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSMainControlButtonFinish_Click(object sender, RoutedEventArgs args) {
             LogHandler.LogInfo("Finishing first time setup");
             Global.GAME_LOCATION = (string) SettingsHandler.WriteSetting("GAME_LOCATION", FtsGameExeControl.FtsGameExeControlTextBoxLocation.Text);
-            Global.MOD_LOCATION = (string)SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
-            Global.PROFILE = (string)SettingsHandler.WriteSetting("PROFILE", ((SettingsLauncherControl.CustomComboBoxItem)FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
+            Global.MOD_LOCATION = (string) SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
+            Global.PROFILE =
+                (string) SettingsHandler.WriteSetting("PROFILE", ((CustomComboBoxItem) FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
             RaiseEvent(new RoutedEventArgs(FTS_MAIN_CONTROL_FINISH_EVENT));
         }
 
-        private void FTSMainControlButtonCancel_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when cancel button is clicked. Closes application.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSMainControlButtonCancel_Click(object sender, RoutedEventArgs args) {
             LogHandler.LogSeverity(Global.Severity.WARNING, "First Time Setup Cancelled. Progress has not been saved.");
             Core.ShutDown();
         }

@@ -6,6 +6,10 @@ namespace UKSF_Launcher.UI.FTS {
     ///     Interaction logic for FtsProfileSelectionControl.xaml
     /// </summary>
     public partial class FtsProfileSelectionControl {
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates new FtsProfileSelectionControl object.
+        /// </summary>
         public FtsProfileSelectionControl() {
             InitializeComponent();
 
@@ -19,13 +23,29 @@ namespace UKSF_Launcher.UI.FTS {
         public static string Surname { get; private set; }
         public static string Initial { get; private set; }
 
-        private void FtsProfileSelectionControlDropdownPrefix_OnSelectionChanged(object sender, SelectionChangedEventArgs e) =>
+
+        /// <summary>
+        ///     Triggered when rank prefix selection is changed. Updates rank value.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">OnSelectionChanged arguments</param>
+        private void FtsProfileSelectionControlDropdownPrefix_OnSelectionChanged(object sender, SelectionChangedEventArgs args) =>
             Rank = PROFILE_PREFIXES[FtsProfileSelectionControlDropdownPrefix.SelectedIndex];
 
-        private void FtsProfileSelectionControlTextBoxSurname_OnTextChanged(object sender, TextChangedEventArgs e) =>
+        /// <summary>
+        ///     Triggered when surname textbox is changed. Updates surname value.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">OnTextChanged arguments</param>
+        private void FtsProfileSelectionControlTextBoxSurname_OnTextChanged(object sender, TextChangedEventArgs args) =>
             Surname = FtsProfileSelectionControlTextBoxSurname.Text;
 
-        private void FtsProfileSelectionControlTextBoxInitial_OnTextChanged(object sender, TextChangedEventArgs e) =>
+        /// <summary>
+        ///     Triggered when initial textbox is changed. Updates initial value.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">OnTextChanged arguments</param>
+        private void FtsProfileSelectionControlTextBoxInitial_OnTextChanged(object sender, TextChangedEventArgs args) =>
             Initial = FtsProfileSelectionControlTextBoxInitial.Text;
     }
 }

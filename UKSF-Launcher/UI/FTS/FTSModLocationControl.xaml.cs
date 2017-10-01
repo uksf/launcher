@@ -6,7 +6,7 @@ using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
-    ///     Interaction logic for FTS_ModLocationControl.xaml
+    ///     Interaction logic for FtsModLocationControl.xaml
     /// </summary>
     public partial class FtsModLocationControl {
         private const string TITLE = "Mod Location";
@@ -21,11 +21,18 @@ namespace UKSF_Launcher.UI.FTS {
         private static FtsModLocationControl _instance;
         private string _location = "";
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates new FtsModLocationControl object.
+        /// </summary>
         public FtsModLocationControl() {
             InitializeComponent();
             _instance = this;
         }
 
+        /// <summary>
+        ///     Shows the mod location control. Adds profiles to the selection.
+        /// </summary>
         public static void Show() {
             _instance.Visibility = Visibility.Visible;
             _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
@@ -42,8 +49,14 @@ namespace UKSF_Launcher.UI.FTS {
             _instance.UpdateWarning();
         }
 
+        /// <summary>
+        ///     Hides the mod location control.
+        /// </summary>
         public static void Hide() => _instance.Visibility = Visibility.Collapsed;
 
+        /// <summary>
+        ///     Checks if a warning needs to be displayed and raises a warning event.
+        /// </summary>
         private void UpdateWarning() {
             if (Visibility != Visibility.Visible) return;
             Visibility visibility = Visibility.Hidden;
@@ -65,7 +78,12 @@ namespace UKSF_Launcher.UI.FTS {
             });
         }
 
-        private void FTSModLocationControlButtonBrowse_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when browse button is clicked. Opens folder browser dialog and updates mod location.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSModLocationControlButtonBrowse_Click(object sender, RoutedEventArgs args) {
             _location = FtsModLocationControlTextBoxLocation.Text;
             using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog()) {
                 if (_location != "") {

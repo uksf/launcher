@@ -159,7 +159,6 @@
     <Compile Include="UI\SafeWindow.cs" />
     <Compile Include="Utility\LogHandler.cs" />
     <Compile Include="Utility\SettingsHandler.cs" />
-    <Compile Include="Utility\SetupHandler.cs" />
     <Compile Include="Utility\UpdateHandler.cs" />
     <Compile Include="UI\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

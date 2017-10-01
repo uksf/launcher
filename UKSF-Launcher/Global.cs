@@ -4,30 +4,40 @@
 
 namespace UKSF_Launcher {
     public static class Global {
+        // Logging severity
         public enum Severity {
             INFO,
             WARNING,
             ERROR
         }
 
+        // Required drive space for mods
         public const long REQUIREDSPACE = 32212254720; // ~30GB
 
+        // Double new line
         public static readonly string NL = Environment.NewLine + Environment.NewLine;
 
-        public static Version VERSION = Version.Parse("0.0.0.0");
-
+        // 64-bit OS
         public static readonly bool IS64BIT = Environment.Is64BitOperatingSystem;
 
-        // Launcher
+        // -------------- Launcher -------------- \\
+        // First time setup complete
         public static bool FIRSTTIMESETUPDONE = false;
 
+        // Automatically update the launcher
         public static bool AUTOUPDATELAUNCHER = true;
 
-        // Game
+        // Launcher version
+        public static Version VERSION = Version.Parse("0.0.0.0");
+
+        // ---------------- Game ---------------- \\
+        // Game exe path
         public static string GAME_LOCATION = "";
 
+        // Mod download path
         public static string MOD_LOCATION = "";
-        
+
+        // Game profile
         public static string PROFILE = "";
     }
 }

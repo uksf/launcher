@@ -6,7 +6,7 @@ using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
-    ///     Interaction logic for FTS_GameExeControl.xaml
+    ///     Interaction logic for FtsGameExeControl.xaml
     /// </summary>
     public partial class FtsGameExeControl {
         private const string TITLE = "Game Executable";
@@ -21,11 +21,18 @@ namespace UKSF_Launcher.UI.FTS {
         private static FtsGameExeControl _instance;
         private string _location = "";
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates new FtsGameExeControl object.
+        /// </summary>
         public FtsGameExeControl() {
             InitializeComponent();
             _instance = this;
         }
 
+        /// <summary>
+        ///     Shows the game exe location control. Adds profiles to the selection.
+        /// </summary>
         public static void Show() {
             _instance.Visibility = Visibility.Visible;
             _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
@@ -42,10 +49,16 @@ namespace UKSF_Launcher.UI.FTS {
             _instance.UpdateWarning();
         }
 
+        /// <summary>
+        ///     Hides the game exe location control.
+        /// </summary>
         public static void Hide() {
             _instance.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        ///     Checks if a warning needs to be displayed and raises a warning event.
+        /// </summary>
         private void UpdateWarning() {
             if (Visibility != Visibility.Visible) return;
             Visibility visibility = Visibility.Hidden;
@@ -74,7 +87,12 @@ namespace UKSF_Launcher.UI.FTS {
             });
         }
 
-        private void FTSGameExeControlButtonBrowse_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when browse button is clicked. Opens file browser dialog and updates game exe location.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSGameExeControlButtonBrowse_Click(object sender, RoutedEventArgs args) {
             _location = FtsGameExeControlTextBoxLocation.Text;
             using (OpenFileDialog fileBrowser = new OpenFileDialog()) {
                 if (_location != "") {

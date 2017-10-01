@@ -5,7 +5,11 @@ using System.Net;
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
-    internal class UpdateHandler {
+    internal static class UpdateHandler {
+        /// <summary>
+        ///     Checks for a new version of the launcher from the website.
+        /// </summary>
+        /// <param name="updated">Determines if the launcher has been updated</param>
         public static void UpdateCheck(bool updated) {
             LogHandler.LogHashSpace();
             VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
@@ -26,6 +30,9 @@ namespace UKSF_Launcher.Utility {
             }
         }
 
+        /// <summary>
+        ///     Downloads the latest updater file and runs it. Running instance of Launcher will shutdown.
+        /// </summary>
         private static void Update() {
             new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             Process updater = new Process();

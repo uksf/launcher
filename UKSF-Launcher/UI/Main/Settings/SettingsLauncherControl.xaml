@@ -43,7 +43,7 @@
             <Label x:Name="SettingsLauncherControlVersion" Content="Version: 1.0.0" HorizontalAlignment="Left"
                    Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
             <CheckBox x:Name="SettingsLauncherControlAutoupdate" Content="Auto-update Launcher"
-                      Click="SettingsLauncherControlCheckBoxAUTOUPDATE_Click" HorizontalAlignment="Right"
+                      Click="SettingsLauncherControlCheckBoxAUTOUPDATELAUNCHER_Click" HorizontalAlignment="Right"
                       Style="{StaticResource Uksf.CheckBox}" />
         </Grid>
     </Grid>

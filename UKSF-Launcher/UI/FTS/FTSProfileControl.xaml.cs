@@ -3,11 +3,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
-using static UKSF_Launcher.UI.SettingsLauncherControl;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
-    ///     Interaction logic for FTS_ProfileControl.xaml
+    ///     Interaction logic for FtsProfileControl.xaml
     /// </summary>
     public partial class FtsProfileControl {
         private const string TITLE = "Game Profile";
@@ -23,11 +22,18 @@ namespace UKSF_Launcher.UI.FTS {
         private List<CustomComboBoxItem> _items;
         private string _profile = "";
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates new FtsProfileControl object.
+        /// </summary>
         public FtsProfileControl() {
             InitializeComponent();
             _instance = this;
         }
 
+        /// <summary>
+        ///     Shows the profile selection control. Adds profiles to the selection.
+        /// </summary>
         public static void Show() {
             if (_instance.Visibility == Visibility.Visible) return;
             if (_instance._items == null) {
@@ -42,8 +48,14 @@ namespace UKSF_Launcher.UI.FTS {
             _instance.UpdateWarning();
         }
 
+        /// <summary>
+        ///     Hides the profile selection control.
+        /// </summary>
         public static void Hide() => _instance.Visibility = Visibility.Collapsed;
 
+        /// <summary>
+        ///     Checks if a warning needs to be displayed and raises a warning event.
+        /// </summary>
         private void UpdateWarning() {
             if (Visibility != Visibility.Visible) return;
             Visibility visibility = Visibility.Hidden;
@@ -61,6 +73,9 @@ namespace UKSF_Launcher.UI.FTS {
             });
         }
 
+        /// <summary>
+        ///     Adds profiles to profile dropdown. Attempts to find a UKSF profile and selectes it if one is found.
+        /// </summary>
         private void AddProfiles() {
             _items = new List<CustomComboBoxItem>();
             FtsProfileControlDropdownProfile.Items.Clear();
@@ -76,14 +91,24 @@ namespace UKSF_Launcher.UI.FTS {
             _profile = _items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile.Name;
         }
 
-        private void FTSProfileControlProfile_Selected(object sender, SelectionChangedEventArgs e) {
+        /// <summary>
+        ///     Triggered when profile selection is changed. Updates profile value and warning.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Selected arguments</param>
+        private void FTSProfileControlProfile_Selected(object sender, SelectionChangedEventArgs args) {
             if (FtsProfileControlDropdownProfile.SelectedIndex > -1) {
                 _profile = _items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile.Name;
             }
             UpdateWarning();
         }
 
-        private void FTSProfileControlButtonCopy_Click(object sender, RoutedEventArgs e) {
+        /// <summary>
+        ///     Triggered when copy button is clicked. Copies selected profile and refreshes profile list in dropdown.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Click arguments</param>
+        private void FTSProfileControlButtonCopy_Click(object sender, RoutedEventArgs args) {
             ProfileHandler.CopyProfile(_items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile);
             AddProfiles();
         }
