@@ -39,6 +39,7 @@ namespace VersionUpdater {
             Process.Start("git", @"git commit -am ""Release version: " + newVersion + "\"")?.WaitForExit();
             Console.Read();
             Process.Start("git", @"push")?.WaitForExit();
+            Console.Read();
 
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
             SetAttributes(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "launcher")));
