@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
+using System.Net;
 
 namespace VersionUpdater {
     internal static class Program {
@@ -19,6 +19,7 @@ namespace VersionUpdater {
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
             Process.Start("git", @"fetch origin")?.WaitForExit();
             Process.Start("git", @"merge origin/release")?.WaitForExit();
+            Process.Start("git", @"push")?.WaitForExit();
 
             string[] files = Directory.GetFiles(Environment.CurrentDirectory, "AssemblyInfo.cs", SearchOption.AllDirectories);
             foreach (string file in files) {
@@ -33,11 +34,10 @@ namespace VersionUpdater {
             string[] appveyorLines = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"));
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
-            
-            Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
+
             Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
-            
+
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
             SetAttributes(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "launcher")));
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
@@ -51,5 +51,17 @@ namespace VersionUpdater {
                 file.Attributes = FileAttributes.Normal;
             }
         }
+
+        /*private static void ResetAppveyorBuildNumber() {
+            HttpWebRequest post = (HttpWebRequest) WebRequest.Create("http://13.93.5.233:8080/load-rsf");
+            post.Method = "POST";
+            post.ContentType = "application/json";
+            post.Headers.Add("Bearer", "Basic " + "<your-api-token>");
+            StreamWriter streamWriter = new StreamWriter(post.GetRequestStream());
+            streamWriter.Write("{\"nextBuildNumber\": " + newVersion + "}");
+            streamWriter.Flush();
+            streamWriter.Close();
+            post.GetResponse();
+        }*/
     }
 }
