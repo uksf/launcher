@@ -16,10 +16,8 @@ namespace VersionUpdater {
             }
 
             Process.Start("git", @"clone https://github.com/uksf/launcher.git")?.WaitForExit();
-            Thread.Sleep(1000);
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
             Process.Start("git", @"fetch origin")?.WaitForExit();
-            Thread.Sleep(1000);
             Process.Start("git", @"merge origin/release")?.WaitForExit();
 
             string[] files = Directory.GetFiles(Environment.CurrentDirectory, "AssemblyInfo.cs", SearchOption.AllDirectories);
@@ -35,15 +33,23 @@ namespace VersionUpdater {
             string[] appveyorLines = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"));
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
-
-            /*Thread.Sleep(1000);
+            
             Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
-            Thread.Sleep(1000);
+            Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
             
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
-            Thread.Sleep(1000);*/
-            //Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
+            SetAttributes(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "launcher")));
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
+        }
+
+        private static void SetAttributes(DirectoryInfo directory) {
+            foreach (DirectoryInfo subDirectory in directory.GetDirectories()) {
+                SetAttributes(subDirectory);
+            }
+            foreach (FileInfo file in directory.GetFiles()) {
+                file.Attributes = FileAttributes.Normal;
+            }
         }
     }
 }
