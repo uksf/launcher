@@ -15,7 +15,7 @@ namespace VersionUpdater {
             }
 
             Process.Start("git", @"clone https://github.com/uksf/launcher.git")?.WaitForExit();
-            Process.Start("cd", @"launcher")?.WaitForExit();
+            Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
             Process.Start("git", @"fetch origin")?.WaitForExit();
             Process.Start("git", @"checkout origin/master")?.WaitForExit();
             Process.Start("git", @"merge origin/release")?.WaitForExit();
@@ -37,6 +37,8 @@ namespace VersionUpdater {
 
             Process.Start("git", @"git commit -am ""VersionUpdater - Updated version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
+            Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
         }
     }
 }
