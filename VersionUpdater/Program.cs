@@ -16,8 +16,10 @@ namespace VersionUpdater {
             }
 
             Process.Start("git", @"clone https://github.com/uksf/launcher.git")?.WaitForExit();
+            Thread.Sleep(1000);
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
             Process.Start("git", @"fetch origin")?.WaitForExit();
+            Thread.Sleep(1000);
             Process.Start("git", @"merge origin/release")?.WaitForExit();
 
             string[] files = Directory.GetFiles(Environment.CurrentDirectory, "AssemblyInfo.cs", SearchOption.AllDirectories);
@@ -34,12 +36,14 @@ namespace VersionUpdater {
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
 
+            Thread.Sleep(1000);
             Process.Start("git", @"git commit -am ""Version: " + newVersion + "\"")?.WaitForExit();
+            Thread.Sleep(1000);
             Process.Start("git", @"push")?.WaitForExit();
             
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
-            Thread.Sleep(5000);
-            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
+            Thread.Sleep(1000);
+            //Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
         }
     }
 }
