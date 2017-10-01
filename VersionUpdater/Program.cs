@@ -19,8 +19,6 @@ namespace VersionUpdater {
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, "launcher"));
             Process.Start("git", @"fetch origin")?.WaitForExit();
             Process.Start("git", @"merge origin/release")?.WaitForExit();
-            Process.Start("git", @"push")?.WaitForExit();
-            Console.Read();
 
             string[] files = Directory.GetFiles(Environment.CurrentDirectory, "AssemblyInfo.cs", SearchOption.AllDirectories);
             foreach (string file in files) {
@@ -35,11 +33,8 @@ namespace VersionUpdater {
             string[] appveyorLines = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"));
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
-            Console.Read();
-            Process.Start("git", @"git commit -am ""Release version: " + newVersion + "\"")?.WaitForExit();
-            Console.Read();
+            Process.Start("git", @"commit -am ""Release version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
-            Console.Read();
 
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
             SetAttributes(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "launcher")));
