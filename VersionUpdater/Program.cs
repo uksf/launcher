@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 
 namespace VersionUpdater {
     internal static class Program {
@@ -49,17 +48,5 @@ namespace VersionUpdater {
                 file.Attributes = FileAttributes.Normal;
             }
         }
-
-        /*private static void ResetAppveyorBuildNumber() {
-            HttpWebRequest post = (HttpWebRequest) WebRequest.Create("http://13.93.5.233:8080/load-rsf");
-            post.Method = "POST";
-            post.ContentType = "application/json";
-            post.Headers.Add("Bearer", "Basic " + "<your-api-token>");
-            StreamWriter streamWriter = new StreamWriter(post.GetRequestStream());
-            streamWriter.Write("{\"nextBuildNumber\": " + newVersion + "}");
-            streamWriter.Flush();
-            streamWriter.Close();
-            post.GetResponse();
-        }*/
     }
 }
