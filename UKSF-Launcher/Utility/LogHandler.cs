@@ -15,7 +15,7 @@ namespace UKSF_Launcher.Utility {
         private const string HASHSPACE = "\n#############################################";
 
         // Logs directory path
-        private static readonly string LOGS = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/UKSF-Launcher";
+        private static readonly string LOGS = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
 
         // Log file
         private static string _logFile;
@@ -26,12 +26,11 @@ namespace UKSF_Launcher.Utility {
         public static void StartLogging() {
             Console.WriteLine(LOGS);
             Directory.CreateDirectory(LOGS);
-            string[] logFiles = new DirectoryInfo(LOGS).GetFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
+            string[] logFiles = new DirectoryInfo(LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
             if (logFiles.Length > 9) {
-                Console.WriteLine(LOGS + "/" + logFiles.Last());
-                File.Delete(LOGS + "/" + logFiles.Last());
+                File.Delete(Path.Combine(LOGS, logFiles.Last()));
             }
-            _logFile = LOGS + "/L__" + DateTime.Now.ToString(FORMAT_DATE) + ".log";
+            _logFile = Path.Combine(LOGS, "L__" + DateTime.Now.ToString(FORMAT_DATE) + ".log");
             try {
                 File.Create(_logFile).Close();
             } catch (Exception e) {
