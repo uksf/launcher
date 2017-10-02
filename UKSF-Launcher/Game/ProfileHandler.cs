@@ -15,20 +15,7 @@ namespace UKSF_Launcher.Game {
             {"Maj", "SqnLdr", "Capt", "FltLt", "Lt", "FgOff", "2Lt", "PltOff", "OCdt", "OffCdt", "Sgt", "FS", "Cpl", "SAC", "LCpl", "LAC", "Pte", "AC", "Rct", "Cdt"};
 
         /// <summary>
-        ///     Checks the default and other profiles locations for profile files. Creates Profile objects for each profile found.
-        /// </summary>
-        /// <returns>List of Profile objects for all profiles found</returns>
-        private static List<Profile> GetProfiles(string directory) {
-            List<string> files = new List<string>();
-            if (Directory.Exists(directory)) {
-                files = GetFiles(directory);
-            }
-
-            return files.Select(file => new Profile(file)).ToList();
-        }
-
-        /// <summary>
-        /// Gets profiles from both default and other locations.
+        ///     Gets profiles from both default and other locations.
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
         public static List<Profile> GetProfilesAll() {
@@ -38,12 +25,17 @@ namespace UKSF_Launcher.Game {
         }
 
         /// <summary>
-        ///     Gets files from given directory with the profile extension and excludes files with chained extensions.
+        ///     Checks the default and other profiles locations for profile files. Creates Profile objects for each profile found.
         /// </summary>
-        /// <param name="directory">Directory path to search in for profile files</param>
-        /// <returns>List of file paths for each profile</returns>
-        private static List<string> GetFiles(string directory) => Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories)
-                                                                           .Where(file => file.Count(count => count == '.') == 1).ToList();
+        /// <returns>List of Profile objects for all profiles found</returns>
+        private static List<Profile> GetProfiles(string directory) {
+            List<string> files = new List<string>();
+            if (Directory.Exists(directory)) {
+                files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories).Where(file => file.Count(count => count == '.') == 1)
+                                 .ToList();
+            }
+            return files.Select(file => new Profile(file)).ToList();
+        }
 
         /// <summary>
         ///     Checks if any of the profiles in the list of Profile objects contains a rank prefix and is formatted correctly

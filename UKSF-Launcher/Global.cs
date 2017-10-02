@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 // ReSharper disable InconsistentNaming
 
 namespace UKSF_Launcher {
+    [ExcludeFromCodeCoverage]
     public static class Global {
         // Logging severity
         public enum Severity {
