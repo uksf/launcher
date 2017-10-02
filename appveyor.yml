@@ -19,7 +19,7 @@ cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
-install:
+before_build:
   - nuget restore
 build:
   project: UKSF-Launcher.sln
