@@ -19,13 +19,13 @@ cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
-before_build:
+install:
   - nuget restore
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 after_test:
-  - cmd:packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.2.1\tools\nunit3-console.exe" -targetargs:"/domain:single C:\projects\launcher\release\UKSF-Launcher.Tests.dll" -output:coverage.xml
+  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.2.1\tools\nunit3-console.exe" -targetargs:"/domain:single C:\projects\launcher\release\UKSF-Launcher.Tests.dll" -output:coverage.xml
   - cmd: packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml -r %COVERALLS_REPO_TOKEN%
 artifacts:
   - path: release\UKSF-Launcher.exe
