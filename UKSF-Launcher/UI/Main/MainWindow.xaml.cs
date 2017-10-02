@@ -1,12 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 
 namespace UKSF_Launcher.UI.Main {
     /// <inheritdoc cref="SafeWindow" />
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class MainWindow {
         public static MainMainControl MainControl;
         public static MainSettingsControl SettingsControl;

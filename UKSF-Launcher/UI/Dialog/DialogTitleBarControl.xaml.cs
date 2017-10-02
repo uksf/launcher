@@ -1,12 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace UKSF_Launcher.UI.Dialog {
     /// <summary>
     ///     Interaction logic for Dialog_TitleBarControl.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class DialogTitleBarControl {
         public static readonly RoutedEvent DIALOG_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT =
             EventManager.RegisterRoutedEvent("DIALOG_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler),

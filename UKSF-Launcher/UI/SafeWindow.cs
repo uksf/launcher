@@ -1,8 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 
 namespace UKSF_Launcher.UI {
-    [ExcludeFromCodeCoverage]
     public class SafeWindow : Window {
         /// <inheritdoc />
         /// <summary>

@@ -25,7 +25,7 @@ build:
   project: UKSF-Launcher.sln
   verbosity: minimal
 after_test:
-  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:"/domain:single C:\projects\launcher\release\UKSF-Launcher.Tests.dll" -output:coverage.xml
+  - cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[UKSF-Launcher*]* -[UKSF-Launcher.Test]* -[UKSF-Launcher]UI.*" -target:"packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:"/domain:single C:\projects\launcher\release\UKSF-Launcher.Tests.dll" -output:coverage.xml
   - cmd: packages\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i coverage.xml
 artifacts:
   - path: release\UKSF-Launcher.exe

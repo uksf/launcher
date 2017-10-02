@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using UKSF_Launcher.Game;
@@ -9,7 +8,6 @@ namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsModLocationControl.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class FtsModLocationControl {
         private const string TITLE = "Mod Location";
 

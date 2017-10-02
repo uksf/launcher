@@ -1,12 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsTitleBarControl.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class FtsTitleBarControl {
         public static readonly RoutedEvent FTS_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT =
             EventManager.RegisterRoutedEvent("FTS_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FtsTitleBarControl));

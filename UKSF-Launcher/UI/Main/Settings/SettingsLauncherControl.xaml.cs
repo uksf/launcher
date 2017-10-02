@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using UKSF_Launcher.Game;
@@ -9,7 +8,6 @@ namespace UKSF_Launcher.UI.Main.Settings {
     /// <summary>
     ///     Interaction logic for SettingsLauncherControl.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class SettingsLauncherControl {
         private readonly List<CustomComboBoxItem> _items;
 

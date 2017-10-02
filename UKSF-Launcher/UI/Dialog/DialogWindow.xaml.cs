@@ -1,12 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 
 namespace UKSF_Launcher.UI.Dialog {
     /// <inheritdoc cref="SafeWindow" />
     /// <summary>
     ///     Interaction logic for Dialog_Window.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public partial class DialogWindow {
         public enum DialogBoxType {
             OK,
