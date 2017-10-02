@@ -21,6 +21,7 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
   - nuget restore
+  - ps: Import-PfxCertificate -FilePath .\UKSF-Launcher\UKSFLauncherCert.pfx -CertStoreLocation cert:\CurrentUser\My
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
