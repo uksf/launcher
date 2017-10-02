@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 // ReSharper disable InconsistentNaming
 
@@ -39,5 +40,11 @@ namespace UKSF_Launcher {
 
         // Game profile
         public static string PROFILE = "";
+
+        // Folder name of default profile location
+        public static string LOCATION_DEFAULT = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Arma 3");
+
+        // Folder name of other profiles location
+        public static string LOCATION_OTHER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Arma 3 - Other Profiles");
     }
 }

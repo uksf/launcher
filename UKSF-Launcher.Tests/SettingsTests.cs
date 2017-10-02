@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Tests {
@@ -31,7 +30,16 @@ namespace UKSF_Launcher.Tests {
 
             Assert.AreEqual(value, true);
         }
-        
+
+        [Test]
+        public void SettingsReadNull() {
+            SettingsHandler settingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher.Tests");
+            settingsHandler.DeleteSetting("READNULL");
+            string value = settingsHandler.ParseSetting("READNULL", "READNULL");
+
+            Assert.AreEqual(value, "READNULL");
+        }
+
         [Test]
         public void SettingsDelete() {
             SettingsHandler settingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher.Tests");

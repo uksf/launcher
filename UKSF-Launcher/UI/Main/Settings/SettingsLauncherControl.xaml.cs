@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using UKSF_Launcher.Game;
-using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.Main.Settings {
     /// <summary>
@@ -55,7 +54,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// </summary>
         private void AddProfiles() {
             SettingsLauncherControlProfile.Items.Clear();
-            List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfiles();
+            List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfilesAll();
             foreach (ProfileHandler.Profile profile in profiles) {
                 CustomComboBoxItem item = new CustomComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
                 _items.Add(item);

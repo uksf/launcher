@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
+using UKSF_Launcher.UI.Dialog;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
@@ -79,7 +80,7 @@ namespace UKSF_Launcher.UI.FTS {
         private void AddProfiles() {
             _items = new List<CustomComboBoxItem>();
             FtsProfileControlDropdownProfile.Items.Clear();
-            List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfiles();
+            List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfilesAll();
             foreach (ProfileHandler.Profile profile in profiles) {
                 CustomComboBoxItem item = new CustomComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
                 _items.Add(item);
@@ -109,7 +110,13 @@ namespace UKSF_Launcher.UI.FTS {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
         private void FTSProfileControlButtonCopy_Click(object sender, RoutedEventArgs args) {
-            ProfileHandler.CopyProfile(_items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile);
+            MessageBoxResult result =
+                DialogWindow.Show("New Profile",
+                                  "Select your rank, enter your last name, and the initial of your first name.\n\nIf you are a new member, your rank will be 'Cdt'.",
+                                  DialogWindow.DialogBoxType.OK_CANCEL, new FtsProfileSelectionControl());
+            if (result != MessageBoxResult.OK) return;
+            ProfileHandler.Profile newProfile = new ProfileHandler.Profile(FtsProfileSelectionControl.Rank, FtsProfileSelectionControl.Surname, FtsProfileSelectionControl.Initial);
+            ProfileHandler.CopyProfile(_items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile, newProfile);
             AddProfiles();
         }
     }

@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
-using UKSF_Launcher.UI.Dialog;
-using UKSF_Launcher.UI.FTS;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Game {
     public static class ProfileHandler {
-        // Folder name of default profile location
-        private const string LOCATION_DEFAULT = "Arma 3";
-
-        // Folder name of other profiles location
-        private const string LOCATION_OTHER = "Arma 3 - Other Profiles";
-
         // File extension of profile files
-        private const string PROFILE_EXTENSION = ".arma3profile";
+        private const string PROFILE_EXTENSION = "*.arma3profile";
 
         // Ranks for prefix of profile
         public static readonly string[] PROFILE_PREFIXES =
@@ -27,31 +18,32 @@ namespace UKSF_Launcher.Game {
         ///     Checks the default and other profiles locations for profile files. Creates Profile objects for each profile found.
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
-        public static List<Profile> GetProfiles() {
-            string defaultLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), LOCATION_DEFAULT);
-            string otherLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), LOCATION_OTHER);
-
+        private static List<Profile> GetProfiles(string directory) {
             List<string> files = new List<string>();
-            if (Directory.Exists(defaultLocation)) {
-                files = GetFiles(defaultLocation);
-            }
-            if (!Directory.Exists(otherLocation)) return files.Select(file => new Profile(file)).ToList();
-            string[] folders = Directory.GetDirectories(otherLocation);
-            foreach (string folder in folders) {
-                files.AddRange(GetFiles(folder));
+            if (Directory.Exists(directory)) {
+                files = GetFiles(directory);
             }
 
             return files.Select(file => new Profile(file)).ToList();
         }
 
         /// <summary>
+        /// Gets profiles from both default and other locations.
+        /// </summary>
+        /// <returns>List of Profile objects for all profiles found</returns>
+        public static List<Profile> GetProfilesAll() {
+            List<Profile> profiles = GetProfiles(Global.LOCATION_DEFAULT);
+            profiles.AddRange(GetProfiles(Global.LOCATION_OTHER));
+            return profiles;
+        }
+
+        /// <summary>
         ///     Gets files from given directory with the profile extension and excludes files with chained extensions.
         /// </summary>
-        /// <param name="directory">Directory path to search for profile files in</param>
+        /// <param name="directory">Directory path to search in for profile files</param>
         /// <returns>List of file paths for each profile</returns>
-        private static List<string> GetFiles(string directory) => Directory.EnumerateFiles(directory)
-                                                                           .Where(file => file.ToLower().EndsWith(PROFILE_EXTENSION) &&
-                                                                                          file.Count(count => count == '.') == 1).ToList();
+        private static List<string> GetFiles(string directory) => Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories)
+                                                                           .Where(file => file.Count(count => count == '.') == 1).ToList();
 
         /// <summary>
         ///     Checks if any of the profiles in the list of Profile objects contains a rank prefix and is formatted correctly
@@ -71,24 +63,17 @@ namespace UKSF_Launcher.Game {
         ///     profiles location. Files of the given Profile are copied and renamed to copy user settings.
         /// </summary>
         /// <param name="profile">Profile to copy settings from</param>
-        public static void CopyProfile(Profile profile) {
-            MessageBoxResult result =
-                DialogWindow.Show("New Profile",
-                                  "Select your rank, enter your last name, and the initial of your first name.\n\nIf you are a new member, your rank will be 'Cdt'.",
-                                  DialogWindow.DialogBoxType.OK_CANCEL, new FtsProfileSelectionControl());
-            if (result != MessageBoxResult.OK) return;
-            Profile newProfile = new Profile(FtsProfileSelectionControl.Rank, FtsProfileSelectionControl.Surname, FtsProfileSelectionControl.Initial);
+        /// <param name="newProfile">New profile to copy settings to</param>
+        public static void CopyProfile(Profile profile, Profile newProfile) {
             if (!File.Exists(profile.FilePath)) return;
             string directory = Path.GetDirectoryName(profile.FilePath);
             if (!Directory.Exists(directory)) return;
             List<string> files = Directory.EnumerateFiles(directory).Where(file => file.ToLower().EndsWith(PROFILE_EXTENSION)).ToList();
-            Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), LOCATION_OTHER, newProfile.Name));
+            Directory.CreateDirectory(Path.Combine(Global.LOCATION_OTHER, newProfile.Name));
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);
                 if (fileName != null) {
-                    File.Copy(file,
-                              Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), LOCATION_OTHER, newProfile.Name,
-                                           fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
+                    File.Copy(file, Path.Combine(Global.LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
                 }
             }
         }

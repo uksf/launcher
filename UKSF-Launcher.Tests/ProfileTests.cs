@@ -6,7 +6,7 @@ using UKSF_Launcher.Game;
 namespace UKSF_Launcher.Tests {
     public class ProfileTests {
         [Test]
-        public void ProfilesCreationFromParts() {
+        public void ProfileCreationFromParts() {
             ProfileHandler.Profile profile = new ProfileHandler.Profile("SqnLdr", "Beswick", "T");
 
             Assert.AreEqual(profile.Name, "SqnLdr%2eBeswick%2eT");
@@ -15,7 +15,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void ProfilesCreationFromFile() {
+        public void ProfileCreationFromFile() {
             ProfileHandler.Profile profile = new ProfileHandler.Profile(@"C:\this\is\a\test\SqnLdr%2eBeswick%2eT.arma3profile");
 
             Assert.AreEqual(profile.Name, "SqnLdr%2eBeswick%2eT");
@@ -24,14 +24,15 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void ProfilesFindUksfProfile() {
+        public void ProfileFindUksfProfile() {
             List<ProfileHandler.Profile> profiles = new List<ProfileHandler.Profile> {
                 new ProfileHandler.Profile("SqnLdr", "Beswick", "T"),
                 new ProfileHandler.Profile("Beswick.arma3profile"),
                 new ProfileHandler.Profile("Cdt", "Jones", "A")
             };
+            ProfileHandler.Profile profile = ProfileHandler.FindUksfProfile(profiles);
 
-            Assert.AreSame(ProfileHandler.FindUksfProfile(profiles), profiles.ElementAt(0));
+            Assert.AreSame(profile, profiles.ElementAt(0));
         }
     }
 }
