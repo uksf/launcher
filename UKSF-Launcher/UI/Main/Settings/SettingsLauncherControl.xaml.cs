@@ -34,7 +34,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
         private void SettingsLauncherControlCheckBoxAUTOUPDATELAUNCHER_Click(object sender, RoutedEventArgs args) {
-            Global.AUTOUPDATELAUNCHER = (bool) SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlAutoupdate.IsChecked);
+            Global.AUTOUPDATELAUNCHER = (bool) Core.SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlAutoupdate.IsChecked);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         private void SettingsLauncherControlProfile_Selected(object sender, RoutedEventArgs args) {
             string profile = _items.ElementAt(SettingsLauncherControlProfile.SelectedIndex).ItemProfile.Name;
             if (Global.PROFILE != profile) {
-                Global.PROFILE = (string) SettingsHandler.WriteSetting("PROFILE", profile);
+                Global.PROFILE = (string) Core.SettingsHandler.WriteSetting("PROFILE", profile);
             }
         }
 

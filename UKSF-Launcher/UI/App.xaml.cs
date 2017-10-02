@@ -22,7 +22,7 @@ namespace UKSF_Launcher.UI {
                 }
             }
 
-            Core.Start(updated);
+            new Core(updated);
         }
 
         /// <summary>

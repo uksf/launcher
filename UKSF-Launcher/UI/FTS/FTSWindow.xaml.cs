@@ -32,7 +32,7 @@ namespace UKSF_Launcher.UI.FTS {
         /// <param name="args">Click arguments</param>
         private void FTS_Finish(object sender, RoutedEventArgs args) {
             LogHandler.LogInfo("First time setup finished");
-            Global.FIRSTTIMESETUPDONE = (bool) SettingsHandler.WriteSetting("FIRSTTIMESETUPDONE", true);
+            Global.FIRSTTIMESETUPDONE = (bool) Core.SettingsHandler.WriteSetting("FIRSTTIMESETUPDONE", true);
             Close();
         }
     }

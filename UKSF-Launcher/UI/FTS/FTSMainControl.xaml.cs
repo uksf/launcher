@@ -128,10 +128,11 @@ namespace UKSF_Launcher.UI.FTS {
         /// <param name="args">Click arguments</param>
         private void FTSMainControlButtonFinish_Click(object sender, RoutedEventArgs args) {
             LogHandler.LogInfo("Finishing first time setup");
-            Global.GAME_LOCATION = (string) SettingsHandler.WriteSetting("GAME_LOCATION", FtsGameExeControl.FtsGameExeControlTextBoxLocation.Text);
-            Global.MOD_LOCATION = (string) SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
+            Global.GAME_LOCATION = (string) Core.SettingsHandler.WriteSetting("GAME_LOCATION", FtsGameExeControl.FtsGameExeControlTextBoxLocation.Text);
+            Global.MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
             Global.PROFILE =
-                (string) SettingsHandler.WriteSetting("PROFILE", ((CustomComboBoxItem) FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
+                (string) Core.SettingsHandler.WriteSetting("PROFILE",
+                                                           ((CustomComboBoxItem) FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
             RaiseEvent(new RoutedEventArgs(FTS_MAIN_CONTROL_FINISH_EVENT));
         }
 

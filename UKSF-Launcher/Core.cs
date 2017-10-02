@@ -7,17 +7,22 @@ using UKSF_Launcher.Utility;
 using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
-    internal static class Core {
+    public class Core {
+
+        public static SettingsHandler SettingsHandler;
+        
         /// <summary>
-        ///     Application starting point
+        ///     Application starting point.
         /// </summary>
         /// <param name="updated">Determines if the launcher has been updated</param>
-        public static void Start(bool updated) {
+        public Core(bool updated) {
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             LogHandler.StartLogging();
             LogHandler.LogHashSpaceMessage(Severity.INFO, "Launcher Started");
-            SettingsHandler.ReadSettings();
+
+            InitialiseSettings();
+            
             UpdateHandler.UpdateCheck(updated);
 
             if (!FIRSTTIMESETUPDONE) {
@@ -29,6 +34,23 @@ namespace UKSF_Launcher {
             mainWindow.Show();
             mainWindow.Activate();
             mainWindow.Focus();
+        }
+
+        /// <summary>
+        ///     Reads all settings from the registry.
+        /// </summary>
+        private void InitialiseSettings() {
+            LogHandler.LogHashSpace();
+            SettingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher");
+
+            // Launcher
+            FIRSTTIMESETUPDONE = SettingsHandler.ParseSetting("FIRSTTIMESETUPDONE", false);
+            AUTOUPDATELAUNCHER = SettingsHandler.ParseSetting("AUTOUPDATELAUNCHER", true);
+
+            // Games
+            GAME_LOCATION = SettingsHandler.ParseSetting("GAME_LOCATION", "");
+            MOD_LOCATION = SettingsHandler.ParseSetting("MOD_LOCATION", "");
+            PROFILE = SettingsHandler.ParseSetting("PROFILE", "");
         }
 
         /// <summary>
