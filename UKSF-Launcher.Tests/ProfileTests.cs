@@ -2,24 +2,9 @@
 using System.Linq;
 using NUnit.Framework;
 using UKSF_Launcher.Game;
-using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Tests {
-    public class Tests {
-        [Test]
-        public void SettingsWrite() {
-            string value = (string) SettingsHandler.WriteSetting("TEST", "test");
-
-            Assert.AreEqual(value, "test");
-        }
-
-        [Test]
-        public void SettingsRead() {
-            string value = SettingsHandler.ParseSetting("TEST", "test");
-
-            Assert.AreEqual(value, "test");
-        }
-
+    public class ProfileTests {
         [Test]
         public void ProfilesCreationFromParts() {
             ProfileHandler.Profile profile = new ProfileHandler.Profile("SqnLdr", "Beswick", "T");
