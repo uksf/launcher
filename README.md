@@ -9,7 +9,7 @@
         <img src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?style=flat-square" alt="Build Status">
     </a>
     <a href='https://coveralls.io/github/uksf/launcher?branch=master'>
-        <img src='https://coveralls.io/repos/github/uksf/launcher/badge.svg?branch=master&amp;t=uiudJX&style=flat-square' alt='Coverage Status' />
+        <img src='https://img.shields.io/coveralls/jekyll/jekyll/master.svg?style=flat-square' alt='Coverage Status' />
     </a>
 </p>
 
