@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -38,3 +39,6 @@ using System.Windows;
                                               //(used if a resource is not found in the page,
                                               // app, or any theme specific resource dictionaries)
 )]
+[assembly: InternalsVisibleTo("UKSF-Launcher.Tests")]
+[assembly: InternalsVisibleTo("UKSF-Launcher.Explorables")]
+

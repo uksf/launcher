@@ -45,6 +45,7 @@ namespace UKSF_Launcher.Utility {
         /// </summary>
         /// <param name="message">Message to log</param>
         private static void LogToFile(string message) {
+            if (_logFile == null) return;
             using (StreamWriter writer = new StreamWriter(_logFile, true)) {
                 writer.WriteLine(message);
             }

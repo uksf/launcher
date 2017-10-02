@@ -1,4 +1,7 @@
 version: "1.0.0.{build}"
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: 3fEK++DqcBYsFmUUVtJ3keqDdrtJ3p8CFaLIWw70SloLgqDSi6DSDgr5fMF1Yke0
 branches:
   only:
   - master
@@ -17,8 +20,7 @@ cache:
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
-- ps: >-
-    nuget restore
+  - nuget restore
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
@@ -29,6 +31,8 @@ artifacts:
     name: Updater
   - path: release\VersionUpdater.exe
     name: VersionUpdater
+after_test:
+  - cmd: .after_test.cmd
 deploy:
 - provider: FTP
   host: ftp.uk-sf.com
