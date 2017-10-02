@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NUnit.Framework;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Tests {
+    [ExcludeFromCodeCoverage]
     public class Tests {
         [Test]
         public void SettingsWrite() {

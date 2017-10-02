@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using UKSF_Launcher.Utility;
 
@@ -7,6 +8,7 @@ namespace UKSF_Launcher.UI {
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class App {
         /// <summary>
         ///     Entry point for Application. Reads and extracts arguments, and runs program start routine.

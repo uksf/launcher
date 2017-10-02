@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
@@ -6,6 +7,7 @@ namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsWindow.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class FtsWindow {
         /// <inheritdoc />
         /// <summary>

@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
 
 namespace UKSF_Launcher.UI {
+    [ExcludeFromCodeCoverage]
     public class CustomComboBoxItem : ComboBoxItem {
         /// <inheritdoc />
         /// <summary>

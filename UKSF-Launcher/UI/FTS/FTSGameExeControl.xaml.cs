@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using UKSF_Launcher.Game;
@@ -8,6 +9,7 @@ namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsGameExeControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class FtsGameExeControl {
         private const string TITLE = "Game Executable";
 

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace UKSF_Launcher.UI.Main {
     /// <summary>
     ///     Interaction logic for MainMainControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MainMainControl {
         /// <inheritdoc />
         /// <summary>

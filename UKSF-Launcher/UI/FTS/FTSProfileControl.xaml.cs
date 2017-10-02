@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,7 @@ namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsProfileControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class FtsProfileControl {
         private const string TITLE = "Game Profile";
 

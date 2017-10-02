@@ -1,10 +1,12 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows.Controls;
 using static UKSF_Launcher.Game.ProfileHandler;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsProfileSelectionControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class FtsProfileSelectionControl {
         /// <inheritdoc />
         /// <summary>

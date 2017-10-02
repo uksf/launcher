@@ -1,10 +1,12 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
     ///     Interaction logic for FtsMainControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class FtsMainControl {
         public static readonly RoutedEvent FTS_MAIN_CONTROL_TITLE_EVENT =
             EventManager.RegisterRoutedEvent("FTS_MAIN_CONTROL_TITLE_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FtsMainControl));

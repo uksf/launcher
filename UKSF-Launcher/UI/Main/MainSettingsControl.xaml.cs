@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 namespace UKSF_Launcher.UI.Main {
     /// <summary>
     ///     Interaction logic for MainSettingsControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MainSettingsControl {
         /// <inheritdoc />
         /// <summary>

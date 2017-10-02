@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 namespace UKSF_Launcher.UI.Dialog {
     /// <summary>
     ///     Interaction logic for DialogMainControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class DialogMainControl {
         public static readonly RoutedEvent DIALOG_MAIN_CONTROL_BUTTON_OK_CLICK_EVENT =
             EventManager.RegisterRoutedEvent("DIALOG_MAIN_CONTROL_BUTTON_OK_CLICK_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DialogMainControl));

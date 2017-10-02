@@ -1,7 +1,10 @@
-﻿namespace UKSF_Launcher.UI.Main.Settings {
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace UKSF_Launcher.UI.Main.Settings {
     /// <summary>
     ///     Interaction logic for SettingsGameControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class SettingsGameControl {
         /// <inheritdoc />
         /// <summary>
