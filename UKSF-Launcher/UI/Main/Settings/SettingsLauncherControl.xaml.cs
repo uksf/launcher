@@ -13,7 +13,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
             InitializeComponent();
 
             SettingsLauncherControlVersion.Content = "Version: " + Global.VERSION;
-            SettingsLauncherControlAutoupdate.IsChecked = Global.AUTOUPDATELAUNCHER;
+            SettingsLauncherControlCheckboxAutoupdateLauncher.IsChecked = Global.AUTOUPDATELAUNCHER;
 
             SettingsLauncherControlGameExeTextboxControl.Filter = "exe files|*.exe";
             SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text = Global.GAME_LOCATION;
@@ -29,7 +29,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
         private void SettingsLauncherControlCheckBoxAutoupdateLauncher_Click(object sender, RoutedEventArgs args) {
-            Global.AUTOUPDATELAUNCHER = (bool) Core.SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlAutoupdate.IsChecked);
+            Global.AUTOUPDATELAUNCHER = (bool) Core.SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlCheckboxAutoupdateLauncher.IsChecked);
         }
     }
 }
