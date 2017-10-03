@@ -30,6 +30,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// <param name="args">Click arguments</param>
         private void SettingsLauncherControlCheckBoxAutoupdateLauncher_Click(object sender, RoutedEventArgs args) {
             Global.AUTOUPDATELAUNCHER = (bool) Core.SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlCheckboxAutoupdateLauncher.IsChecked);
+            // TODO: Check update if set to true
         }
     }
 }

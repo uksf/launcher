@@ -39,7 +39,7 @@ namespace UKSF_Launcher.UI.General {
             if (ProfileHandler.FindUksfProfile(profiles) != null) {
                 if (Global.FIRSTTIMESETUPDONE && Global.PROFILE == "") {
                     Global.PROFILE = ProfileHandler.FindUksfProfile(profiles).DisplayName;
-                } else {
+                } else { // TODO: Recheck the logic here. Find uksf profile happens when PROFILE is set
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
                 }
             }
