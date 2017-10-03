@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using UKSF_Launcher.Game;
-using UKSF_Launcher.UI.Dialog;
+﻿using System.Windows;
+using UKSF_Launcher.UI.General;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
@@ -13,46 +10,43 @@ namespace UKSF_Launcher.UI.FTS {
         private const string TITLE = "Game Profile";
 
         private static readonly string DESCRIPTION = "We have selected the Arma 3 profile we think you use for UKSF." + Global.NL +
-                                                     "If this is incorrect, select the profile you wish to use from the list below.";
+                                                     "If this is incorrect, select the profile you wish to use from the list below." + Global.NL +
+                                                     "Alternatively, select a profile from the list below and press 'Copy' to create a new profile and copy your game settings.";
 
         private static readonly string DESCRIPTION_NOPROFILE = "We can't find an Arma 3 profile suitable for UKSF." + Global.NL +
-                                                               "Select a profile from the list below and press 'Copy' to create a new profile with your existing settings." +
+                                                               "Select a profile from the list below and press 'Copy' to create a new profile and copy your game settings." +
                                                                Global.NL + "You may skip this step if you do not wish to create a new profile. (Not recommended)";
-
-        private static FtsProfileControl _instance;
-        private List<CustomComboBoxItem> _items;
-        private string _profile = "";
 
         /// <inheritdoc />
         /// <summary>
         ///     Creates new FtsProfileControl object.
         /// </summary>
         public FtsProfileControl() {
+            LogInfo("Add event");
+            AddHandler(ProfileSelectionControl.PROFILE_SELECTION_CONTROL_UPDATE_EVENT, new RoutedEventHandler(FtsProfileControlProfile_Update));
+
             InitializeComponent();
-            _instance = this;
         }
 
         /// <summary>
         ///     Shows the profile selection control. Adds profiles to the selection.
         /// </summary>
-        public static void Show() {
-            if (_instance.Visibility == Visibility.Visible) return;
-            if (_instance._items == null) {
-                _instance.AddProfiles();
-            }
-            _instance.Visibility = Visibility.Visible;
-            _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
-            _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
-                Text = _instance._profile != "" ? DESCRIPTION : DESCRIPTION_NOPROFILE
+        public void Show() {
+            if (Visibility == Visibility.Visible) return;
+            Visibility = Visibility.Visible;
+            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
+            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
+                Text = ((ProfileComboBoxItem) FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile != null
+                           ? DESCRIPTION
+                           : DESCRIPTION_NOPROFILE
             });
-            _instance.FtsProfileControlButtonCopy.Visibility = _instance._profile == "" ? Visibility.Visible : Visibility.Hidden;
-            _instance.UpdateWarning();
+            UpdateWarning();
         }
 
         /// <summary>
         ///     Hides the profile selection control.
         /// </summary>
-        public static void Hide() => _instance.Visibility = Visibility.Collapsed;
+        public void Hide() => Visibility = Visibility.Collapsed;
 
         /// <summary>
         ///     Checks if a warning needs to be displayed and raises a warning event.
@@ -62,62 +56,17 @@ namespace UKSF_Launcher.UI.FTS {
             Visibility visibility = Visibility.Hidden;
             string warning = "";
             bool block = false;
-            if (string.IsNullOrEmpty(_profile)) {
+            if (((ProfileComboBoxItem) FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile == null) {
                 visibility = Visibility.Visible;
                 warning = "Please select a profile";
                 block = true;
             }
-            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {
-                Visibility = visibility,
-                Warning = warning,
-                Block = block
-            });
+            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Visibility = visibility, Warning = warning, Block = block});
         }
 
-        /// <summary>
-        ///     Adds profiles to profile dropdown. Attempts to find a UKSF profile and selectes it if one is found.
-        /// </summary>
-        private void AddProfiles() {
-            _items = new List<CustomComboBoxItem>();
-            FtsProfileControlDropdownProfile.Items.Clear();
-            List<ProfileHandler.Profile> profiles = ProfileHandler.GetProfilesAll();
-            foreach (ProfileHandler.Profile profile in profiles) {
-                CustomComboBoxItem item = new CustomComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
-                _items.Add(item);
-                FtsProfileControlDropdownProfile.Items.Add(item);
-            }
-
-            if (ProfileHandler.FindUksfProfile(profiles) == null) return;
-            FtsProfileControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
-            _profile = _items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile.Name;
-        }
-
-        /// <summary>
-        ///     Triggered when profile selection is changed. Updates profile value and warning.
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="args">Selected arguments</param>
-        private void FTSProfileControlProfile_Selected(object sender, SelectionChangedEventArgs args) {
-            if (FtsProfileControlDropdownProfile.SelectedIndex > -1) {
-                _profile = _items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile.Name;
-            }
+        private void FtsProfileControlProfile_Update(object sender, RoutedEventArgs args) {
+            LogInfo($"Profile name: {((ProfileComboBoxItem) FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile.Name}");
             UpdateWarning();
-        }
-
-        /// <summary>
-        ///     Triggered when copy button is clicked. Copies selected profile and refreshes profile list in dropdown.
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="args">Click arguments</param>
-        private void FTSProfileControlButtonCopy_Click(object sender, RoutedEventArgs args) {
-            MessageBoxResult result =
-                DialogWindow.Show("New Profile",
-                                  "Select your rank, enter your last name, and the initial of your first name.\n\nIf you are a new member, your rank will be 'Cdt'.",
-                                  DialogWindow.DialogBoxType.OK_CANCEL, new FtsProfileSelectionControl());
-            if (result != MessageBoxResult.OK) return;
-            ProfileHandler.Profile newProfile = new ProfileHandler.Profile(FtsProfileSelectionControl.Rank, FtsProfileSelectionControl.Surname, FtsProfileSelectionControl.Initial);
-            ProfileHandler.CopyProfile(_items.ElementAt(FtsProfileControlDropdownProfile.SelectedIndex).ItemProfile, newProfile);
-            AddProfiles();
         }
     }
 }

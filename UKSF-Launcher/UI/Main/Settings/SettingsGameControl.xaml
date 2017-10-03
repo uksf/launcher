@@ -3,11 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:general="clr-namespace:UKSF_Launcher.UI.General"
              mc:Ignorable="d"
-             d:DesignHeight="428" d:DesignWidth="500"
-             Visibility="Hidden">
-    <Grid Margin="10,10,10,10">
-        <CheckBox x:Name="SettingsGameControlAutoupdate" Content="Test" HorizontalAlignment="Right"
-                  VerticalAlignment="Top" Style="{StaticResource Uksf.CheckBox}" />
+             d:DesignHeight="428" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Width="480">
+            <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
+                <Grid>
+                    <Label Content="Profile" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                    <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                </Grid>
+            </Border>
+        </StackPanel>
     </Grid>
 </UserControl>

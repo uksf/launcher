@@ -60,7 +60,7 @@ namespace UKSF_Launcher.Game {
             if (!File.Exists(profile.FilePath)) return;
             string directory = Path.GetDirectoryName(profile.FilePath);
             if (!Directory.Exists(directory)) return;
-            List<string> files = Directory.EnumerateFiles(directory).Where(file => file.ToLower().EndsWith(PROFILE_EXTENSION)).ToList();
+            List<string> files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION).ToList();
             Directory.CreateDirectory(Path.Combine(Global.LOCATION_OTHER, newProfile.Name));
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);

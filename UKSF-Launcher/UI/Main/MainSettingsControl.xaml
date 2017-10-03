@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settings="clr-namespace:UKSF_Launcher.UI.Main.Settings"
              mc:Ignorable="d"
-             d:DesignHeight="464" d:DesignWidth="500"
-             Visibility="Hidden">
+             d:DesignHeight="464" d:DesignWidth="500">
     <Grid>
         <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/SettingsM.png"
                HorizontalAlignment="Center" Width="428" Height="428" VerticalAlignment="Bottom"
@@ -17,13 +16,15 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Button x:Name="MainSettingsControlButtonLauncher" Content="Launcher"
-                    Click="MainSettingsControlButtonLauncher_Click" Grid.Column="0" IsEnabled="False"
+                    Click="MainSettingsControlButtonLauncher_Click" Grid.Column="0" IsEnabled="True"
                     HorizontalAlignment="Stretch" Style="{StaticResource Uksf.TabButton}" />
             <Button x:Name="MainSettingsControlButtonGame" Content="Game" Click="MainSettingsControlButtonGame_Click"
-                    Grid.Column="1" IsEnabled="True" HorizontalAlignment="Stretch"
+                    Grid.Column="1" IsEnabled="False" HorizontalAlignment="Stretch"
                     Style="{StaticResource Uksf.TabButton}" />
         </Grid>
-        <settings:SettingsLauncherControl x:Name="MainSettingsControlLauncherSettingsControl" Margin="0,36,0,0" />
-        <settings:SettingsGameControl x:Name="MainSettingsControlGameSettingsControl" Margin="0,36,0,0" />
+        <Grid Margin="8">
+            <settings:SettingsLauncherControl x:Name="MainSettingsControlLauncherSettingsControl" Margin="0,36,0,0" Visibility="Hidden"/>
+            <settings:SettingsGameControl x:Name="MainSettingsControlGameSettingsControl" Margin="0,36,0,0" />
+        </Grid>
     </Grid>
 </UserControl>

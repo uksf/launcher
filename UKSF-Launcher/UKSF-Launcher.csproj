@@ -135,14 +135,17 @@
     <Compile Include="UI\FTS\FTSProfileControl.xaml.cs">
       <DependentUpon>FTSProfileControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\FTS\FTSProfileSelectionControl.xaml.cs">
-      <DependentUpon>FTSProfileSelectionControl.xaml</DependentUpon>
+    <Compile Include="UI\General\ProfileCreationControl.xaml.cs">
+      <DependentUpon>ProfileCreationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FTS\FTSTitleBarControl.xaml.cs">
       <DependentUpon>FTSTitleBarControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FTS\FTSWindow.xaml.cs">
       <DependentUpon>FTSWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\General\ProfileSelectionControl.xaml.cs">
+      <DependentUpon>ProfileSelectionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Main\MainMainControl.xaml.cs">
       <DependentUpon>MainMainControl.xaml</DependentUpon>
@@ -156,7 +159,7 @@
     <Compile Include="UI\Main\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\CustomComboBoxItem.cs" />
+    <Compile Include="UI\General\ProfileComboBoxItem.cs" />
     <Compile Include="UI\Main\Settings\SettingsGameControl.xaml.cs">
       <DependentUpon>SettingsGameControl.xaml</DependentUpon>
     </Compile>
@@ -199,7 +202,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\FTS\FTSProfileSelectionControl.xaml">
+    <Page Include="UI\General\ProfileCreationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,6 +213,10 @@
     <Page Include="UI\FTS\FTSWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\General\ProfileSelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Main\MainMainControl.xaml">
       <Generator>MSBuild:Compile</Generator>

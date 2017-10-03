@@ -18,7 +18,6 @@ namespace UKSF_Launcher.UI.FTS {
                                                                "This is unusual, so you should check the game is installed in Steam." + Global.NL +
                                                                "You can continue by selecting the mod download location you wish to use manually. (Not recommended)";
 
-        private static FtsModLocationControl _instance;
         private string _location = "";
 
         /// <inheritdoc />
@@ -27,32 +26,31 @@ namespace UKSF_Launcher.UI.FTS {
         /// </summary>
         public FtsModLocationControl() {
             InitializeComponent();
-            _instance = this;
         }
 
         /// <summary>
         ///     Shows the mod location control. Adds profiles to the selection.
         /// </summary>
-        public static void Show() {
-            _instance.Visibility = Visibility.Visible;
-            _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
-            if (string.IsNullOrEmpty(_instance._location)) {
-                _instance._location = Path.GetDirectoryName(GameHandler.GetGameInstallation());
-                if (!string.IsNullOrEmpty(_instance._location)) {
-                    LogHandler.LogInfo("Using Arma 3 location: " + _instance._location);
-                    _instance.FtsModLocationControlTextBoxLocation.Text = _instance._location;
+        public void Show() {
+            Visibility = Visibility.Visible;
+            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
+            if (string.IsNullOrEmpty(_location)) {
+                _location = Path.GetDirectoryName(GameHandler.GetGameInstallation());
+                if (!string.IsNullOrEmpty(_location)) {
+                    LogHandler.LogInfo("Using Arma 3 location: " + _location);
+                    FtsModLocationControlTextBoxLocation.Text = _location;
                 }
             }
-            _instance.RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
-                Text = _instance._location != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
+            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
+                Text = _location != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
             });
-            _instance.UpdateWarning();
+            UpdateWarning();
         }
 
         /// <summary>
         ///     Hides the mod location control.
         /// </summary>
-        public static void Hide() => _instance.Visibility = Visibility.Collapsed;
+        public void Hide() => Visibility = Visibility.Collapsed;
 
         /// <summary>
         ///     Checks if a warning needs to be displayed and raises a warning event.

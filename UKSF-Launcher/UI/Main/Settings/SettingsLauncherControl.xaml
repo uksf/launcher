@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="428" d:DesignWidth="500">
-    <Grid Margin="10,10,10,10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel>
-            <Border Width="480" Height="50" Style="{StaticResource Uksf.ContainerBorder}">
+        <StackPanel Width="480">
+            <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Game Executable" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
                     <TextBox x:Name="SettingsLauncherControlGameExecutable" Text="TextBox" Width="395" Height="25"
@@ -20,22 +20,13 @@
                             Height="25" FontSize="18" Style="{StaticResource Uksf.Button}" />
                 </Grid>
             </Border>
-            <Border Width="480" Height="50" Style="{StaticResource Uksf.ContainerBorder}">
+            <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Mod Download Location" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
                     <TextBox x:Name="SettingsLauncherControlDownloadLocation" Text="TextBox" Width="395" Height="25"
                              Style="{StaticResource Uksf.Textbox}" />
                     <Button Content="Browse" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75"
                             Height="25" FontSize="18" Style="{StaticResource Uksf.Button}" />
-                </Grid>
-            </Border>
-            <Border Width="480" Height="50" Style="{StaticResource Uksf.ContainerBorder}">
-                <Grid>
-                    <Label Content="Profile" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <ComboBox x:Name="SettingsLauncherControlProfile" HorizontalAlignment="Left"
-                              VerticalAlignment="Bottom" Width="175" Height="25"
-                              SelectionChanged="SettingsLauncherControlProfile_Selected"
-                              RenderTransformOrigin="0.35,0.484" Style="{StaticResource Uksf.ComboBox}" />
                 </Grid>
             </Border>
         </StackPanel>

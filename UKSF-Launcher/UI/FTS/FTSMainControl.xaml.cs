@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UKSF_Launcher.UI.General;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
@@ -130,9 +131,10 @@ namespace UKSF_Launcher.UI.FTS {
             LogHandler.LogInfo("Finishing first time setup");
             Global.GAME_LOCATION = (string) Core.SettingsHandler.WriteSetting("GAME_LOCATION", FtsGameExeControl.FtsGameExeControlTextBoxLocation.Text);
             Global.MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", FtsModLocationControl.FtsModLocationControlTextBoxLocation.Text);
-            Global.PROFILE =
-                (string) Core.SettingsHandler.WriteSetting("PROFILE",
-                                                           ((CustomComboBoxItem) FtsProfileControl.FtsProfileControlDropdownProfile.SelectedItem).ItemProfile.Name);
+            Global.PROFILE = (string) Core.SettingsHandler.WriteSetting("PROFILE",
+                                                                        ((ProfileComboBoxItem) FtsProfileControl
+                                                                            .FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem)
+                                                                        .Profile.Name);
             RaiseEvent(new RoutedEventArgs(FTS_MAIN_CONTROL_FINISH_EVENT));
         }
 

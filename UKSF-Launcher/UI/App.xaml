@@ -53,10 +53,10 @@
                 <Setter Property="FocusVisualStyle" Value="{StaticResource Uksf.Focus}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="BorderBrush" Value="{StaticResource Uksf.BackgroundDarker}" />
-                <Setter Property="Padding" Value="2,2,2,2" />
-                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Top" />
-                <Setter Property="Margin" Value="0,1,0,1" />
+                <Setter Property="Margin" Value="1,1,1,1" />
             </Style>
 
             <Style x:Key="Uksf.SettingsLabel" TargetType="{x:Type Label}">
@@ -213,7 +213,7 @@
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="FontFamily" Value="Arial" />
-                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type CheckBox}">
