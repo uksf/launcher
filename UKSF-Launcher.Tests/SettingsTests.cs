@@ -28,7 +28,7 @@ namespace UKSF_Launcher.Tests {
         public void SettingsReadBool() {
             bool value = new SettingsHandler(@"SOFTWARE\UKSF-Launcher.Tests").ParseSetting("READBOOL", true);
 
-            Assert.AreEqual(value, true);
+            Assert.AreEqual(value, false);
         }
 
         [Test]
