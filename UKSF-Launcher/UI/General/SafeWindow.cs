@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace UKSF_Launcher.UI {
+namespace UKSF_Launcher.UI.General {
     public class SafeWindow : Window {
         /// <inheritdoc />
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 
 namespace UKSF_Launcher.UI.Main {
-    /// <inheritdoc cref="SafeWindow" />
+    /// <inheritdoc cref="General.SafeWindow" />
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>

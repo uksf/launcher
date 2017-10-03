@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 
 namespace UKSF_Launcher.UI.Dialog {
-    /// <inheritdoc cref="SafeWindow" />
+    /// <inheritdoc cref="General.SafeWindow" />
     /// <summary>
     ///     Interaction logic for Dialog_Window.xaml
     /// </summary>

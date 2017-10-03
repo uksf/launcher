@@ -2,7 +2,7 @@
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
-    /// <inheritdoc cref="SafeWindow" />
+    /// <inheritdoc cref="General.SafeWindow" />
     /// <summary>
     ///     Interaction logic for FtsWindow.xaml
     /// </summary>

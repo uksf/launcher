@@ -44,8 +44,7 @@ namespace UKSF_Launcher.UI.General {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
                 }
             }
-
-            LogInfo($"Raise event {ProfileSelectionControlDropdownProfile.SelectedItem}");
+            
             RaiseEvent(new RoutedEventArgs(PROFILE_SELECTION_CONTROL_UPDATE_EVENT));
         }
 

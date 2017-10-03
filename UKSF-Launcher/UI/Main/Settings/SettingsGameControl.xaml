@@ -15,7 +15,7 @@
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Profile" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
                 </Grid>
             </Border>
         </StackPanel>

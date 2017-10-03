@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
-using System.Windows.Forms;
 using UKSF_Launcher.Game;
+using UKSF_Launcher.UI.General;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.UI.FTS {
@@ -18,14 +18,16 @@ namespace UKSF_Launcher.UI.FTS {
                                                                "This is unusual, so you should check the game is installed in Steam." + Global.NL +
                                                                "You can continue by selecting the mod download location you wish to use manually. (Not recommended)";
 
-        private string _location = "";
-
         /// <inheritdoc />
         /// <summary>
         ///     Creates new FtsModLocationControl object.
         /// </summary>
         public FtsModLocationControl() {
             InitializeComponent();
+
+            FtsModLocationControlLocationTextboxControl.Directory = true;
+
+            AddHandler(LocationTextboxControl.LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT, new RoutedEventHandler(FtsMainControlLocation_Update));
         }
 
         /// <summary>
@@ -34,15 +36,15 @@ namespace UKSF_Launcher.UI.FTS {
         public void Show() {
             Visibility = Visibility.Visible;
             RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
-            if (string.IsNullOrEmpty(_location)) {
-                _location = Path.GetDirectoryName(GameHandler.GetGameInstallation());
-                if (!string.IsNullOrEmpty(_location)) {
-                    LogHandler.LogInfo("Using Arma 3 location: " + _location);
-                    FtsModLocationControlTextBoxLocation.Text = _location;
+            if (string.IsNullOrEmpty(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
+                string path = Path.GetDirectoryName(GameHandler.GetGameInstallation());
+                if (!string.IsNullOrEmpty(path)) {
+                    FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text = path;
+                    LogHandler.LogInfo("Using Arma 3 location: " + FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);
                 }
             }
             RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
-                Text = _location != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
+                Text = FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
             });
             UpdateWarning();
         }
@@ -60,38 +62,24 @@ namespace UKSF_Launcher.UI.FTS {
             Visibility visibility = Visibility.Hidden;
             string warning = "";
             bool block = false;
-            if (string.IsNullOrEmpty(_location)) {
+            if (string.IsNullOrEmpty(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
                 visibility = Visibility.Visible;
                 warning = "Please select a mod download location";
                 block = true;
-            } else if (!GameHandler.CheckDriveSpace(_location)) {
+            } else if (!GameHandler.CheckDriveSpace(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
                 visibility = Visibility.Visible;
                 warning = "Not enough drive space";
                 block = true;
             }
-            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {
-                Visibility = visibility,
-                Warning = warning,
-                Block = block
-            });
+            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Visibility = visibility, Warning = warning, Block = block});
         }
 
         /// <summary>
-        ///     Triggered when browse button is clicked. Opens folder browser dialog and updates mod location.
+        ///     Triggered by eventhanlder. Updates warning.
         /// </summary>
         /// <param name="sender">Sender object</param>
-        /// <param name="args">Click arguments</param>
-        private void FTSModLocationControlButtonBrowse_Click(object sender, RoutedEventArgs args) {
-            _location = FtsModLocationControlTextBoxLocation.Text;
-            using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog()) {
-                if (_location != "") {
-                    folderBrowser.SelectedPath = _location;
-                }
-                if (folderBrowser.ShowDialog() == DialogResult.OK) {
-                    _location = folderBrowser.SelectedPath;
-                    FtsModLocationControlTextBoxLocation.Text = _location;
-                }
-            }
+        /// <param name="args">Selected arguments</param>
+        private void FtsMainControlLocation_Update(object sender, RoutedEventArgs args) {
             UpdateWarning();
         }
     }

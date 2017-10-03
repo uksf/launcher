@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:general="clr-namespace:UKSF_Launcher.UI.General"
              mc:Ignorable="d"
              d:DesignHeight="428" d:DesignWidth="500">
     <Grid>
@@ -14,26 +15,22 @@
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Game Executable" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <TextBox x:Name="SettingsLauncherControlGameExecutable" Text="TextBox" Width="395" Height="25"
-                             Style="{StaticResource Uksf.Textbox}" />
-                    <Button Content="Browse" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75"
-                            Height="25" FontSize="18" Style="{StaticResource Uksf.Button}" />
+                    <general:LocationTextboxControl x:Name="SettingsLauncherControlGameExeTextboxControl"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Mod Download Location" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <TextBox x:Name="SettingsLauncherControlDownloadLocation" Text="TextBox" Width="395" Height="25"
-                             Style="{StaticResource Uksf.Textbox}" />
-                    <Button Content="Browse" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75"
-                            Height="25" FontSize="18" Style="{StaticResource Uksf.Button}" />
+                    <general:LocationTextboxControl x:Name="SettingsLauncherControlDownloadTextboxControl"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
         </StackPanel>
         <Grid Grid.Row="1">
             <Label x:Name="SettingsLauncherControlVersion" Content="Version: 1.0.0" HorizontalAlignment="Left"
                    Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
-            <CheckBox x:Name="SettingsLauncherControlAutoupdate" Content="Auto-update Launcher"
+            <CheckBox x:Name="SettingsLauncherControlAutoupdate" Content="Auto-update Launcher" FontSize="12"
                       Click="SettingsLauncherControlCheckBoxAUTOUPDATELAUNCHER_Click" HorizontalAlignment="Right"
                       Style="{StaticResource Uksf.CheckBox}" />
         </Grid>

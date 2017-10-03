@@ -135,6 +135,9 @@
     <Compile Include="UI\FTS\FTSProfileControl.xaml.cs">
       <DependentUpon>FTSProfileControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\General\LocationTextboxControl.xaml.cs">
+      <DependentUpon>LocationTextboxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\General\ProfileCreationControl.xaml.cs">
       <DependentUpon>ProfileCreationControl.xaml</DependentUpon>
     </Compile>
@@ -166,7 +169,7 @@
     <Compile Include="UI\Main\Settings\SettingsLauncherControl.xaml.cs">
       <DependentUpon>SettingsLauncherControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SafeWindow.cs" />
+    <Compile Include="UI\General\SafeWindow.cs" />
     <Compile Include="Utility\LogHandler.cs" />
     <Compile Include="Utility\SettingsHandler.cs" />
     <Compile Include="Utility\UpdateHandler.cs" />
@@ -201,6 +204,10 @@
     <Page Include="UI\FTS\FTSProfileControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\General\LocationTextboxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\General\ProfileCreationControl.xaml">
       <SubType>Designer</SubType>

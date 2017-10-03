@@ -15,8 +15,10 @@ namespace UKSF_Launcher.UI.Main.Settings {
             SettingsLauncherControlVersion.Content = "Version: " + Global.VERSION;
             SettingsLauncherControlAutoupdate.IsChecked = Global.AUTOUPDATELAUNCHER;
 
-            SettingsLauncherControlGameExecutable.Text = Global.GAME_LOCATION;
-            SettingsLauncherControlDownloadLocation.Text = Global.MOD_LOCATION;
+            SettingsLauncherControlGameExeTextboxControl.Filter = "exe files|*.exe";
+            SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text = Global.GAME_LOCATION;
+            SettingsLauncherControlDownloadTextboxControl.Directory = true;
+            SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text = Global.MOD_LOCATION;
         }
 
         /// <summary>
