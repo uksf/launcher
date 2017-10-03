@@ -8,8 +8,8 @@
     <a href="https://ci.appveyor.com/project/UKSF/launcher/branch/master">
         <img src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg" alt="Build Status">
     </a>
-    <a href='https://coveralls.io/github/uksf/launcher'>
-        <img src='https://coveralls.io/repos/github/uksf/launcher/badge.svg?t=uiudJX' alt='Coverage Status'>
+    <a href='https://coveralls.io/github/uksf/launcher?branch=master'>
+        <img src='https://coveralls.io/repos/github/uksf/launcher/badge.svg?branch=master&amp;t=uiudJX' alt='Coverage Status'>
     </a>
 </p>
 
