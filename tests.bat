@@ -1,0 +1,1 @@
+nunit-console-x86 /domain:single .\release\UKSF-Launcher.Tests.dll
