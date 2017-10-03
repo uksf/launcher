@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="314" d:DesignWidth="500">
     <Grid Margin="5">
-        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,30"
+        <Border VerticalAlignment="Stretch" Margin="0,0,0,30"
                 Style="{StaticResource Uksf.ContainerBorder}">
             <StackPanel>
                 <Label x:Name="FtsMainControlTitle" Content="Game Executable" FontSize="24"

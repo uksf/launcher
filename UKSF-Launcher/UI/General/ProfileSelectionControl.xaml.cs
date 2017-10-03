@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
-using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI.General {
     /// <summary>
@@ -44,7 +43,7 @@ namespace UKSF_Launcher.UI.General {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
                 }
             }
-            
+
             RaiseEvent(new RoutedEventArgs(PROFILE_SELECTION_CONTROL_UPDATE_EVENT));
         }
 
