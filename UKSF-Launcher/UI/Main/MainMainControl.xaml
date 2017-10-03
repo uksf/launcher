@@ -10,8 +10,9 @@
         <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
                HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
                RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" Panel.ZIndex="0" />
-        <Button x:Name="MainMainControlButtonPlay" Content="Play" Width="232" Click="MainMainControlButtonPlay_Click"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="50" Margin="0,0,0,100" Panel.ZIndex="1"
+        <Button x:Name="MainMainControlButtonPlay" Content="Play" FontSize="50" Width="348" Height="75"
+                Click="MainMainControlButtonPlay_Click"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1"
                 Style="{StaticResource Uksf.Button}" />
     </Grid>
 </UserControl>

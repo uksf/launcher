@@ -78,6 +78,7 @@ namespace UKSF_Launcher.UI.FTS {
                 visibility = Visibility.Visible;
                 warning = "We recommend using the 'arma3__x64' exe";
             }
+            // TODO: Disallow battleye as exe
             RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Visibility = visibility, Warning = warning, Block = block});
         }
 

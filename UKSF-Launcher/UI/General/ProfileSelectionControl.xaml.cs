@@ -31,14 +31,14 @@ namespace UKSF_Launcher.UI.General {
                 ProfileComboBoxItem item = new ProfileComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
                 ProfileSelectionControlDropdownProfile.Items.Add(item);
 
-                if (Global.FIRSTTIMESETUPDONE && profile.Name == Global.PROFILE) {
+                if (Global.FIRSTTIMESETUPDONE && profile.DisplayName == Global.PROFILE) {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(profile);
                 }
             }
 
             if (ProfileHandler.FindUksfProfile(profiles) != null) {
                 if (Global.FIRSTTIMESETUPDONE && Global.PROFILE == "") {
-                    Global.PROFILE = ProfileHandler.FindUksfProfile(profiles).Name;
+                    Global.PROFILE = ProfileHandler.FindUksfProfile(profiles).DisplayName;
                 } else {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
                 }

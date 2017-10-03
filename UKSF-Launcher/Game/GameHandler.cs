@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.Win32;
+using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Game {
     internal static class GameHandler {
@@ -18,7 +22,7 @@ namespace UKSF_Launcher.Game {
             if (gameKey == null) return location;
             string install = gameKey.GetValue("main", "").ToString();
             if (!Directory.Exists(install)) return location;
-            string exe = Path.Combine(install, Global.IS64BIT ? "arma3_x64.exe" : "arma3.exe");
+            string exe = Path.Combine(install, IS64BIT ? "arma3_x64.exe" : "arma3.exe");
             if (File.Exists(exe)) {
                 location = exe;
             }
@@ -31,7 +35,39 @@ namespace UKSF_Launcher.Game {
         /// <param name="path">Path to check drive space</param>
         /// <returns>True if enough space on drive</returns>
         public static bool CheckDriveSpace(string path) {
-            return DriveInfo.GetDrives().Where(drive => drive.Name.Equals(Path.GetPathRoot(path))).ElementAt(0).AvailableFreeSpace >= Global.REQUIREDSPACE;
+            return DriveInfo.GetDrives().Where(drive => drive.Name.Equals(Path.GetPathRoot(path))).ElementAt(0).AvailableFreeSpace >= REQUIREDSPACE;
+        }
+
+        /// <summary>
+        ///     Starts the game.
+        /// </summary>
+        public static void StartGame() {
+            Process game = new Process();
+            try {
+                game.StartInfo.UseShellExecute = false;
+                game.StartInfo.FileName = GAME_LOCATION;
+                game.StartInfo.Arguments = GetStartupParameters();
+                game.Start();
+            }
+            catch (Exception exception) {
+                Core.Error(exception);
+            }
+        }
+
+        private static string GetStartupParameters() {
+            StringBuilder startupString = new StringBuilder();
+            startupString.Append($"-name={PROFILE}");
+            startupString.Append(STARTUP_NOSPLASH ? " -nosplash" : "");
+            startupString.Append(STARTUP_EMPTYWORLD ? " -world=empty" : "");
+            startupString.Append(STARTUP_SCRIPTERRORS ? " -showScriptErrors" : "");
+            startupString.Append(STARTUP_FILEPATCHING ? " -filePatching" : "");
+            startupString.Append(STARTUP_HUGEPAGES ? " -hugepages" : "");
+            if (STARTUP_MALLOC != MALLOC_SYSTEM_DEFAULT) {
+                startupString.Append(GAME_LOCATION.Contains("x64") ? $" -malloc={STARTUP_MALLOC}_x64" : $" -malloc={STARTUP_MALLOC}");
+            } else {
+                startupString.Append(" -malloc=system");
+            }
+            return startupString.ToString();
         }
     }
 }

@@ -19,8 +19,8 @@ namespace UKSF_Launcher.Game {
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
         public static List<Profile> GetProfilesAll() {
-            List<Profile> profiles = GetProfiles(Global.LOCATION_DEFAULT);
-            profiles.AddRange(GetProfiles(Global.LOCATION_OTHER));
+            List<Profile> profiles = GetProfiles(Global.PROFILE_LOCATION_DEFAULT);
+            profiles.AddRange(GetProfiles(Global.PROFILE_LOCATION_OTHER));
             return profiles;
         }
 
@@ -31,8 +31,7 @@ namespace UKSF_Launcher.Game {
         private static List<Profile> GetProfiles(string directory) {
             List<string> files = new List<string>();
             if (Directory.Exists(directory)) {
-                files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories).Where(file => file.Count(count => count == '.') == 1)
-                                 .ToList();
+                files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories).Where(file => file.Count(count => count == '.') == 1).ToList();
             }
             return files.Select(file => new Profile(file)).ToList();
         }
@@ -61,11 +60,11 @@ namespace UKSF_Launcher.Game {
             string directory = Path.GetDirectoryName(profile.FilePath);
             if (!Directory.Exists(directory)) return;
             List<string> files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION).ToList();
-            Directory.CreateDirectory(Path.Combine(Global.LOCATION_OTHER, newProfile.Name));
+            Directory.CreateDirectory(Path.Combine(Global.PROFILE_LOCATION_OTHER, newProfile.Name));
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);
                 if (fileName != null) {
-                    File.Copy(file, Path.Combine(Global.LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
+                    File.Copy(file, Path.Combine(Global.PROFILE_LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
                 }
             }
         }

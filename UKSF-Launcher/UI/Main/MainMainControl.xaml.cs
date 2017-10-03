@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using UKSF_Launcher.Game;
 
 namespace UKSF_Launcher.UI.Main {
     /// <summary>
@@ -12,6 +12,8 @@ namespace UKSF_Launcher.UI.Main {
         /// </summary>
         public MainMainControl() {
             InitializeComponent();
+            
+            // TODO: Add event for blocking play button if blocking warning present
         }
 
         /// <summary>
@@ -20,7 +22,7 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
         private void MainMainControlButtonPlay_Click(object sender, RoutedEventArgs args) {
-            Console.WriteLine("PRESSED");
+            GameHandler.StartGame();
         }
     }
 }

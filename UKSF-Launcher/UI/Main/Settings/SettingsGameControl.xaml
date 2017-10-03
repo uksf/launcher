@@ -15,9 +15,82 @@
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
                     <Label Content="Profile" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
+                    <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl"
+                                                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Border Style="{StaticResource Uksf.ContainerBorder}">
+                        <StackPanel>
+                            <Label Content="Startup Parameters" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                            <Grid VerticalAlignment="Stretch">
+                                <StackPanel>
+                                    <CheckBox Content="No Splash Screen" Margin="2"
+                                              x:Name="SettingsGameControlCheckboxSplash"
+                                              Click="SettingsGameControlCheckbox_Click"
+                                              Style="{StaticResource Uksf.CheckBox}" />
+                                    <CheckBox Content="Empty World" Margin="2"
+                                              x:Name="SettingsGameControlCheckboxWorld"
+                                              Click="SettingsGameControlCheckbox_Click"
+                                              Style="{StaticResource Uksf.CheckBox}" />
+                                    <CheckBox Content="Show Script Errors" Margin="2"
+                                              x:Name="SettingsGameControlCheckboxScript"
+                                              Click="SettingsGameControlCheckbox_Click"
+                                              Style="{StaticResource Uksf.CheckBox}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border VerticalAlignment="Stretch" Style="{StaticResource Uksf.ContainerBorder}">
+                        <StackPanel>
+                            <Label Content="Memory Allocator" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                            <Grid VerticalAlignment="Stretch">
+                                <StackPanel>
+                                    <CheckBox Content="Huge Pages" Margin="2"
+                                              x:Name="SettingsGameControlCheckboxPages"
+                                              Click="SettingsGameControlCheckbox_Click"
+                                              Style="{StaticResource Uksf.CheckBox}" />
+                                    <ComboBox Margin="2" Height="25" x:Name="SettingsGameControlDropdownMalloc"
+                                              SelectionChanged="SettingsLauncherControlMalloc_Update"
+                                              Style="{StaticResource Uksf.ComboBox}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border x:Name="SettingsGameControlDevControl" Style="{StaticResource Uksf.ContainerBorder}"
+                            IsEnabled="False">
+                        <StackPanel>
+                            <Label Content="Dev Parameters" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                            <Grid VerticalAlignment="Stretch">
+                                <StackPanel>
+                                    <CheckBox Content="File Patching" Margin="2"
+                                              x:Name="SettingsGameControlCheckboxPatching"
+                                              Click="SettingsGameControlCheckbox_Click"
+                                              Style="{StaticResource Uksf.CheckBox}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <Border Grid.Column="1" VerticalAlignment="Stretch" Style="{StaticResource Uksf.ContainerBorder}">
+                    <StackPanel>
+                        <Label Content="Additional Mods" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                        <Grid VerticalAlignment="Stretch">
+                            <StackPanel>
+                                <CheckBox Content="ShackTac HUD" Margin="2"
+                                          x:Name="SettingsGameControlCheckboxShacktac"
+                                          Click="SettingsGameControlCheckbox_Click"
+                                          Style="{StaticResource Uksf.CheckBox}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

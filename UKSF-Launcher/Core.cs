@@ -8,9 +8,8 @@ using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher {
     public class Core {
-
         public static SettingsHandler SettingsHandler;
-        
+
         /// <summary>
         ///     Application starting point.
         /// </summary>
@@ -22,7 +21,7 @@ namespace UKSF_Launcher {
             LogHandler.LogHashSpaceMessage(Severity.INFO, "Launcher Started");
 
             InitialiseSettings();
-            
+
             UpdateHandler.UpdateCheck(updated);
 
             if (!FIRSTTIMESETUPDONE) {
@@ -47,10 +46,21 @@ namespace UKSF_Launcher {
             FIRSTTIMESETUPDONE = SettingsHandler.ParseSetting("FIRSTTIMESETUPDONE", false);
             AUTOUPDATELAUNCHER = SettingsHandler.ParseSetting("AUTOUPDATELAUNCHER", true);
 
-            // Games
+            // Game
             GAME_LOCATION = SettingsHandler.ParseSetting("GAME_LOCATION", "");
             MOD_LOCATION = SettingsHandler.ParseSetting("MOD_LOCATION", "");
             PROFILE = SettingsHandler.ParseSetting("PROFILE", "");
+
+            // Startup
+            STARTUP_NOSPLASH = SettingsHandler.ParseSetting("STARTUP_NOSPLASH", true);
+            STARTUP_EMPTYWORLD = SettingsHandler.ParseSetting("STARTUP_EMPTYWORLD", true);
+            STARTUP_SCRIPTERRORS = SettingsHandler.ParseSetting("STARTUP_SCRIPTERRORS", false);
+            STARTUP_HUGEPAGES = SettingsHandler.ParseSetting("STARTUP_HUGEPAGES", false);
+            STARTUP_MALLOC = SettingsHandler.ParseSetting("STARTUP_MALLOC", MALLOC_SYSTEM_DEFAULT);
+            STARTUP_FILEPATCHING = SettingsHandler.ParseSetting("STARTUP_FILEPATCHING", false);
+
+            // Mods
+            MODS_SHACKTAC = SettingsHandler.ParseSetting("MODS_SHACKTAC", false);
         }
 
         /// <summary>
@@ -73,9 +83,8 @@ namespace UKSF_Launcher {
             string error = exception.Message + "\n" + exception.StackTrace;
             LogHandler.LogSeverity(Severity.ERROR, error);
             Clipboard.SetDataObject(error, true);
-            MessageBoxResult result =
-                DialogWindow.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error,
-                                  DialogWindow.DialogBoxType.OK);
+            MessageBoxResult result = DialogWindow.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error,
+                                                        DialogWindow.DialogBoxType.OK);
             if (result == MessageBoxResult.OK) {
                 ShutDown();
             }

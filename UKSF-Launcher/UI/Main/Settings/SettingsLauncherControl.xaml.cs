@@ -19,6 +19,8 @@ namespace UKSF_Launcher.UI.Main.Settings {
             SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text = Global.GAME_LOCATION;
             SettingsLauncherControlDownloadTextboxControl.Directory = true;
             SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text = Global.MOD_LOCATION;
+            
+            // TODO: Add warnings for exe and mod location selection
         }
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
-        private void SettingsLauncherControlCheckBoxAUTOUPDATELAUNCHER_Click(object sender, RoutedEventArgs args) {
+        private void SettingsLauncherControlCheckBoxAutoupdateLauncher_Click(object sender, RoutedEventArgs args) {
             Global.AUTOUPDATELAUNCHER = (bool) Core.SettingsHandler.WriteSetting("AUTOUPDATELAUNCHER", SettingsLauncherControlAutoupdate.IsChecked);
         }
     }
