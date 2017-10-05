@@ -6,12 +6,21 @@ using System.Net;
 namespace Updater {
     internal static class Program {
         private static void Main() {
-            File.Delete(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe"));
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/UKSF-Launcher.exe", Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe"));
-            Process launcher = new Process {
+            foreach (Process process in Process.GetProcessesByName("UKSF-Launcher")) {
+                process.WaitForExit(2500);
+                if (!process.HasExited) {
+                    process.Kill();
+                }
+            }
+
+            string launcher = Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe");
+            File.SetAttributes(launcher, FileAttributes.Normal);
+            File.Delete(launcher);
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/UKSF-Launcher.exe", launcher);
+            Process launcherProcess = new Process {
                 StartInfo = {UseShellExecute = false, FileName = Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe"), Arguments = "-u"}
             };
-            launcher.Start();
+            launcherProcess.Start();
             Environment.Exit(0);
         }
     }

@@ -15,11 +15,12 @@ namespace UKSF_Launcher.Utility {
         public static void UpdateCheck(bool updated) {
             LogHashSpaceMessage(Severity.INFO, "Checking for update");
             VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+            string[] oldFlags = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).ProductVersion.Split(':');
             LogInfo($"Current version: {VERSION}");
 
             string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version").Split(':');
             Version latestVersion = Version.Parse(versionString[0]);
-            bool force = HandleFlags(versionString);
+            bool force = HandleFlags(versionString, oldFlags);
             LogInfo($"Latest version: {latestVersion} - Force update: {force}");
 
             if ((AUTOUPDATELAUNCHER || force) && VERSION < latestVersion) {
@@ -31,14 +32,14 @@ namespace UKSF_Launcher.Utility {
             }
         }
 
-        private static bool HandleFlags(IReadOnlyList<string> flags) {
-            bool force = flags[1].Equals("F");
-            if (flags[2].Equals("R")) {
+        private static bool HandleFlags(IReadOnlyList<string> flags, IReadOnlyList<string> oldFlags) {
+            bool force = flags[1].Equals("F") && !oldFlags[1].Equals("F");
+            if (flags[2].Equals("R") && !oldFlags[2].Equals("R")) {
                 LogHashSpaceMessage(Severity.INFO, "Resetting all settings");
                 Core.SettingsHandler.ResetSettings();
                 force = true;
             }
-            if (flags[3].Equals("C")) {
+            if (flags[3].Equals("C") && !oldFlags[3].Equals("C")) {
                 LogHashSpaceMessage(Severity.INFO, "Cleaning settings");
                 Core.CleanSettings();
             }
