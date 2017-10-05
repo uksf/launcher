@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Utility {
     public class SettingsHandler {
@@ -26,7 +27,7 @@ namespace UKSF_Launcher.Utility {
                 value = defaultValue;
                 WriteSetting(name, value);
             }
-            LogHandler.LogInfo("Reading setting '" + name + "': " + value);
+            LogInfo("Reading setting '" + name + "': " + value);
             return value?.ToString();
         }
 
@@ -38,7 +39,7 @@ namespace UKSF_Launcher.Utility {
         /// <returns>Value written to registry key</returns>
         public object WriteSetting(string name, object value) {
             RegistryKey registry = GetRegistryKey();
-            LogHandler.LogInfo("Writing setting '" + name + "': " + value);
+            LogInfo("Writing setting '" + name + "': " + value);
             registry.SetValue(name, value);
             return value;
         }
@@ -77,5 +78,8 @@ namespace UKSF_Launcher.Utility {
                 registry.DeleteValue(name);
             }
         }
+
+        // ReSharper disable once UnusedMember.Global
+        public void ResetSettings() => Registry.CurrentUser.DeleteSubKey(_registry);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Utility {
     internal static class UpdateHandler {
@@ -11,23 +13,35 @@ namespace UKSF_Launcher.Utility {
         /// </summary>
         /// <param name="updated">Determines if the launcher has been updated</param>
         public static void UpdateCheck(bool updated) {
-            LogHandler.LogHashSpace();
+            LogHashSpaceMessage(Severity.INFO, "Checking for update");
             VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
-            LogHandler.LogInfo("Current version: " + VERSION);
-            if (!AUTOUPDATELAUNCHER) return;
-            Version latestVersion = Version.Parse(new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version"));
-            LogHandler.LogInfo("Latest version: " + latestVersion);
-#if FORCEUPDATE
-            VERSION = Version.Parse("0.0.0.0");
-            LogHandler.LogSeverity(Severity.INFO, "Force version: " + VERSION);
-#endif
-            if (VERSION < latestVersion) {
-                LogHandler.LogInfo("Updating to " + latestVersion);
+            LogInfo($"Current version: {VERSION}");
+
+            string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version").Split(':');
+            Version latestVersion = Version.Parse(versionString[0]);
+            bool force = HandleFlags(versionString);
+            LogInfo($"Latest version: {latestVersion} - Force update: {force}");
+
+            if ((AUTOUPDATELAUNCHER || force) && VERSION < latestVersion) {
+                LogInfo($"Updating to {latestVersion}");
                 Update();
             }
             if (updated) {
                 File.Delete(Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             }
+        }
+
+        private static bool HandleFlags(IReadOnlyList<string> flags) {
+            bool force = flags[1].Equals("F");
+            if (flags[2].Equals("R")) {
+                LogHashSpaceMessage(Severity.INFO, "Resetting all settings");
+                Core.SettingsHandler.ResetSettings();
+            }
+            if (flags[3].Equals("C")) {
+                LogHashSpaceMessage(Severity.INFO, "Cleaning settings");
+                Core.CleanSettings();
+            }
+            return force;
         }
 
         /// <summary>

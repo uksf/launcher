@@ -5,6 +5,7 @@ using UKSF_Launcher.UI.FTS;
 using UKSF_Launcher.UI.Main;
 using UKSF_Launcher.Utility;
 using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher {
     public class Core {
@@ -17,18 +18,19 @@ namespace UKSF_Launcher {
         public Core(bool updated) {
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            LogHandler.StartLogging();
-            LogHandler.LogHashSpaceMessage(Severity.INFO, "Launcher Started");
+            StartLogging();
+            LogHashSpaceMessage(Severity.INFO, "Launcher Started");
 
             InitialiseSettings();
 
             UpdateHandler.UpdateCheck(updated);
 
             if (!FIRSTTIMESETUPDONE) {
-                LogHandler.LogHashSpaceMessage(Severity.INFO, "Running first time setup");
+                LogHashSpaceMessage(Severity.INFO, "Running first time setup");
                 new FtsWindow().ShowDialog();
             }
 
+            LogHashSpace();
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
             mainWindow.Activate();
@@ -38,8 +40,8 @@ namespace UKSF_Launcher {
         /// <summary>
         ///     Reads all settings from the registry.
         /// </summary>
-        private void InitialiseSettings() {
-            LogHandler.LogHashSpace();
+        private static void InitialiseSettings() {
+            LogHashSpaceMessage(Severity.INFO, "Reading all settings");
             SettingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher");
 
             // Launcher
@@ -63,6 +65,11 @@ namespace UKSF_Launcher {
             MODS_SHACKTAC = SettingsHandler.ParseSetting("MODS_SHACKTAC", false);
         }
 
+        // ReSharper disable once UnusedMember.Local
+        public static void CleanSettings() {
+            
+        }
+
         /// <summary>
         ///     Shuts the application down.
         ///     If there is no instance of Applicaiton, exit forcefully.
@@ -81,7 +88,7 @@ namespace UKSF_Launcher {
         /// <param name="exception">Error exception to report</param>
         public static void Error(Exception exception) {
             string error = exception.Message + "\n" + exception.StackTrace;
-            LogHandler.LogSeverity(Severity.ERROR, error);
+            LogSeverity(Severity.ERROR, error);
             Clipboard.SetDataObject(error, true);
             MessageBoxResult result = DialogWindow.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error,
                                                         DialogWindow.DialogBoxType.OK);

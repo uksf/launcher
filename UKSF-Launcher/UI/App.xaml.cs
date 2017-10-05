@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using UKSF_Launcher.Utility;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI {
     /// <inheritdoc />
@@ -30,8 +30,6 @@ namespace UKSF_Launcher.UI {
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="args">Shutdown arguments</param>
-        private void Application_Exit(object sender, EventArgs args) {
-            LogHandler.CloseLog();
-        }
+        private void Application_Exit(object sender, EventArgs args) => CloseLog();
     }
 }

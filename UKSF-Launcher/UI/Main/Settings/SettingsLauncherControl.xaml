@@ -14,14 +14,22 @@
         <StackPanel Width="480">
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
+                    <StackPanel Orientation="Horizontal">
                     <Label Content="Game Executable" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                    <Label x:Name="SettingsLauncherControlGameExeWarningText" Content="" Margin="10,0,0,0" Height="18"
+                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                    </StackPanel>
                     <general:LocationTextboxControl x:Name="SettingsLauncherControlGameExeTextboxControl"
                                                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
             <Border Height="50" Style="{StaticResource Uksf.ContainerBorder}">
                 <Grid>
+                    <StackPanel Orientation="Horizontal">
                     <Label Content="Mod Download Location" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
+                    <Label x:Name="SettingsLauncherControlDownloadWarningText" Content="" Margin="10,0,0,0" Height="18"
+                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                    </StackPanel>
                     <general:LocationTextboxControl x:Name="SettingsLauncherControlDownloadTextboxControl"
                                                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
                 </Grid>

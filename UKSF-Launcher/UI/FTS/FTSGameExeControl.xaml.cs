@@ -2,7 +2,8 @@
 using System.Windows;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.General;
-using UKSF_Launcher.Utility;
+using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
@@ -11,11 +12,11 @@ namespace UKSF_Launcher.UI.FTS {
     public partial class FtsGameExeControl {
         private const string TITLE = "Game Executable";
 
-        private static readonly string DESCRIPTION = "We found your Arma 3 installation and chose the best exe for you." + Global.NL +
+        private static readonly string DESCRIPTION = "We found your Arma 3 installation and chose the best exe for you." + NL +
                                                      "If you are not happy with this, select the Arma 3 exe you wish to use.";
 
-        private static readonly string DESCRIPTION_NOINSTALL = "We can't find your Arma 3 installation." + Global.NL +
-                                                               "This is unusual, so you should check the game is installed in Steam." + Global.NL +
+        private static readonly string DESCRIPTION_NOINSTALL = "We can't find your Arma 3 installation." + NL +
+                                                               "This is unusual, so you should check the game is installed in Steam." + NL +
                                                                "You can continue by selecting the Arma 3 exe you wish to use manually. (Not recommended)";
 
         /// <inheritdoc />
@@ -35,14 +36,14 @@ namespace UKSF_Launcher.UI.FTS {
         /// </summary>
         public void Show() {
             Visibility = Visibility.Visible;
-            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
+            RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
             if (string.IsNullOrEmpty(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
                 FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text = GameHandler.GetGameInstallation();
                 if (!string.IsNullOrEmpty(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
-                    LogHandler.LogInfo("Using Arma 3 location: " + FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);
+                    LogInfo("Using Arma 3 location: " + FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);
                 }
             }
-            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
+            RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
                 Text = FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
             });
             UpdateWarning();
@@ -58,28 +59,31 @@ namespace UKSF_Launcher.UI.FTS {
         /// </summary>
         private void UpdateWarning() {
             if (Visibility != Visibility.Visible) return;
-            Visibility visibility = Visibility.Hidden;
             string warning = "";
             bool block = false;
             if (string.IsNullOrEmpty(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
-                visibility = Visibility.Visible;
                 warning = "Please select an Arma 3 exe";
                 block = true;
             } else if (Path.GetExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text) != ".exe") {
-                visibility = Visibility.Visible;
                 warning = "File is not an exe";
                 block = true;
             } else if (!Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("arma3")) {
-                visibility = Visibility.Visible;
                 warning = "File is not an Arma 3 exe";
                 block = true;
-            } else if (Global.IS64BIT && !Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower()
+            } else if (Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("battleye")) {
+                warning = "Exe cannot be battleye";
+                block = true;
+            } else if (Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("launcher")) {
+                warning = "Exe cannot be launcher";
+                block = true;
+            } else if (Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("server")) {
+                warning = "Exe cannot be server";
+                block = true;
+            } else if (IS64BIT && !Path.GetFileNameWithoutExtension(FtsGameExeControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower()
                                               .Contains("x64")) {
-                visibility = Visibility.Visible;
-                warning = "We recommend using the 'arma3__x64' exe";
+                warning = "We recommend using the 'arma3_x64' exe";
             }
-            // TODO: Disallow battleye as exe
-            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Visibility = visibility, Warning = warning, Block = block});
+            RaiseEvent(new SafeWindow.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Warning = warning, Block = block});
         }
 
         /// <summary>

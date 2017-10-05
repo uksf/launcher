@@ -2,7 +2,8 @@
 using System.Windows;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.General;
-using UKSF_Launcher.Utility;
+using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <summary>
@@ -11,11 +12,11 @@ namespace UKSF_Launcher.UI.FTS {
     public partial class FtsModLocationControl {
         private const string TITLE = "Mod Location";
 
-        private static readonly string DESCRIPTION = "We have selected your Arma 3 install location as your mod download location." + Global.NL +
+        private static readonly string DESCRIPTION = "We have selected your Arma 3 install location as your mod download location." + NL +
                                                      "If you wish to change this, select the folder below.";
 
-        private static readonly string DESCRIPTION_NOINSTALL = "We can't find your Arma 3 installation." + Global.NL +
-                                                               "This is unusual, so you should check the game is installed in Steam." + Global.NL +
+        private static readonly string DESCRIPTION_NOINSTALL = "We can't find your Arma 3 installation." + NL +
+                                                               "This is unusual, so you should check the game is installed in Steam." + NL +
                                                                "You can continue by selecting the mod download location you wish to use manually. (Not recommended)";
 
         /// <inheritdoc />
@@ -35,15 +36,15 @@ namespace UKSF_Launcher.UI.FTS {
         /// </summary>
         public void Show() {
             Visibility = Visibility.Visible;
-            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
+            RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
             if (string.IsNullOrEmpty(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
                 string path = Path.GetDirectoryName(GameHandler.GetGameInstallation());
                 if (!string.IsNullOrEmpty(path)) {
                     FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text = path;
-                    LogHandler.LogInfo("Using Arma 3 location: " + FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);
+                    LogInfo("Using Arma 3 location: " + FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);
                 }
             }
-            RaiseEvent(new FtsMainControl.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
+            RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
                 Text = FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text != "" ? DESCRIPTION : DESCRIPTION_NOINSTALL
             });
             UpdateWarning();
@@ -59,19 +60,16 @@ namespace UKSF_Launcher.UI.FTS {
         /// </summary>
         private void UpdateWarning() {
             if (Visibility != Visibility.Visible) return;
-            Visibility visibility = Visibility.Hidden;
             string warning = "";
             bool block = false;
             if (string.IsNullOrEmpty(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
-                visibility = Visibility.Visible;
                 warning = "Please select a mod download location";
                 block = true;
             } else if (!GameHandler.CheckDriveSpace(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
-                visibility = Visibility.Visible;
                 warning = "Not enough drive space";
                 block = true;
             }
-            RaiseEvent(new FtsMainControl.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Visibility = visibility, Warning = warning, Block = block});
+            RaiseEvent(new SafeWindow.WarningRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_WARNING_EVENT) {Warning = warning, Block = block});
         }
 
         /// <summary>

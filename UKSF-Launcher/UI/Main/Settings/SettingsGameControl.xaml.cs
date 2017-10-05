@@ -10,33 +10,39 @@ namespace UKSF_Launcher.UI.Main.Settings {
     ///     Interaction logic for SettingsGameControl.xaml
     /// </summary>
     public partial class SettingsGameControl {
+        public static readonly RoutedEvent SETTINGS_GAME_CONTROL_WARNING_EVENT =
+            EventManager.RegisterRoutedEvent("SETTINGS_GAME_CONTROL_WARNING_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(SettingsGameControl));
+
         /// <inheritdoc />
         /// <summary>
         ///     Creates new MainMainControl object.
         /// </summary>
         public SettingsGameControl() {
             InitializeComponent();
-            SettingsGameControlCheckboxSplash.IsChecked = Core.SettingsHandler.ParseSetting("STARTUP_NOSPLASH", true);
-            SettingsGameControlCheckboxWorld.IsChecked = Core.SettingsHandler.ParseSetting("STARTUP_EMPTYWORLD", true);
-            SettingsGameControlCheckboxScript.IsChecked = Core.SettingsHandler.ParseSetting("STARTUP_SCRIPTERRORS", false);
-            SettingsGameControlCheckboxPages.IsChecked = Core.SettingsHandler.ParseSetting("STARTUP_HUGEPAGES", false);
-            SettingsGameControlCheckboxShacktac.IsChecked = Core.SettingsHandler.ParseSetting("MODS_SHACKTAC", false);
+        }
+
+        public void Initialise() {
+            AddHandler(ProfileSelectionControl.PROFILE_SELECTION_CONTROL_UPDATE_EVENT, new RoutedEventHandler(SettingsLauncherControlProfile_Update));
+            AddHandler(SETTINGS_GAME_CONTROL_WARNING_EVENT, new RoutedEventHandler(SettingsLauncherControlProfile_Update));
+
+            SettingsGameControlCheckboxSplash.IsChecked = STARTUP_NOSPLASH;
+            SettingsGameControlCheckboxWorld.IsChecked = STARTUP_EMPTYWORLD;
+            SettingsGameControlCheckboxScript.IsChecked = STARTUP_SCRIPTERRORS;
+            SettingsGameControlCheckboxPages.IsChecked = STARTUP_HUGEPAGES;
+            SettingsGameControlCheckboxShacktac.IsChecked = MODS_SHACKTAC;
 
             SettingsGameControlDevControl.IsEnabled = false;
             SettingsGameControlCheckboxPatching.IsChecked = false;
-
 #if DEV
             SettingsGameControlDevControl.IsEnabled = true;
-            SettingsGameControlCheckboxPatching.IsChecked = Core.SettingsHandler.ParseSetting("STARTUP_FILEPATCHING", false);
+            SettingsGameControlCheckboxPatching.IsChecked = STARTUP_FILEPATCHING;
 #endif
-
-            AddHandler(ProfileSelectionControl.PROFILE_SELECTION_CONTROL_UPDATE_EVENT, new RoutedEventHandler(SettingsLauncherControlProfile_Update));
 
             if (SettingsGameControlDropdownMalloc.Items.IsEmpty) {
                 AddMallocs();
             }
-            
-            // TODO: Add warnins for no profile selected
+
+            UpdateWarning();
         }
 
         /// <summary>
@@ -64,11 +70,30 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Selected arguments</param>
         private void SettingsLauncherControlProfile_Update(object sender, RoutedEventArgs args) {
-            PROFILE = PROFILE != ((ProfileComboBoxItem) SettingsGameControlDropdownProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile.DisplayName
-                          ? (string) Core.SettingsHandler.WriteSetting("PROFILE",
-                                                                       ((ProfileComboBoxItem) SettingsGameControlDropdownProfileSelectionControl
-                                                                           .ProfileSelectionControlDropdownProfile.SelectedItem).Profile.DisplayName)
-                          : PROFILE;
+            if (SettingsGameControlDropdownProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem != null) {
+                if (PROFILE != ((ProfileComboBoxItem) SettingsGameControlDropdownProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile.DisplayName) {
+                    PROFILE = (string) Core.SettingsHandler.WriteSetting("PROFILE",
+                                                                         ((ProfileComboBoxItem) SettingsGameControlDropdownProfileSelectionControl
+                                                                             .ProfileSelectionControlDropdownProfile.SelectedItem).Profile.DisplayName);
+                }
+            }
+            UpdateWarning();
+        }
+
+        private void UpdateWarning() {
+            string warning = "";
+            bool block = false;
+            if (SettingsGameControlDropdownProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedIndex == -1) {
+                warning = "Please select a profile";
+                block = true;
+            }
+            SettingsGameControlProfileWarningText.Content = warning;
+            if (MainWindow.Instance.MainMainControl == null) return;
+            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.WarningRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_WARNING_EVENT) {
+                Warning = warning,
+                Block = block,
+                CurrentWarning = MainMainControl.CurrentWarning.PROFILE
+            });
         }
 
         /// <summary>
@@ -77,7 +102,9 @@ namespace UKSF_Launcher.UI.Main.Settings {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Selected arguments</param>
         private void SettingsLauncherControlMalloc_Update(object sender, RoutedEventArgs args) {
-            if (SettingsGameControlDropdownMalloc.SelectedIndex <= -1) return;
+            if (SettingsGameControlDropdownMalloc.SelectedIndex == -1 || STARTUP_MALLOC == ((MallocComboBoxItem) SettingsGameControlDropdownMalloc.SelectedItem).Malloc.Name) {
+                return;
+            }
             STARTUP_MALLOC = (string) Core.SettingsHandler.WriteSetting("STARTUP_MALLOC", ((MallocComboBoxItem) SettingsGameControlDropdownMalloc.SelectedItem).Malloc.Name);
             if (Equals(((MallocComboBoxItem) SettingsGameControlDropdownMalloc.SelectedItem).Malloc.Name, MALLOC_SYSTEM_DEFAULT)) return;
             SettingsGameControlCheckboxPages.IsChecked = false;

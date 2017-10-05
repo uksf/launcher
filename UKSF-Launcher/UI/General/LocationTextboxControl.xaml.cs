@@ -7,7 +7,7 @@ namespace UKSF_Launcher.UI.General {
     /// </summary>
     public partial class LocationTextboxControl {
         public static readonly RoutedEvent LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT =
-            EventManager.RegisterRoutedEvent("LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT", RoutingStrategy.Tunnel, typeof(RoutedEventHandler), typeof(LocationTextboxControl));
+            EventManager.RegisterRoutedEvent("LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(LocationTextboxControl));
 
         public LocationTextboxControl() {
             InitializeComponent();

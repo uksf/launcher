@@ -6,21 +6,22 @@ namespace UKSF_Launcher.UI.Main {
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow {
-        public static MainMainControl MainControl;
-        public static MainSettingsControl SettingsControl;
+        public static MainWindow Instance;
 
         /// <inheritdoc />
         /// <summary>
         ///     Creates new MainWindow object.
         /// </summary>
         public MainWindow() {
-            InitializeComponent();
-
-            MainControl = MainMainControl;
-            SettingsControl = MainSettingsControl;
+            Instance = this;
 
             AddHandler(MainTitleBarControl.MAIN_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT, new RoutedEventHandler(MainTitleBar_MouseDown));
             AddHandler(MainTitleBarControl.MAIN_TITLE_BAR_CONTROL_BUTTON_MINIMIZE_CLICK_EVENT, new RoutedEventHandler(MainTitleBarButtonMinimize_Click));
+
+            InitializeComponent();
+            
+            MainSettingsControl.MainSettingsControlLauncherSettingsControl.Initialise();
+            MainSettingsControl.MainSettingsControlGameSettingsControl.Initialise();
         }
 
         /// <summary>

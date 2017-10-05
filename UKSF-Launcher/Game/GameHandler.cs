@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Game {
     internal static class GameHandler {
@@ -42,11 +43,13 @@ namespace UKSF_Launcher.Game {
         ///     Starts the game.
         /// </summary>
         public static void StartGame() {
+            LogHashSpaceMessage(Severity.INFO, "Starting game...");
             Process game = new Process();
             try {
                 game.StartInfo.UseShellExecute = false;
                 game.StartInfo.FileName = GAME_LOCATION;
                 game.StartInfo.Arguments = GetStartupParameters();
+                LogInfo($"Startup Parameters {game.StartInfo.Arguments}");
                 game.Start();
             }
             catch (Exception exception) {
@@ -54,6 +57,10 @@ namespace UKSF_Launcher.Game {
             }
         }
 
+        /// <summary>
+        /// Compiles startup parameter variables into a startup string.
+        /// </summary>
+        /// <returns>String of parameters</returns>
         private static string GetStartupParameters() {
             StringBuilder startupString = new StringBuilder();
             startupString.Append($"-name={PROFILE}");

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UKSF_Launcher.Utility;
+using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Game {
     public static class ProfileHandler {
@@ -19,8 +20,8 @@ namespace UKSF_Launcher.Game {
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
         public static List<Profile> GetProfilesAll() {
-            List<Profile> profiles = GetProfiles(Global.PROFILE_LOCATION_DEFAULT);
-            profiles.AddRange(GetProfiles(Global.PROFILE_LOCATION_OTHER));
+            List<Profile> profiles = GetProfiles(PROFILE_LOCATION_DEFAULT);
+            profiles.AddRange(GetProfiles(PROFILE_LOCATION_OTHER));
             return profiles;
         }
 
@@ -29,6 +30,7 @@ namespace UKSF_Launcher.Game {
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
         private static List<Profile> GetProfiles(string directory) {
+            LogSeverity(Severity.INFO, $"Searching {directory} for profiles");
             List<string> files = new List<string>();
             if (Directory.Exists(directory)) {
                 files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories).Where(file => file.Count(count => count == '.') == 1).ToList();
@@ -60,11 +62,11 @@ namespace UKSF_Launcher.Game {
             string directory = Path.GetDirectoryName(profile.FilePath);
             if (!Directory.Exists(directory)) return;
             List<string> files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION).ToList();
-            Directory.CreateDirectory(Path.Combine(Global.PROFILE_LOCATION_OTHER, newProfile.Name));
+            Directory.CreateDirectory(Path.Combine(PROFILE_LOCATION_OTHER, newProfile.Name));
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);
                 if (fileName != null) {
-                    File.Copy(file, Path.Combine(Global.PROFILE_LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
+                    File.Copy(file, Path.Combine(PROFILE_LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
                 }
             }
         }
@@ -81,7 +83,7 @@ namespace UKSF_Launcher.Game {
                 FilePath = fileName;
                 Name = Path.GetFileNameWithoutExtension(fileName);
                 DisplayName = Regex.Replace(Name ?? throw new InvalidOperationException(), PROFILE_JOINER, ".");
-                LogHandler.LogInfo("Found profile: " + Name + " / " + DisplayName + "");
+                LogInfo("Found profile: " + Name + " / " + DisplayName + "");
             }
 
             /// <summary>
@@ -94,7 +96,7 @@ namespace UKSF_Launcher.Game {
                 FilePath = "";
                 Name = rank + PROFILE_JOINER + surname + PROFILE_JOINER + initial.ToUpper();
                 DisplayName = Regex.Replace(Name, PROFILE_JOINER, ".");
-                LogHandler.LogInfo("Found profile: " + Name + " / " + DisplayName + "");
+                LogInfo("Found profile: " + Name + " / " + DisplayName + "");
             }
 
             public string FilePath { get; }

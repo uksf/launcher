@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UKSF_Launcher.UI.Main;
 
 namespace UKSF_Launcher.UI.General {
     public class SafeWindow : Window {
@@ -10,6 +11,18 @@ namespace UKSF_Launcher.UI.General {
             if (Application.Current == null) {
                 Core.ShutDown();
             }
+        }
+
+        public class StringRoutedEventArgs : RoutedEventArgs {
+            public StringRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public string Text { get; set; }
+        }
+
+        public class WarningRoutedEventArgs : RoutedEventArgs {
+            public WarningRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public bool Block { get; set; }
+            public string Warning { get; set; }
+            public MainMainControl.CurrentWarning CurrentWarning { get; set; }
         }
     }
 }

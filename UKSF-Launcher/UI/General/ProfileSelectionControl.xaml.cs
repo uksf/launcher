@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
+using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.UI.General {
     /// <summary>
@@ -10,7 +11,7 @@ namespace UKSF_Launcher.UI.General {
     /// </summary>
     public partial class ProfileSelectionControl {
         public static readonly RoutedEvent PROFILE_SELECTION_CONTROL_UPDATE_EVENT =
-            EventManager.RegisterRoutedEvent("PROFILE_SELECTION_CONTROL_UPDATE_EVENT", RoutingStrategy.Tunnel, typeof(RoutedEventHandler), typeof(ProfileSelectionControl));
+            EventManager.RegisterRoutedEvent("PROFILE_SELECTION_CONTROL_UPDATE_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ProfileSelectionControl));
 
         public ProfileSelectionControl() {
             InitializeComponent();
@@ -31,15 +32,13 @@ namespace UKSF_Launcher.UI.General {
                 ProfileComboBoxItem item = new ProfileComboBoxItem(profile, FindResource("Uksf.ComboBoxItem") as Style);
                 ProfileSelectionControlDropdownProfile.Items.Add(item);
 
-                if (Global.FIRSTTIMESETUPDONE && profile.DisplayName == Global.PROFILE) {
+                if (FIRSTTIMESETUPDONE && profile.DisplayName == PROFILE) {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(profile);
                 }
             }
 
-            if (ProfileHandler.FindUksfProfile(profiles) != null) {
-                if (Global.FIRSTTIMESETUPDONE && Global.PROFILE == "") {
-                    Global.PROFILE = ProfileHandler.FindUksfProfile(profiles).DisplayName;
-                } else { // TODO: Recheck the logic here. Find uksf profile happens when PROFILE is set
+            if (ProfileSelectionControlDropdownProfile.SelectedIndex == -1 && ProfileHandler.FindUksfProfile(profiles) != null) {
+                if (!FIRSTTIMESETUPDONE || FIRSTTIMESETUPDONE && PROFILE == "") {
                     ProfileSelectionControlDropdownProfile.SelectedIndex = profiles.IndexOf(ProfileHandler.FindUksfProfile(profiles));
                 }
             }

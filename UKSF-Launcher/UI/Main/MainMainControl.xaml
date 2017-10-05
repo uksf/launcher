@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="464" d:DesignWidth="500"
-             Visibility="Visible">
+             d:DesignHeight="464" d:DesignWidth="500">
     <Grid>
         <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
                HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
@@ -14,5 +13,10 @@
                 Click="MainMainControlButtonPlay_Click"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1"
                 Style="{StaticResource Uksf.Button}" />
+        <TextBlock x:Name="MainMainControlWarningText" FontSize="24"
+                   FontWeight="Bold" HorizontalAlignment="Center" MaxWidth="450"
+                   VerticalAlignment="Bottom" TextAlignment="Center" Margin="0,0,0,10"
+                   Foreground="{StaticResource Uksf.Foreground}" Panel.ZIndex="1"
+                   Style="{StaticResource Uksf.TextBlock}" />
     </Grid>
 </UserControl>

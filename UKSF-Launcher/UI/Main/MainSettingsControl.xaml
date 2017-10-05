@@ -16,14 +16,14 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Button x:Name="MainSettingsControlButtonLauncher" Content="Launcher"
-                    Click="MainSettingsControlButtonLauncher_Click" Grid.Column="0" IsEnabled="True"
+                    Click="MainSettingsControlButtonLauncher_Click" Grid.Column="0"
                     HorizontalAlignment="Stretch" Style="{StaticResource Uksf.TabButton}" />
             <Button x:Name="MainSettingsControlButtonGame" Content="Game" Click="MainSettingsControlButtonGame_Click"
-                    Grid.Column="1" IsEnabled="False" HorizontalAlignment="Stretch"
+                    Grid.Column="1" HorizontalAlignment="Stretch"
                     Style="{StaticResource Uksf.TabButton}" />
         </Grid>
         <Grid Margin="8">
-            <settings:SettingsLauncherControl x:Name="MainSettingsControlLauncherSettingsControl" Margin="0,36,0,0" Visibility="Hidden"/>
+            <settings:SettingsLauncherControl x:Name="MainSettingsControlLauncherSettingsControl" Margin="0,36,0,0"/>
             <settings:SettingsGameControl x:Name="MainSettingsControlGameSettingsControl" Margin="0,36,0,0" />
         </Grid>
     </Grid>

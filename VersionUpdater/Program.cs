@@ -6,12 +6,14 @@ namespace VersionUpdater {
     internal static class Program {
         private static void Main() {
             Version newVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe")).FileVersion);
+            string flags = FileVersionInfo.GetVersionInfo(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe")).ProductVersion;
+
             string versionFile = Path.Combine(Environment.CurrentDirectory, "version");
             if (!File.Exists(versionFile)) {
                 File.Create(versionFile).Close();
             }
             using (StreamWriter writer = new StreamWriter(versionFile)) {
-                writer.Write(newVersion.ToString());
+                writer.Write(newVersion + flags);
             }
 
             Process.Start("git", @"clone https://github.com/uksf/launcher.git")?.WaitForExit();

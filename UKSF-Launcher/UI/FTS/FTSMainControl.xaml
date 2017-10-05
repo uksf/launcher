@@ -15,8 +15,8 @@
                 <TextBlock x:Name="FtsMainControlDescription" Text="Test" MinHeight="130" FontSize="14"
                            Style="{StaticResource Uksf.TextBlock}" />
                 <Grid Margin="5">
-                    <Label x:Name="FtsMainControlWarningText" Content="Warning" FontSize="14" Height="20"
-                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                    <TextBlock x:Name="FtsMainControlWarningText" Text="Warning" FontWeight="Bold" FontSize="14" Padding="2,2,2,2" Height="20"
+                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.TextBlock}" />
                     <Grid Height="25">
                         <fts:FtsGameExeControl x:Name="FtsGameExeControl" />
                         <fts:FtsModLocationControl x:Name="FtsModLocationControl" Visibility="Collapsed" />

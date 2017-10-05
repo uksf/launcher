@@ -17,7 +17,7 @@
                     BorderThickness="1">
     <Grid>
         <main:MainTitleBarControl x:Name="MainTitleBarControl" Margin="0,0,0,464" />
-        <main:MainMainControl x:Name="MainMainControl" Visibility="Hidden" />
-        <main:MainSettingsControl x:Name="MainSettingsControl" Margin="0,36,0,0" />
+        <main:MainMainControl x:Name="MainMainControl" />
+        <main:MainSettingsControl x:Name="MainSettingsControl" Margin="0,36,0,0" Visibility="Collapsed" />
     </Grid>
 </general:SafeWindow>

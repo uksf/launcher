@@ -7,13 +7,13 @@
              d:DesignHeight="25" d:DesignWidth="470">
     <Grid Width="470">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="ProfileSelectionControlDropdownProfile" VerticalAlignment="Top"
                   SelectionChanged="ProfileSelectionControlDropdownProfile_Selected"
                   HorizontalAlignment="Stretch" Height="25" Grid.Column="0" Style="{StaticResource Uksf.ComboBox}" />
-        <Button x:Name="ProfileSelectionControlButtonCopy" Click="ProfileSelectionControlButtonCopy_Click"
+        <Button Click="ProfileSelectionControlButtonCopy_Click"
                 Content="Copy" VerticalAlignment="Top" HorizontalAlignment="Left" Height="25" Margin="10,0,0,0"
                 Grid.Column="1"
                 Style="{StaticResource Uksf.DialogButton}" />

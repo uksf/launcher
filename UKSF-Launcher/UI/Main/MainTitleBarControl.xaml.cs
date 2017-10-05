@@ -10,8 +10,7 @@ namespace UKSF_Launcher.UI.Main {
             EventManager.RegisterRoutedEvent("MAIN_TITLE_BAR_CONTROL_MOUSE_DOWN_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(MainTitleBarControl));
 
         public static readonly RoutedEvent MAIN_TITLE_BAR_CONTROL_BUTTON_MINIMIZE_CLICK_EVENT =
-            EventManager.RegisterRoutedEvent("MAIN_TITLE_BAR_CONTROL_BUTTON_MINIMIZE_CLICK_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler),
-                                             typeof(MainTitleBarControl));
+            EventManager.RegisterRoutedEvent("MAIN_TITLE_BAR_CONTROL_BUTTON_MINIMIZE_CLICK_EVENT", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(MainTitleBarControl));
 
         /// <inheritdoc />
         /// <summary>
@@ -53,15 +52,8 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="sender">Sender bject</param>
         /// <param name="args">Click arguments</param>
         private void MainTitleBarControlButtonSettings_Click(object sender, RoutedEventArgs args) {
-            MainMainControl main = MainWindow.MainControl;
-            MainSettingsControl settings = MainWindow.SettingsControl;
-            if (main.Visibility == Visibility.Visible) {
-                main.Visibility = Visibility.Hidden;
-                settings.Visibility = Visibility.Visible;
-            } else {
-                main.Visibility = Visibility.Visible;
-                settings.Visibility = Visibility.Hidden;
-            }
+            MainWindow.Instance.MainMainControl.Visibility = MainWindow.Instance.MainMainControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            MainWindow.Instance.MainSettingsControl.Visibility = MainWindow.Instance.MainSettingsControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

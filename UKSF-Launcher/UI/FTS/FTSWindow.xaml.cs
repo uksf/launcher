@@ -1,5 +1,6 @@
 ﻿using System.Windows;
-using UKSF_Launcher.Utility;
+using static UKSF_Launcher.Global;
+using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.UI.FTS {
     /// <inheritdoc cref="General.SafeWindow" />
@@ -31,8 +32,8 @@ namespace UKSF_Launcher.UI.FTS {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Click arguments</param>
         private void FTS_Finish(object sender, RoutedEventArgs args) {
-            LogHandler.LogInfo("First time setup finished");
-            Global.FIRSTTIMESETUPDONE = (bool) Core.SettingsHandler.WriteSetting("FIRSTTIMESETUPDONE", true);
+            LogInfo("First time setup finished");
+            FIRSTTIMESETUPDONE = (bool) Core.SettingsHandler.WriteSetting("FIRSTTIMESETUPDONE", true);
             Close();
         }
     }

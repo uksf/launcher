@@ -5,6 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:general="clr-namespace:UKSF_Launcher.UI.General"
              mc:Ignorable="d"
-             d:DesignHeight="25" d:DesignWidth="454">
-    <general:LocationTextboxControl x:Name="FtsModLocationControlLocationTextboxControl" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+             d:DesignHeight="25" d:DesignWidth="470">
+    <general:LocationTextboxControl x:Name="FtsModLocationControlLocationTextboxControl" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 </UserControl>

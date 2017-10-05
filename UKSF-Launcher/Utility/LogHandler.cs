@@ -12,7 +12,7 @@ namespace UKSF_Launcher.Utility {
         private const string FORMAT_TIME = "HH:mm:ss";
 
         // Logging spacer
-        private const string HASHSPACE = "\n#############################################";
+        private const string HASHSPACE = "\n##########################################################################################";
 
         // Logs directory path
         private static readonly string LOGS = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
@@ -65,7 +65,7 @@ namespace UKSF_Launcher.Utility {
         ///     Logs a message to the log file without a timestamp.
         /// </summary>
         /// <param name="message">Message to log</param>
-        public static void LogNoTime(string message) {
+        private static void LogNoTime(string message) {
             Console.WriteLine(message);
             LogToFile(message);
         }
