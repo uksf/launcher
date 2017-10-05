@@ -36,6 +36,7 @@ namespace UKSF_Launcher.Utility {
             if (flags[2].Equals("R")) {
                 LogHashSpaceMessage(Severity.INFO, "Resetting all settings");
                 Core.SettingsHandler.ResetSettings();
+                force = true;
             }
             if (flags[3].Equals("C")) {
                 LogHashSpaceMessage(Severity.INFO, "Cleaning settings");
