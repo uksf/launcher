@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -42,12 +41,12 @@ namespace UKSF_Launcher.Tests {
             List<ProfileHandler.Profile> profiles = null;
             if (Directory.Exists(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher.Tests\Profiles")) {
                 profiles = ProfileHandler.GetProfiles(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher.Tests\Profiles");
-                
+
                 Assert.That(profiles.Any(profile => profile.DisplayName.Equals("Tim")) && profiles.Any(profile => profile.DisplayName.Equals("Maj.Dick.H")) &&
                             profiles.Any(profile => profile.DisplayName.Equals("SqnLdr.Beswick.T")));
             } else if (Directory.Exists(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles")) {
                 profiles = ProfileHandler.GetProfiles(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles");
-                
+
                 Assert.That(profiles.Any(profile => profile.DisplayName.Equals("Tim")) && profiles.Any(profile => profile.DisplayName.Equals("Maj.Dick.H")) &&
                             profiles.Any(profile => profile.DisplayName.Equals("SqnLdr.Beswick.T")));
             } else {
@@ -71,6 +70,23 @@ namespace UKSF_Launcher.Tests {
 
                 Assert.True(File.Exists(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles\Cdt%2eTwat%2eC\Cdt%2eTwat%2eC.Arma3Profile"));
                 Directory.Delete(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles\Cdt%2eTwat%2eC", true);
+            }
+        }
+
+        [Test]
+        public void ProfileTestsCopyBadProfile() {
+            if (Directory.Exists(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher.Tests\Profiles")) {
+                ProfileHandler.Profile profile1 = new ProfileHandler.Profile(@"C:\this\is\a\test\SqnLdr%2eBeswick%2eT.arma3profile");
+                ProfileHandler.Profile profile2 = new ProfileHandler.Profile("Cdt", "Twat", "C");
+                ProfileHandler.CopyProfile(profile1, profile2, @"E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher.Tests\Profiles");
+
+                Assert.False(File.Exists(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\UKSF-Launcher.Tests\Profiles\Cdt%2eTwat%2eC\Cdt%2eTwat%2eC.Arma3Profile"));
+            } else if (Directory.Exists(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles")) {
+                ProfileHandler.Profile profile1 = new ProfileHandler.Profile(@"C:\this\is\a\test\SqnLdr%2eBeswick%2eT.arma3profile");
+                ProfileHandler.Profile profile2 = new ProfileHandler.Profile("Cdt", "Twat", "C");
+                ProfileHandler.CopyProfile(profile1, profile2, @"C:\projects\launcher\UKSF-Launcher.Tests\Profiles");
+
+                Assert.False(File.Exists(@"C:\projects\launcher\UKSF-Launcher.Tests\Profiles\Cdt%2eTwat%2eC\Cdt%2eTwat%2eC.Arma3Profile"));
             }
         }
     }

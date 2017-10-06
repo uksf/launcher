@@ -7,6 +7,16 @@ using UKSF_Launcher.Utility;
 namespace UKSF_Launcher.Tests {
     internal class LogTests {
         [Test, Order(1)]
+        public void LogTestsNoLogFile() {
+            string logFile = Path.Combine(Global.LOGS,
+                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+                                                                        .First());
+            LogHandler.LogInfo("SINGLEINFOTEST");
+
+            Assert.That(File.ReadAllLines(logFile).Any(line => !line.Contains("SINGLEINFOTEST")));
+        }
+
+        [Test, Order(2)]
         public void LogTestsStart() {
             Directory.CreateDirectory(Global.LOGS);
             string[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
