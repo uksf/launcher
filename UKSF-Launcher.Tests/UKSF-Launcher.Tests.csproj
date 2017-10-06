@@ -55,6 +55,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotMemory.Unit, Version=109.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.dotMemoryUnit.2.4.20170830.172630\lib\dotMemory.Unit.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -69,9 +72,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameTests.cs" />
+    <Compile Include="LogTests.cs" />
+    <Compile Include="MallocTests.cs" />
+    <Compile Include="ServerTests.cs" />
     <Compile Include="SettingsTests.cs" />
     <Compile Include="ProfileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

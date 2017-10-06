@@ -9,9 +9,6 @@ using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Game {
     internal static class GameHandler {
-        // Registry key locaiton for arma installation
-        private const string REGISTRY = @"SOFTWARE\WOW6432Node\bohemia interactive\arma 3";
-
         /// <summary>
         ///     Finds the game installation from registry and selects the best exe to use. Will return an empty string if no exe or
         ///     installation found.
@@ -19,7 +16,7 @@ namespace UKSF_Launcher.Game {
         /// <returns>Path to game exe. Empty string if no installation</returns>
         public static string GetGameInstallation() {
             string location = "";
-            RegistryKey gameKey = Registry.LocalMachine.OpenSubKey(REGISTRY);
+            RegistryKey gameKey = Registry.LocalMachine.OpenSubKey(GAME_REGISTRY);
             if (gameKey == null) return location;
             string install = gameKey.GetValue("main", "").ToString();
             if (!Directory.Exists(install)) return location;
@@ -61,7 +58,7 @@ namespace UKSF_Launcher.Game {
         /// Compiles startup parameter variables into a startup string.
         /// </summary>
         /// <returns>String of parameters</returns>
-        private static string GetStartupParameters() {
+        public static string GetStartupParameters() {
             StringBuilder startupString = new StringBuilder();
             startupString.Append($"-name={PROFILE}");
             startupString.Append(STARTUP_NOSPLASH ? " -nosplash" : "");

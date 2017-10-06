@@ -5,17 +5,6 @@ using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
     internal static class LogHandler {
-        // Logging data format
-        private const string FORMAT_DATE = "yyyy-MM-dd__HH-mm-ss";
-
-        // Logging time format
-        private const string FORMAT_TIME = "HH:mm:ss";
-
-        // Logging spacer
-        private const string HASHSPACE = "\n##########################################################################################";
-
-        // Logs directory path
-        private static readonly string LOGS = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
 
         // Log file
         private static string _logFile;

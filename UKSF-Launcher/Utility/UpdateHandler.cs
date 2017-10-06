@@ -8,9 +8,6 @@ using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Utility {
     internal static class UpdateHandler {
-        private const string FLAG_FORCE = "F";
-        private const string FLAG_RESET = "R";
-        private const string FLAG_CLEAN = "C";
 
         /// <summary>
         ///     Checks for a new version of the launcher from the website.
@@ -42,15 +39,15 @@ namespace UKSF_Launcher.Utility {
         /// <param name="newFlags">Array of remote version flags</param>
         /// <param name="currentFlags">Array of current version flags</param>
         /// <returns>Force update</returns>
-        private static bool HandleFlags(IReadOnlyList<string> newFlags, IReadOnlyList<string> currentFlags) {
-            bool force = newFlags[1].Equals(FLAG_FORCE) && !currentFlags[1].Equals(FLAG_FORCE);
-            if (newFlags[2].Equals(FLAG_RESET) && !currentFlags[2].Equals(FLAG_RESET)) {
-                LogHashSpaceMessage(Severity.INFO, "Resetting all settings");
-                Core.SettingsHandler.ResetSettings();
+        public static bool HandleFlags(IReadOnlyList<string> newFlags, IReadOnlyList<string> currentFlags) {
+            bool force = newFlags[1].Equals(UPDATE_FLAG_FORCE) && !currentFlags[1].Equals(UPDATE_FLAG_FORCE);
+            if (newFlags[2].Equals(UPDATE_FLAG_RESET) && !currentFlags[2].Equals(UPDATE_FLAG_RESET)) {
+                LogHashSpaceMessage(Severity.WARNING, "Resetting all settings");
+                Core.ResetSettings();
                 force = true;
             }
-            if (newFlags[3].Equals(FLAG_CLEAN) && !currentFlags[3].Equals(FLAG_CLEAN)) {
-                LogHashSpaceMessage(Severity.INFO, "Cleaning settings");
+            if (newFlags[3].Equals(UPDATE_FLAG_CLEAN) && !currentFlags[3].Equals(UPDATE_FLAG_CLEAN)) {
+                LogHashSpaceMessage(Severity.WARNING, "Cleaning settings");
                 Core.CleanSettings();
             }
             return force;

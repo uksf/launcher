@@ -5,7 +5,7 @@ using static UKSF_Launcher.Global;
 using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Game {
-    public class MallocHandler {
+    public static class MallocHandler {
         /// <summary>
         ///     Finds Malloc files. Creates Malloc objects for each malloc found.
         /// </summary>

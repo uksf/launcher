@@ -11,7 +11,7 @@ using static UKSF_Launcher.Utility.LogHandler;
 namespace UKSF_Launcher {
     public class Core {
         public static SettingsHandler SettingsHandler;
-        public static ServerHandler ServerHandler;
+        private static ServerHandler _serverHandler;
 
         /// <summary>
         ///     Application starting point.
@@ -32,7 +32,7 @@ namespace UKSF_Launcher {
                 new FtsWindow().ShowDialog();
             }
 
-            ServerHandler = new ServerHandler();
+            _serverHandler = new ServerHandler();
 
             LogHashSpace();
             MainWindow mainWindow = new MainWindow();
@@ -46,7 +46,7 @@ namespace UKSF_Launcher {
         /// </summary>
         private static void InitialiseSettings() {
             LogHashSpaceMessage(Severity.INFO, "Reading all settings");
-            SettingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher");
+            SettingsHandler = new SettingsHandler(REGSITRY);
 
             // Launcher
             FIRSTTIMESETUPDONE = SettingsHandler.ParseSetting("FIRSTTIMESETUPDONE", false);
@@ -70,6 +70,11 @@ namespace UKSF_Launcher {
         }
 
         // ReSharper disable once UnusedMember.Local
+        public static void ResetSettings() {
+            SettingsHandler.ResetSettings();
+        }
+
+        // ReSharper disable once UnusedMember.Local
         public static void CleanSettings() {
             
         }
@@ -79,7 +84,7 @@ namespace UKSF_Launcher {
         ///     If there is no instance of Applicaiton, exit forcefully.
         /// </summary>
         public static void ShutDown() {
-            ServerHandler.Stop();
+            _serverHandler.Stop();
             if (Application.Current == null) {
                 Environment.Exit(0);
             } else {

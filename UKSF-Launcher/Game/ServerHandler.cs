@@ -7,10 +7,8 @@ using System.Threading;
 namespace UKSF_Launcher.Game {
     public class ServerHandler {
         private readonly ManualResetEvent _stopEvent = new ManualResetEvent(false);
-        private bool _run;
-
-        private List<Server> _servers;
         private readonly Thread _thread;
+        private bool _run;
 
         public ServerHandler() {
             _thread = new Thread(Start);
@@ -18,8 +16,10 @@ namespace UKSF_Launcher.Game {
             _thread.Start();
         }
 
+        public List<Server> Servers { get; set; }
+
         private void Start() {
-            _servers = new List<Server> {
+            Servers = new List<Server> {
                 new Server {Active = false, Ip = "uk-sf.com", Name = "Primary Server", Password = "l85", Port = 2303},
                 new Server {Active = false, Ip = "uk-sf.com", Name = "Secondary Server", Password = "l85", Port = 2333},
                 new Server {Active = false, Ip = "uk-sf.com", Name = "Tertiary Server", Password = "l85", Port = 2343},
@@ -40,7 +40,7 @@ namespace UKSF_Launcher.Game {
         private void QueryServers() {
             while (_run) {
                 if (_stopEvent.WaitOne(0)) break;
-                foreach (Server server in _servers) {
+                foreach (Server server in Servers) {
                     try {
                         using (UdpClient udpClient = new UdpClient(56800)) {
                             IPEndPoint ipEndPoint = new IPEndPoint(Dns.GetHostAddresses(server.Ip)[0], server.Port);

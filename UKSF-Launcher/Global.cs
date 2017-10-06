@@ -13,6 +13,18 @@ namespace UKSF_Launcher {
             WARNING,
             ERROR
         }
+        
+        // Settings registry key name
+        public const string REGSITRY = @"SOFTWARE\UKSF-Launcher";
+
+        // Registry key locaiton for arma installation
+        public const string GAME_REGISTRY = @"SOFTWARE\WOW6432Node\bohemia interactive\arma 3";
+
+        // Logging data format
+        public const string FORMAT_DATE = "yyyy-MM-dd__HH-mm-ss";
+
+        // Logging time format
+        public const string FORMAT_TIME = "HH:mm:ss";
 
         // Required drive space for mods
         public const long REQUIREDSPACE = 32212254720; // ~30GB
@@ -20,11 +32,26 @@ namespace UKSF_Launcher {
         // Display name for system default memory allocator
         public const string MALLOC_SYSTEM_DEFAULT = "System Default";
 
+        // Force update flag
+        public const string UPDATE_FLAG_FORCE = "F";
+
+        // Reset all settings and force update flag
+        public const string UPDATE_FLAG_RESET = "R";
+
+        // Clean settings flag
+        public const string UPDATE_FLAG_CLEAN = "C";
+
+        // Logging spacer
+        public static string HASHSPACE = Environment.NewLine + "##########################################################################################";
+
         // Double new line
         public static readonly string NL = Environment.NewLine + Environment.NewLine;
 
         // 64-bit OS
         public static readonly bool IS64BIT = Environment.Is64BitOperatingSystem;
+
+        // Logs directory path
+        public static readonly string LOGS = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
 
         // Folder name of default profile location
         public static readonly string PROFILE_LOCATION_DEFAULT = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Arma 3");
