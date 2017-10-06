@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="36" d:DesignWidth="500">
-    <Grid Height="36" VerticalAlignment="Top" Background="{StaticResource Uksf.BackgroundDark}"
+             d:DesignHeight="34" d:DesignWidth="500">
+    <Grid Height="34" Margin="0,0,0,0" VerticalAlignment="Top" Background="{StaticResource Uksf.BackgroundDark}"
           MouseDown="MainTitleBarControl_MouseDown">
         <Button x:Name="MainTitleBarControlButtonClose" Width="36" Click="MainTitleBarControlButtonClose_Click"
                 HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource Uksf.Button}">

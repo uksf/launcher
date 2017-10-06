@@ -79,6 +79,9 @@ namespace UKSF_Launcher.Utility {
             }
         }
 
+        /// <summary>
+        ///     Deletes regsitry settings subkey.
+        /// </summary>
         // ReSharper disable once UnusedMember.Global
         public void ResetSettings() => Registry.CurrentUser.DeleteSubKey(_registry);
     }

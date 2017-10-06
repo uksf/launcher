@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
 using UKSF_Launcher.UI.FTS;
 using UKSF_Launcher.UI.Main;
@@ -10,6 +11,7 @@ using static UKSF_Launcher.Utility.LogHandler;
 namespace UKSF_Launcher {
     public class Core {
         public static SettingsHandler SettingsHandler;
+        public static ServerHandler ServerHandler;
 
         /// <summary>
         ///     Application starting point.
@@ -29,6 +31,8 @@ namespace UKSF_Launcher {
                 LogHashSpaceMessage(Severity.INFO, "Running first time setup");
                 new FtsWindow().ShowDialog();
             }
+
+            ServerHandler = new ServerHandler();
 
             LogHashSpace();
             MainWindow mainWindow = new MainWindow();
@@ -75,6 +79,7 @@ namespace UKSF_Launcher {
         ///     If there is no instance of Applicaiton, exit forcefully.
         /// </summary>
         public static void ShutDown() {
+            ServerHandler.Stop();
             if (Application.Current == null) {
                 Environment.Exit(0);
             } else {

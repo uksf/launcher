@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.General;
 
@@ -53,6 +54,10 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="args">Click arguments</param>
         private void MainMainControlButtonPlay_Click(object sender, RoutedEventArgs args) {
             GameHandler.StartGame();
+        }
+
+        private void MainMainControlDropdownServer_Selected(object sender, SelectionChangedEventArgs args) {
+            
         }
     }
 }

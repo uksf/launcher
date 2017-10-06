@@ -8,6 +8,10 @@ using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Utility {
     internal static class UpdateHandler {
+        private const string FLAG_FORCE = "F";
+        private const string FLAG_RESET = "R";
+        private const string FLAG_CLEAN = "C";
+
         /// <summary>
         ///     Checks for a new version of the launcher from the website.
         /// </summary>
@@ -15,12 +19,12 @@ namespace UKSF_Launcher.Utility {
         public static void UpdateCheck(bool updated) {
             LogHashSpaceMessage(Severity.INFO, "Checking for update");
             VERSION = Version.Parse(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
-            string[] oldFlags = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).ProductVersion.Split(':');
+            string[] currentFlags = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).ProductVersion.Split(':');
             LogInfo($"Current version: {VERSION}");
 
             string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version").Split(':');
             Version latestVersion = Version.Parse(versionString[0]);
-            bool force = HandleFlags(versionString, oldFlags);
+            bool force = HandleFlags(versionString, currentFlags);
             LogInfo($"Latest version: {latestVersion} - Force update: {force}");
 
             if ((AUTOUPDATELAUNCHER || force) && VERSION < latestVersion) {
@@ -32,14 +36,20 @@ namespace UKSF_Launcher.Utility {
             }
         }
 
-        private static bool HandleFlags(IReadOnlyList<string> flags, IReadOnlyList<string> oldFlags) {
-            bool force = flags[1].Equals("F") && !oldFlags[1].Equals("F");
-            if (flags[2].Equals("R") && !oldFlags[2].Equals("R")) {
+        /// <summary>
+        ///     Checks and handles remote version and current version flags.
+        /// </summary>
+        /// <param name="newFlags">Array of remote version flags</param>
+        /// <param name="currentFlags">Array of current version flags</param>
+        /// <returns>Force update</returns>
+        private static bool HandleFlags(IReadOnlyList<string> newFlags, IReadOnlyList<string> currentFlags) {
+            bool force = newFlags[1].Equals(FLAG_FORCE) && !currentFlags[1].Equals(FLAG_FORCE);
+            if (newFlags[2].Equals(FLAG_RESET) && !currentFlags[2].Equals(FLAG_RESET)) {
                 LogHashSpaceMessage(Severity.INFO, "Resetting all settings");
                 Core.SettingsHandler.ResetSettings();
                 force = true;
             }
-            if (flags[3].Equals("C") && !oldFlags[3].Equals("C")) {
+            if (newFlags[3].Equals(FLAG_CLEAN) && !currentFlags[3].Equals(FLAG_CLEAN)) {
                 LogHashSpaceMessage(Severity.INFO, "Cleaning settings");
                 Core.CleanSettings();
             }
