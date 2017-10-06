@@ -9,12 +9,11 @@ namespace UKSF_Launcher.Tests {
         [Test, Order(1)]
         public void LogTestsNoLogFile() {
             Directory.CreateDirectory(Global.LOGS);
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
-                                                                        .First());
+            FileInfo[] oldLogFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
             LogHandler.LogInfo("SINGLEINFOTEST");
+            FileInfo[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
 
-            Assert.That(File.ReadAllLines(logFile).Any(line => !line.Contains("SINGLEINFOTEST")));
+            Assert.That(logFiles.Length == 0 || oldLogFiles[0] != logFiles[0]);
         }
 
         [Test, Order(2)]
