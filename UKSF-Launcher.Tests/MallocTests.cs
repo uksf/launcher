@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using UKSF_Launcher.Game;
@@ -14,7 +15,8 @@ namespace UKSF_Launcher.Tests {
 
         [Test]
         public void MallocFind() {
-            string installation = Path.GetDirectoryName(GameHandler.GetGameInstallation());
+            string installation = GameHandler.GetGameInstallation();
+            installation = Path.GetDirectoryName(installation);
             if (string.IsNullOrEmpty(installation)) return;
             List<MallocHandler.Malloc> mallocs = MallocHandler.GetMalloc(Path.Combine(installation, "Dll"));
 
