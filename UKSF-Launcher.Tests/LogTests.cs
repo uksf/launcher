@@ -8,6 +8,7 @@ namespace UKSF_Launcher.Tests {
     internal class LogTests {
         [Test, Order(1)]
         public void LogTestsNoLogFile() {
+            Directory.CreateDirectory(Global.LOGS);
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
@@ -18,7 +19,6 @@ namespace UKSF_Launcher.Tests {
 
         [Test, Order(2)]
         public void LogTestsStart() {
-            Directory.CreateDirectory(Global.LOGS);
             string[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
 
             Assert.DoesNotThrow(LogHandler.StartLogging);
