@@ -7,7 +7,7 @@ using UKSF_Launcher.Utility;
 namespace UKSF_Launcher.Tests {
     internal class LogTests {
         [Test, Order(1)]
-        public void LogStart() {
+        public void LogTestsStart() {
             Directory.CreateDirectory(Global.LOGS);
             string[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
 
@@ -18,7 +18,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void LogSeverity() {
+        public void LogTestsLogSeverity() {
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
@@ -32,7 +32,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void LogHashSpace() {
+        public void LogTestsLogHashSpace() {
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
@@ -42,7 +42,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void LogHashSpaceMessage() {
+        public void LogTestsLogHashSpaceMessage() {
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
@@ -54,7 +54,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void LogInfo() {
+        public void LogTestsLogInfo() {
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
@@ -64,7 +64,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void LogClose() {
+        public void LogTestsClose() {
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());

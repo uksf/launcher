@@ -8,35 +8,35 @@ namespace UKSF_Launcher.Tests {
         private const string REGISTRY = @"SOFTWARE\UKSF-Launcher.Tests";
 
         [Test]
-        public void SettingsWrite() {
+        public void SettingsTestsWrite() {
             string value = (string) new SettingsHandler(REGISTRY).WriteSetting("WRITE", "WRITE");
 
             Assert.AreEqual(value, "WRITE");
         }
 
         [Test]
-        public void SettingsReadString() {
+        public void SettingsTestsReadString() {
             string value = new SettingsHandler(REGISTRY).ParseSetting("READSTRING", "READSTRING");
 
             Assert.AreEqual(value, "READSTRING");
         }
 
         [Test]
-        public void SettingsReadInt() {
+        public void SettingsTestsReadInt() {
             int value = new SettingsHandler(REGISTRY).ParseSetting("READINT", 10);
 
             Assert.AreEqual(value, 10);
         }
 
         [Test]
-        public void SettingsReadBool() {
+        public void SettingsTestsReadBool() {
             bool value = new SettingsHandler(REGISTRY).ParseSetting("READBOOL", true);
 
             Assert.AreEqual(value, true);
         }
 
         [Test]
-        public void SettingsReadNull() {
+        public void SettingsTestsReadNull() {
             SettingsHandler settingsHandler = new SettingsHandler(REGISTRY);
             settingsHandler.DeleteSetting("READNULL");
             string value = settingsHandler.ParseSetting("READNULL", "READNULL");
@@ -45,7 +45,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void SettingsDelete() {
+        public void SettingsTestsDelete() {
             SettingsHandler settingsHandler = new SettingsHandler(REGISTRY);
             settingsHandler.WriteSetting("DELETE", "DELETE");
             settingsHandler.DeleteSetting("DELETE");
@@ -55,7 +55,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void SettingsReset() {
+        public void SettingsTestsReset() {
             SettingsHandler settingsHandler = new SettingsHandler(REGISTRY);
             settingsHandler.ResetSettings();
 

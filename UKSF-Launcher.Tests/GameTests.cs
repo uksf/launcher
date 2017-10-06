@@ -5,7 +5,7 @@ using UKSF_Launcher.Game;
 namespace UKSF_Launcher.Tests {
     public class GameTests {
         [Test]
-        public void GetGameInstallation() {
+        public void GameTestsGetGameInstallation() {
             string installation = GameHandler.GetGameInstallation();
 
             if (Registry.LocalMachine.OpenSubKey(Global.GAME_REGISTRY) == null) {
@@ -16,7 +16,7 @@ namespace UKSF_Launcher.Tests {
         }
 
         [Test]
-        public void StartupString() {
+        public void GameTestsStartupString() {
             Global.PROFILE = "TESTPROFILE";
             Global.STARTUP_NOSPLASH = true;
             Global.STARTUP_EMPTYWORLD = true;

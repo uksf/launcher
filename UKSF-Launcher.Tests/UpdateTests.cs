@@ -6,7 +6,7 @@ using UKSF_Launcher.Utility;
 namespace UKSF_Launcher.Tests {
     internal class UpdateTests {
         [Test]
-        public void HandleAllFlags() {
+        public void UpdateTestsHandleAllFlags() {
             Core.SettingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher.Tests");
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
@@ -22,7 +22,7 @@ namespace UKSF_Launcher.Tests {
         }
         
         [Test]
-        public void HandleNoFlags() {
+        public void UpdateTestsHandleNoFlags() {
             Core.SettingsHandler = new SettingsHandler(@"SOFTWARE\UKSF-Launcher.Tests");
             string logFile = Path.Combine(Global.LOGS,
                                           new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()

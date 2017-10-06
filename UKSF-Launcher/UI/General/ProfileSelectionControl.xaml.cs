@@ -69,7 +69,7 @@ namespace UKSF_Launcher.UI.General {
                                   DialogWindow.DialogBoxType.OK_CANCEL, control);
             if (result != MessageBoxResult.OK) return;
             ProfileHandler.CopyProfile(((ProfileComboBoxItem) ProfileSelectionControlDropdownProfile.SelectedItem).Profile,
-                                       new ProfileHandler.Profile(control.Rank, control.Surname, control.Initial));
+                                       new ProfileHandler.Profile(control.Rank, control.Surname, control.Initial), PROFILE_LOCATION_OTHER);
             AddProfiles();
         }
     }

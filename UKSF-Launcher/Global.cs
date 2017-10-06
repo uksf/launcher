@@ -42,7 +42,7 @@ namespace UKSF_Launcher {
         public const string UPDATE_FLAG_CLEAN = "C";
 
         // Logging spacer
-        public static string HASHSPACE = Environment.NewLine + "##########################################################################################";
+        public static readonly string HASHSPACE = Environment.NewLine + "##########################################################################################";
 
         // Double new line
         public static readonly string NL = Environment.NewLine + Environment.NewLine;

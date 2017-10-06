@@ -6,14 +6,14 @@ using UKSF_Launcher.Game;
 namespace UKSF_Launcher.Tests {
     internal class MallocTests {
         [Test]
-        public void MallocCreation() {
+        public void MallocTestsMallocCreation() {
             MallocHandler.Malloc malloc = new MallocHandler.Malloc(@"B:\Steam\steamapps\common\Arma 3\Dll\tbb4malloc_bi.dll");
 
             Assert.AreEqual(malloc.Name, "tbb4malloc_bi");
         }
 
         [Test]
-        public void MallocFind() {
+        public void MallocTestsFind() {
             string installation = GameHandler.GetGameInstallation();
             if (string.IsNullOrEmpty(installation)) return;
             installation = Path.GetDirectoryName(installation);

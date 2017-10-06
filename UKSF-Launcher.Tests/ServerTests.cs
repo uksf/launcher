@@ -4,7 +4,7 @@ using UKSF_Launcher.Game;
 namespace UKSF_Launcher.Tests {
     internal class ServerTests {
         [Test]
-        public void ServerCreation() {
+        public void ServerTestsServerCreation() {
             ServerHandler.Server server = new ServerHandler.Server {Active = false, Ip = "uk-sf.com", Name = "Primary Server", Password = "l85", Port = 2303};
 
             Assert.AreEqual(server.Ip, "uk-sf.com");

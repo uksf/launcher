@@ -9,7 +9,7 @@ using static UKSF_Launcher.Utility.LogHandler;
 namespace UKSF_Launcher.Game {
     public static class ProfileHandler {
         // File extension of profile files
-        private const string PROFILE_EXTENSION = "*.arma3profile";
+        private const string PROFILE_EXTENSION = "*.Arma3Profile";
 
         // Ranks for prefix of profile
         public static readonly string[] PROFILE_PREFIXES =
@@ -29,11 +29,12 @@ namespace UKSF_Launcher.Game {
         ///     Checks the default and other profiles locations for profile files. Creates Profile objects for each profile found.
         /// </summary>
         /// <returns>List of Profile objects for all profiles found</returns>
-        private static List<Profile> GetProfiles(string directory) {
+        public static List<Profile> GetProfiles(string directory) {
             LogSeverity(Severity.INFO, $"Searching {directory} for profiles");
             List<string> files = new List<string>();
             if (Directory.Exists(directory)) {
-                files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories).Where(file => file.Count(count => count == '.') == 1).ToList();
+                files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories)
+                                 .Where(file => (Path.GetFileName(file) ?? throw new InvalidOperationException()).Count(count => count == '.') == 1).ToList();
             }
             return files.Select(file => new Profile(file)).ToList();
         }
@@ -57,16 +58,17 @@ namespace UKSF_Launcher.Game {
         /// </summary>
         /// <param name="profile">Profile to copy settings from</param>
         /// <param name="newProfile">New profile to copy settings to</param>
-        public static void CopyProfile(Profile profile, Profile newProfile) {
+        /// <param name="newDirectory">Directory to create new profile in</param>
+        public static void CopyProfile(Profile profile, Profile newProfile, string newDirectory) {
             if (!File.Exists(profile.FilePath)) return;
             string directory = Path.GetDirectoryName(profile.FilePath);
             if (!Directory.Exists(directory)) return;
             List<string> files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION).ToList();
-            Directory.CreateDirectory(Path.Combine(PROFILE_LOCATION_OTHER, newProfile.Name));
+            Directory.CreateDirectory(Path.Combine(newDirectory, newProfile.Name));
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);
                 if (fileName != null) {
-                    File.Copy(file, Path.Combine(PROFILE_LOCATION_OTHER, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
+                    File.Copy(file, Path.Combine(newDirectory, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
                 }
             }
         }
