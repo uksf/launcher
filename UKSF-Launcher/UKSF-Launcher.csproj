@@ -160,6 +160,7 @@
     <Compile Include="UI\General\LocationTextboxControl.xaml.cs">
       <DependentUpon>LocationTextboxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\General\ServerComboBoxItem.cs" />
     <Compile Include="UI\General\MallocComboBoxItem.cs" />
     <Compile Include="UI\General\ProfileCreationControl.xaml.cs">
       <DependentUpon>ProfileCreationControl.xaml</DependentUpon>

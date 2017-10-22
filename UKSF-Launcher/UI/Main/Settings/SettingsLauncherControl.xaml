@@ -16,8 +16,8 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                     <Label Content="Game Executable" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <Label x:Name="SettingsLauncherControlGameExeWarningText" Content="" Margin="10,0,0,0" Height="18"
-                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                    <TextBlock x:Name="SettingsLauncherControlGameExeWarningText" Text="" Margin="10,0,0,0"
+                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsTextBlock}" />
                     </StackPanel>
                     <general:LocationTextboxControl x:Name="SettingsLauncherControlGameExeTextboxControl"
                                                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -27,8 +27,8 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                     <Label Content="Mod Download Location" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                    <Label x:Name="SettingsLauncherControlDownloadWarningText" Content="" Margin="10,0,0,0" Height="18"
-                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                        <TextBlock x:Name="SettingsLauncherControlDownloadWarningText" Text="" Margin="10,0,0,0"
+                           Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsTextBlock}" />
                     </StackPanel>
                     <general:LocationTextboxControl x:Name="SettingsLauncherControlDownloadTextboxControl"
                                                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />

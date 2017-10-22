@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
+using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Main;
 
 namespace UKSF_Launcher.UI.General {
@@ -23,6 +25,11 @@ namespace UKSF_Launcher.UI.General {
             public bool Block { get; set; }
             public string Warning { get; set; }
             public MainMainControl.CurrentWarning CurrentWarning { get; set; }
+        }
+
+        public class ServerRoutedEventArgs : RoutedEventArgs {
+            public ServerRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public List<ServerHandler.Server> Servers { get; set; }
         }
     }
 }

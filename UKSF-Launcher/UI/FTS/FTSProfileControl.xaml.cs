@@ -35,7 +35,7 @@ namespace UKSF_Launcher.UI.FTS {
             Visibility = Visibility.Visible;
             RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
             RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_DESCRIPTION_EVENT) {
-                Text = ((ProfileComboBoxItem) FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem).Profile != null
+                Text = FtsProfileControlProfileSelectionControl.ProfileSelectionControlDropdownProfile.SelectedItem != null
                            ? DESCRIPTION
                            : DESCRIPTION_NOPROFILE
             });

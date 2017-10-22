@@ -91,7 +91,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
                                        .Contains("x64")) {
                 warning = "We recommend using the 'arma3_x64' exe";
             }
-            SettingsLauncherControlGameExeWarningText.Content = warning;
+            SettingsLauncherControlGameExeWarningText.Text = warning;
             if (MainWindow.Instance.MainMainControl == null) return;
             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.WarningRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_WARNING_EVENT) {
                 Warning = warning,
@@ -110,7 +110,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
                 warning = "Not enough drive space";
                 block = true;
             }
-            SettingsLauncherControlDownloadWarningText.Content = warning;
+            SettingsLauncherControlDownloadWarningText.Text = warning;
             if (MainWindow.Instance.MainMainControl == null) return;
             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.WarningRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_WARNING_EVENT) {
                 Warning = warning,
