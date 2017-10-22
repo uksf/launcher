@@ -84,7 +84,7 @@ namespace UKSF_Launcher {
         ///     If there is no instance of Applicaiton, exit forcefully.
         /// </summary>
         public static void ShutDown() {
-            _serverHandler.Stop();
+            _serverHandler?.Stop();
             if (Application.Current == null) {
                 Environment.Exit(0);
             } else {

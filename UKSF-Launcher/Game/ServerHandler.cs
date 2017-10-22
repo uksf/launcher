@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UKSF_Launcher.UI.General;
+using UKSF_Launcher.UI.Main;
 
 namespace UKSF_Launcher.Game {
     public class ServerHandler {
@@ -57,6 +59,7 @@ namespace UKSF_Launcher.Game {
                         server.Active = false;
                     }
                 }
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ServerRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_SERVER_EVENT) {Servers = Servers});
                 _stopEvent.WaitOne(30000);
             }
         }

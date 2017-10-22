@@ -16,8 +16,8 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Profile" Height="18" Style="{StaticResource Uksf.SettingsLabel}" />
-                        <Label x:Name="SettingsGameControlProfileWarningText" Content="Warning" Margin="10,0,0,0" Height="18"
-                               Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsLabel}" />
+                        <TextBlock x:Name="SettingsGameControlProfileWarningText" Text="" Margin="10,0,0,0"
+                               Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.SettingsTextBlock}" />
                     </StackPanel>
                     <general:ProfileSelectionControl x:Name="SettingsGameControlDropdownProfileSelectionControl"
                                                      HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />

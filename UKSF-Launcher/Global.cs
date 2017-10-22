@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using UKSF_Launcher.Game;
 
 // ReSharper disable InconsistentNaming
 
@@ -13,7 +14,7 @@ namespace UKSF_Launcher {
             WARNING,
             ERROR
         }
-        
+
         // Settings registry key name
         public const string REGSITRY = @"SOFTWARE\UKSF-Launcher";
 
@@ -59,7 +60,7 @@ namespace UKSF_Launcher {
         // Folder name of other profiles location
         public static readonly string PROFILE_LOCATION_OTHER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Arma 3 - Other Profiles");
 
-        // ######################################################################### Settings ######################################################################### \\
+        // ######################################### Settings ######################################### \\
 
         // -------------- Launcher -------------- \\
         // First time setup complete
@@ -80,6 +81,9 @@ namespace UKSF_Launcher {
 
         // Game profile
         public static string PROFILE = "";
+        
+        // Server
+        public static ServerHandler.Server SERVER = null;
 
         // ---------------- Startup parameters ---------------- \\
         // No splash screen

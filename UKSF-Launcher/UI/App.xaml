@@ -79,6 +79,19 @@
                 <Setter Property="TextWrapping" Value="Wrap" />
             </Style>
 
+            <Style x:Key="Uksf.SettingsTextBlock" TargetType="{x:Type TextBlock}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Uksf.Focus}" />
+                <Setter Property="Foreground" Value="{StaticResource Uksf.Grey}" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Padding" Value="2,2,2,2" />
+                <Setter Property="FontFamily" Value="Arial" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Height" Value="18" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+
             <Style x:Key="Uksf.Button" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource Uksf.Focus}" />
                 <Setter Property="Foreground" Value="{StaticResource Uksf.Foreground}" />

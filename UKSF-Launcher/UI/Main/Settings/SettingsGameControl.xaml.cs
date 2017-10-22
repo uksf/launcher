@@ -87,7 +87,7 @@ namespace UKSF_Launcher.UI.Main.Settings {
                 warning = "Please select a profile";
                 block = true;
             }
-            SettingsGameControlProfileWarningText.Content = warning;
+            SettingsGameControlProfileWarningText.Text = warning;
             if (MainWindow.Instance.MainMainControl == null) return;
             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.WarningRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_WARNING_EVENT) {
                 Warning = warning,
