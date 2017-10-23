@@ -68,7 +68,7 @@ namespace UKSF_Launcher.UI.Main {
                 if (servers.Count > 0) {
                     MainMainControlDropdownServer.Visibility = Visibility.Visible;
                     MainMainControlDropdownServer.Items.Clear();
-                    MainMainControlDropdownServer.Items.Add(new ServerComboBoxItem(ServerHandler.NoServer, FindResource("Uksf.ComboBoxItemPlay") as Style));
+                    MainMainControlDropdownServer.Items.Add(new ServerComboBoxItem(ServerHandler.NO_SERVER, FindResource("Uksf.ComboBoxItemPlay") as Style));
                     foreach (ServerHandler.Server server in servers) {
                         ServerComboBoxItem serverComboBoxItem = new ServerComboBoxItem(server, FindResource("Uksf.ComboBoxItemPlay") as Style);
                         MainMainControlDropdownServer.Items.Add(serverComboBoxItem);
@@ -102,7 +102,7 @@ namespace UKSF_Launcher.UI.Main {
             if (MainMainControlDropdownServer.SelectedItem != null) {
                 Global.SERVER = ((ServerComboBoxItem) MainMainControlDropdownServer.SelectedItem).Server;
 
-                if (Equals(Global.SERVER, ServerHandler.NoServer)) {
+                if (Equals(Global.SERVER, ServerHandler.NO_SERVER)) {
                     MainMainControlButtonPlay.Content = "Play";
                     MainMainControlButtonPlay.FontSize = 50;
                 } else {

@@ -45,13 +45,18 @@ namespace UKSF_Launcher.Game {
         /// </summary>
         /// <param name="profiles">List of Profile objects to check</param>
         /// <returns>Profile with a rank or no Profile if no rank</returns>
-        public static Profile FindUksfProfile(IEnumerable<Profile> profiles) =>
-            (from profile in profiles
-             let parts = profile.DisplayName.Split('.')
-             where parts.Length == 3
-             where PROFILE_PREFIXES.Contains(parts.ElementAt(0), StringComparer.OrdinalIgnoreCase)
-             select profile).FirstOrDefault();
-        // TODO: Use sorting for rank prefixes
+        public static Profile FindUksfProfile(List<Profile> profiles) {
+            Profile selectedProfile = null;
+            foreach (string prefix in PROFILE_PREFIXES) {
+                selectedProfile = (from profile in profiles
+                                   let parts = profile.DisplayName.Split('.')
+                                   where parts.Length == 3
+                                   where parts.ElementAt(0).ToLower().Contains(prefix.ToLower())
+                                   select profile).FirstOrDefault();
+                if (selectedProfile != null) break;
+            }
+            return selectedProfile;
+        }
 
         /// <summary>
         ///     Prompts user to select a rank, enter a surname and first initial. Then creates a new Profile and directory in other

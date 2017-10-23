@@ -71,7 +71,7 @@ namespace UKSF_Launcher.Game {
             } else {
                 startupString.Append(" -malloc=system");
             }
-            if (SERVER != null || SERVER != ServerHandler.NoServer) {
+            if (SERVER != null || SERVER != ServerHandler.NO_SERVER) {
                 startupString.Append($" -connect={SERVER?.Ip} -port={SERVER?.Port} -password={SERVER?.Password}");
             }
             return startupString.ToString();

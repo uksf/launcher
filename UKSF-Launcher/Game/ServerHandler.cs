@@ -18,7 +18,7 @@ namespace UKSF_Launcher.Game {
             _thread.Start();
         }
 
-        public List<Server> Servers { get; set; }
+        private List<Server> Servers { get; set; }
 
         private void Start() {
             Servers = new List<Server> {
@@ -64,7 +64,7 @@ namespace UKSF_Launcher.Game {
             }
         }
 
-        public static Server NoServer = new Server {
+        public static readonly Server NO_SERVER = new Server {
             Name = "No Server",
             Active = false
         };

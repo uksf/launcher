@@ -81,7 +81,7 @@ namespace UKSF_Launcher {
 
         // Game profile
         public static string PROFILE = "";
-        
+
         // Server
         public static ServerHandler.Server SERVER = null;
 

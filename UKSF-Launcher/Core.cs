@@ -74,9 +74,7 @@ namespace UKSF_Launcher {
         }
 
         // ReSharper disable once UnusedMember.Local
-        public static void CleanSettings() {
-            
-        }
+        public static void CleanSettings() { }
 
         /// <summary>
         ///     Shuts the application down.

@@ -8,6 +8,7 @@ namespace UKSF_Launcher.Utility {
 
         // Log file
         private static string _logFile;
+        // TODO: Apply string interpolation
 
         /// <summary>
         ///     Starts logging. Creates a new log file, and deletes the oldest if there are more than 9 files.
