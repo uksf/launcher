@@ -10,7 +10,7 @@ namespace UKSF_Launcher.Tests {
         public void LogTestsNoLogFile() {
             Directory.CreateDirectory(Global.LOGS);
             FileInfo[] oldLogFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
-            LogHandler.LogInfo("SINGLEINFOTEST");
+            LogHandler.LogInfo("PRESTARTTEST");
             FileInfo[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
 
             Assert.That(logFiles.Length == 0 || oldLogFiles[0] != logFiles[0]);
