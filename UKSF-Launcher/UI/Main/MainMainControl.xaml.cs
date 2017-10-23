@@ -34,6 +34,8 @@ namespace UKSF_Launcher.UI.Main {
             AddHandler(MAIN_MAIN_CONTROL_SERVER_EVENT, new RoutedEventHandler(MainMainControlServer_Update));
 
             InitializeComponent();
+
+            MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -66,9 +68,15 @@ namespace UKSF_Launcher.UI.Main {
                 if (servers.Count > 0) {
                     MainMainControlDropdownServer.Visibility = Visibility.Visible;
                     MainMainControlDropdownServer.Items.Clear();
+                    MainMainControlDropdownServer.Items.Add(new ServerComboBoxItem(ServerHandler.NoServer, FindResource("Uksf.ComboBoxItemPlay") as Style));
                     foreach (ServerHandler.Server server in servers) {
-                        MainMainControlDropdownServer.Items.Add(new ServerComboBoxItem(server, FindResource("Uksf.ComboBoxItem") as Style));
+                        ServerComboBoxItem serverComboBoxItem = new ServerComboBoxItem(server, FindResource("Uksf.ComboBoxItemPlay") as Style);
+                        MainMainControlDropdownServer.Items.Add(serverComboBoxItem);
+                        if (Global.SERVER != null && serverComboBoxItem.Server.Name == Global.SERVER.Name) {
+                            MainMainControlDropdownServer.SelectedItem = serverComboBoxItem;
+                        }
                     }
+                    MainMainControlDropdownServer_Selected(null, null);
                 } else {
                     MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
                     Global.SERVER = null;
@@ -85,9 +93,25 @@ namespace UKSF_Launcher.UI.Main {
             GameHandler.StartGame();
         }
 
+        /// <summary>
+        ///     Triggered when server dropdown selection changes.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Selection arguments</param>
         private void MainMainControlDropdownServer_Selected(object sender, SelectionChangedEventArgs args) {
             if (MainMainControlDropdownServer.SelectedItem != null) {
                 Global.SERVER = ((ServerComboBoxItem) MainMainControlDropdownServer.SelectedItem).Server;
+
+                if (Equals(Global.SERVER, ServerHandler.NoServer)) {
+                    MainMainControlButtonPlay.Content = "Play";
+                    MainMainControlButtonPlay.FontSize = 50;
+                } else {
+                    MainMainControlButtonPlay.Content = Global.SERVER.Name;
+                    MainMainControlButtonPlay.FontSize = 30;
+                }
+            } else {
+                MainMainControlButtonPlay.Content = "Play";
+                MainMainControlButtonPlay.FontSize = 50;
             }
         }
     }

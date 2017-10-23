@@ -460,14 +460,16 @@
                                         </ControlTemplate>
                                     </TextBox.Template>
                                 </TextBox>
-                                <Popup x:Name="Popup" Placement="Bottom" Focusable="False" AllowsTransparency="True"
-                                       IsOpen="{TemplateBinding IsDropDownOpen}" PopupAnimation="Slide">
+                                <Popup x:Name="Popup" Placement="Left" Focusable="False" AllowsTransparency="True"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}" PopupAnimation="Slide"
+                                       VerticalOffset="{TemplateBinding ActualHeight}"
+                                       HorizontalOffset="{TemplateBinding ActualWidth}">
                                     <Grid x:Name="DropDown" SnapsToDevicePixels="True"
                                           MinWidth="375"
                                           MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                         <Border x:Name="DropDownBorder" BorderThickness="1"
-                                                Background="{StaticResource Uksf.Transparent}"
-                                                BorderBrush="{StaticResource Uksf.Transparent}" />
+                                                Background="{StaticResource Uksf.BackgroundDark}"
+                                                BorderBrush="{StaticResource Uksf.BackgroundDark}" />
                                         <ScrollViewer SnapsToDevicePixels="True">
                                             <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
                                         </ScrollViewer>

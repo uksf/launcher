@@ -10,7 +10,7 @@
         <Button x:Name="MainTitleBarControlButtonClose" Width="36" Click="MainTitleBarControlButtonClose_Click"
                 HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource Uksf.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor"
-                   RenderOptions.EdgeMode="Aliased">
+                   RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
                         <Setter Property="Source"
@@ -28,7 +28,7 @@
         <Button x:Name="MainTitleBarControlButtonMinimize" Width="36" Click="MainTitleBarControlButtonMinimize_Click"
                 HorizontalAlignment="Right" Margin="0,0,36,0" Panel.ZIndex="1" Style="{StaticResource Uksf.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor"
-                   RenderOptions.EdgeMode="Aliased">
+                   RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
                         <Setter Property="Source"
@@ -46,7 +46,7 @@
         <Button x:Name="MainTitleBarControlButtonSettings" Width="36" Click="MainTitleBarControlButtonSettings_Click"
                 HorizontalAlignment="Left" Panel.ZIndex="1" Style="{StaticResource Uksf.Button}">
             <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor"
-                   RenderOptions.EdgeMode="Aliased">
+                   RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
                         <Setter Property="Source"

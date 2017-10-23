@@ -60,10 +60,15 @@ namespace UKSF_Launcher.Game {
                     }
                 }
                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ServerRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_SERVER_EVENT) {Servers = Servers});
-                _stopEvent.WaitOne(30000);
+                _stopEvent.WaitOne(10000);
             }
         }
 
+        public static Server NoServer = new Server {
+            Name = "No Server",
+            Active = false
+        };
+        
         public class Server {
             public string Name { get; set; }
             public string Ip { get; set; }
