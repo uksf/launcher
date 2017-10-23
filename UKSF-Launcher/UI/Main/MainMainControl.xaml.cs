@@ -64,7 +64,7 @@ namespace UKSF_Launcher.UI.Main {
         private void MainMainControlServer_Update(object sender, RoutedEventArgs args) {
             Dispatcher.Invoke(() => {
                 SafeWindow.ServerRoutedEventArgs serverArgs = (SafeWindow.ServerRoutedEventArgs) args;
-                List<ServerHandler.Server> servers = serverArgs.Servers.Where(server => !server.Active).ToList();
+                List<ServerHandler.Server> servers = serverArgs.Servers.Where(server => server.Active).ToList();
                 if (servers.Count > 0) {
                     MainMainControlDropdownServer.Visibility = Visibility.Visible;
                     MainMainControlDropdownServer.Items.Clear();

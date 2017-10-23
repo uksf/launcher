@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -8,6 +7,8 @@ using UKSF_Launcher.UI.Main;
 
 namespace UKSF_Launcher.Game {
     public class ServerHandler {
+        public static readonly Server NO_SERVER = new Server {Name = "No Server", Active = false};
+
         private readonly ManualResetEvent _stopEvent = new ManualResetEvent(false);
         private readonly Thread _thread;
         private bool _run;
@@ -43,20 +44,20 @@ namespace UKSF_Launcher.Game {
             while (_run) {
                 if (_stopEvent.WaitOne(0)) break;
                 foreach (Server server in Servers) {
+                    UdpClient udpClient = new UdpClient(56800);
                     try {
-                        using (UdpClient udpClient = new UdpClient(56800)) {
-                            IPEndPoint ipEndPoint = new IPEndPoint(Dns.GetHostAddresses(server.Ip)[0], server.Port);
-                            udpClient.Client.ReceiveTimeout = 100;
-                            udpClient.Connect(ipEndPoint);
-                            byte[] request = {
-                                0xFF, 0xFF, 0xFF, 0xFF, 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00
-                            };
-                            udpClient.Send(request, request.Length);
-                            udpClient.Receive(ref ipEndPoint);
-                            server.Active = true;
-                        }
-                    } catch (Exception) {
+                        IPEndPoint ipEndPoint = new IPEndPoint(Dns.GetHostAddresses(server.Ip)[0], server.Port);
+                        udpClient.Client.ReceiveTimeout = 100;
+                        udpClient.Connect(ipEndPoint);
+                        byte[] request = {
+                            0xFF, 0xFF, 0xFF, 0xFF, 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00
+                        };
+                        udpClient.Send(request, request.Length);
+                        udpClient.Receive(ref ipEndPoint);
+                        server.Active = true;
+                    } catch (SocketException) {
                         server.Active = false;
+                        udpClient.Close();
                     }
                 }
                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ServerRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_SERVER_EVENT) {Servers = Servers});
@@ -64,11 +65,6 @@ namespace UKSF_Launcher.Game {
             }
         }
 
-        public static readonly Server NO_SERVER = new Server {
-            Name = "No Server",
-            Active = false
-        };
-        
         public class Server {
             public string Name { get; set; }
             public string Ip { get; set; }

@@ -18,27 +18,31 @@ namespace UKSF_Launcher {
         /// </summary>
         /// <param name="updated">Determines if the launcher has been updated</param>
         public Core(bool updated) {
-            Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            try {
+                Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            StartLogging();
-            LogHashSpaceMessage(Severity.INFO, "Launcher Started");
+                StartLogging();
+                LogHashSpaceMessage(Severity.INFO, "Launcher Started");
 
-            InitialiseSettings();
+                InitialiseSettings();
 
-            UpdateHandler.UpdateCheck(updated);
+                UpdateHandler.UpdateCheck(updated);
 
-            if (!FIRSTTIMESETUPDONE) {
-                LogHashSpaceMessage(Severity.INFO, "Running first time setup");
-                new FtsWindow().ShowDialog();
+                if (!FIRSTTIMESETUPDONE) {
+                    LogHashSpaceMessage(Severity.INFO, "Running first time setup");
+                    new FtsWindow().ShowDialog();
+                }
+
+                _serverHandler = new ServerHandler();
+
+                LogHashSpace();
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                mainWindow.Activate();
+                mainWindow.Focus();
+            } catch (Exception exception) {
+                Error(exception);
             }
-
-            _serverHandler = new ServerHandler();
-
-            LogHashSpace();
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            mainWindow.Activate();
-            mainWindow.Focus();
         }
 
         /// <summary>
