@@ -382,9 +382,9 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
-                    <Border Grid.ColumnSpan="2" Name="Border" Background="{StaticResource Uksf.BackgroundDark}" />
+                    <Border Grid.ColumnSpan="2" Name="Border" IsHitTestVisible="False" Background="{StaticResource Uksf.Transparent}" />
                     <Border Grid.Column="1" Name="ButtonBorder" Margin="1,1,1,1"
-                            Background="{StaticResource Uksf.BackgroundDark}" />
+                            Background="{StaticResource Uksf.Transparent}" />
                     <Path Name="Arrow" Grid.Column="1" Data="M0,0 L0,7 L15,22 L30,7 L30,0 L15,15 z"
                           HorizontalAlignment="Center" Fill="{StaticResource Uksf.Foreground}"
                           VerticalAlignment="Center" />
@@ -429,7 +429,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="ComboBoxPlay" TargetType="{x:Type ComboBox}">
+            <Style x:Key="Uksf.ComboBoxPlay" TargetType="{x:Type ComboBox}">
                 <Setter Property="FontFamily" Value="Arial" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -441,7 +441,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ComboBox}">
-                            <Grid>
+                            <Grid x:Name="Grid">
                                 <ToggleButton x:Name="ToggleButton" ClickMode="Press" Focusable="False"
                                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                               Template="{StaticResource Uksf.ComboBoxToggleButtonPlay}" />
@@ -460,10 +460,8 @@
                                         </ControlTemplate>
                                     </TextBox.Template>
                                 </TextBox>
-                                <Popup x:Name="Popup" Placement="Left" Focusable="False" AllowsTransparency="True"
-                                       IsOpen="{TemplateBinding IsDropDownOpen}" PopupAnimation="Slide"
-                                       VerticalOffset="{TemplateBinding ActualHeight}"
-                                       HorizontalOffset="{TemplateBinding ActualWidth}">
+                                <Popup x:Name="Popup" Placement="Bottom" Focusable="False" AllowsTransparency="True"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}" PopupAnimation="Slide">
                                     <Grid x:Name="DropDown" SnapsToDevicePixels="True"
                                           MinWidth="375"
                                           MaxHeight="{TemplateBinding MaxDropDownHeight}">

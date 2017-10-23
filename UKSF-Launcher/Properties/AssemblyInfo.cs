@@ -7,9 +7,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UKSF-Launcher")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("UKSF Launcher")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("UKSF")]
 [assembly: AssemblyProduct("UKSF-Launcher")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

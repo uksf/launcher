@@ -9,9 +9,10 @@
         <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
                HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
                RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" Panel.ZIndex="0" />
-        <ComboBox x:Name="MainMainControlDropdownServer" Width="50" Height="75" Margin="325,50,0,0" VerticalAlignment="Center" HorizontalAlignment="Center"
+        <ComboBox x:Name="MainMainControlDropdownServer" Width="375" Height="75" Margin="0,50,0,0"
+                  VerticalAlignment="Center" HorizontalAlignment="Center"
                   SelectionChanged="MainMainControlDropdownServer_Selected"
-                  Panel.ZIndex="2" Style="{DynamicResource ComboBoxPlay}">
+                  Panel.ZIndex="2" Style="{StaticResource Uksf.ComboBoxPlay}">
         </ComboBox>
         <Button x:Name="MainMainControlButtonPlay" Content="Play" FontSize="50" Width="375" Height="75"
                 Click="MainMainControlButtonPlay_Click" Margin="0,50,0,0"

@@ -46,10 +46,9 @@ namespace UKSF_Launcher.Utility {
                 Core.ResetSettings();
                 force = true;
             }
-            if (newFlags[3].Equals(UPDATE_FLAG_CLEAN) && !currentFlags[3].Equals(UPDATE_FLAG_CLEAN)) {
-                LogHashSpaceMessage(Severity.WARNING, "Cleaning settings");
-                Core.CleanSettings();
-            }
+            if (!newFlags[3].Equals(UPDATE_FLAG_CLEAN) || currentFlags[3].Equals(UPDATE_FLAG_CLEAN)) return force;
+            LogHashSpaceMessage(Severity.WARNING, "Cleaning settings");
+            Core.CleanSettings();
             return force;
         }
 

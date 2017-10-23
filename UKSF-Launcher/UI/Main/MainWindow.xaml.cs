@@ -19,7 +19,7 @@ namespace UKSF_Launcher.UI.Main {
             AddHandler(MainTitleBarControl.MAIN_TITLE_BAR_CONTROL_BUTTON_MINIMIZE_CLICK_EVENT, new RoutedEventHandler(MainTitleBarButtonMinimize_Click));
 
             InitializeComponent();
-            
+
             MainSettingsControl.MainSettingsControlLauncherSettingsControl.Initialise();
             MainSettingsControl.MainSettingsControlGameSettingsControl.Initialise();
         }

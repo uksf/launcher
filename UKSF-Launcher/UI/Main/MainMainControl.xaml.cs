@@ -64,13 +64,12 @@ namespace UKSF_Launcher.UI.Main {
         private void MainMainControlServer_Update(object sender, RoutedEventArgs args) {
             Dispatcher.Invoke(() => {
                 SafeWindow.ServerRoutedEventArgs serverArgs = (SafeWindow.ServerRoutedEventArgs) args;
-                List<ServerHandler.Server> servers = serverArgs.Servers.Where(server => server.Active).ToList();
+                List<ServerHandler.Server> servers = serverArgs.Servers.Where(server => !server.Active).ToList();
                 if (servers.Count > 0) {
                     MainMainControlDropdownServer.Visibility = Visibility.Visible;
                     MainMainControlDropdownServer.Items.Clear();
                     MainMainControlDropdownServer.Items.Add(new ServerComboBoxItem(ServerHandler.NO_SERVER, FindResource("Uksf.ComboBoxItemPlay") as Style));
-                    foreach (ServerHandler.Server server in servers) {
-                        ServerComboBoxItem serverComboBoxItem = new ServerComboBoxItem(server, FindResource("Uksf.ComboBoxItemPlay") as Style);
+                    foreach (ServerComboBoxItem serverComboBoxItem in servers.Select(server => new ServerComboBoxItem(server, FindResource("Uksf.ComboBoxItemPlay") as Style))) {
                         MainMainControlDropdownServer.Items.Add(serverComboBoxItem);
                         if (Global.SERVER != null && serverComboBoxItem.Server.Name == Global.SERVER.Name) {
                             MainMainControlDropdownServer.SelectedItem = serverComboBoxItem;

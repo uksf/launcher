@@ -15,7 +15,7 @@
                     Background="{StaticResource Uksf.Background}"
                     BorderBrush="{StaticResource Uksf.BackgroundLight}"
                     BorderThickness="1">
-    <Grid>
+    <Grid Width="500" Height="500">
         <main:MainTitleBarControl x:Name="MainTitleBarControl" Margin="0,0,0,464" />
         <main:MainMainControl x:Name="MainMainControl" />
         <main:MainSettingsControl x:Name="MainSettingsControl" Margin="0,34,0,0" Visibility="Collapsed" />

@@ -20,11 +20,11 @@ namespace UKSF_Launcher.Utility {
             if (logFiles.Length > 9) {
                 File.Delete(Path.Combine(LOGS, logFiles.Last()));
             }
-            _logFile = Path.Combine(LOGS, "L__" + DateTime.Now.ToString(FORMAT_DATE) + ".log");
+            _logFile = Path.Combine(LOGS, $"L__{DateTime.Now.ToString(FORMAT_DATE)}.log");
             try {
                 File.Create(_logFile).Close();
             } catch (Exception e) {
-                Console.WriteLine("Log file not created: " + _logFile + ". " + e.Message);
+                Console.WriteLine($"Log file not created: {_logFile}. {e.Message}");
             }
             LogInfo("Log Created");
         }
@@ -46,7 +46,7 @@ namespace UKSF_Launcher.Utility {
         /// <param name="severity">Message severity</param>
         /// <param name="message">Message to log</param>
         public static void LogSeverity(Severity severity, string message) {
-            message = DateTime.Now.ToString(FORMAT_TIME) + " " + severity + ": " + message;
+            message = $"{DateTime.Now.ToString(FORMAT_TIME)} {severity}: {message}";
             Console.WriteLine(message);
             LogToFile(message);
         }
