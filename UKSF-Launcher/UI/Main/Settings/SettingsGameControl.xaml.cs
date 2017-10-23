@@ -26,7 +26,6 @@ namespace UKSF_Launcher.UI.Main.Settings {
             AddHandler(SETTINGS_GAME_CONTROL_WARNING_EVENT, new RoutedEventHandler(SettingsLauncherControlProfile_Update));
 
             SettingsGameControlCheckboxSplash.IsChecked = STARTUP_NOSPLASH;
-            SettingsGameControlCheckboxWorld.IsChecked = STARTUP_EMPTYWORLD;
             SettingsGameControlCheckboxScript.IsChecked = STARTUP_SCRIPTERRORS;
             SettingsGameControlCheckboxPages.IsChecked = STARTUP_HUGEPAGES;
             SettingsGameControlCheckboxShacktac.IsChecked = MODS_SHACKTAC;
@@ -119,8 +118,6 @@ namespace UKSF_Launcher.UI.Main.Settings {
         private void SettingsGameControlCheckbox_Click(object sender, RoutedEventArgs args) {
             if (Equals(sender, SettingsGameControlCheckboxSplash)) {
                 STARTUP_NOSPLASH = (bool) Core.SettingsHandler.WriteSetting("STARTUP_NOSPLASH", SettingsGameControlCheckboxSplash.IsChecked);
-            } else if (Equals(sender, SettingsGameControlCheckboxWorld)) {
-                STARTUP_EMPTYWORLD = (bool) Core.SettingsHandler.WriteSetting("STARTUP_EMPTYWORLD", SettingsGameControlCheckboxWorld.IsChecked);
             } else if (Equals(sender, SettingsGameControlCheckboxScript)) {
                 STARTUP_SCRIPTERRORS = (bool) Core.SettingsHandler.WriteSetting("STARTUP_SCRIPTERRORS", SettingsGameControlCheckboxScript.IsChecked);
             } else if (Equals(sender, SettingsGameControlCheckboxPatching)) {

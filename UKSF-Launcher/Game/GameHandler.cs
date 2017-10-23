@@ -47,6 +47,7 @@ namespace UKSF_Launcher.Game {
                 game.StartInfo.FileName = GAME_LOCATION;
                 game.StartInfo.Arguments = GetStartupParameters();
                 LogInfo($"Startup Parameters {game.StartInfo.Arguments}");
+                ProfileHandler.UpdateProfileSquad(PROFILE);
                 game.Start();
             }
             catch (Exception exception) {
@@ -62,7 +63,6 @@ namespace UKSF_Launcher.Game {
             StringBuilder startupString = new StringBuilder();
             startupString.Append($"-name={PROFILE}");
             startupString.Append(STARTUP_NOSPLASH ? " -nosplash" : "");
-            startupString.Append(STARTUP_EMPTYWORLD ? " -world=empty" : "");
             startupString.Append(STARTUP_SCRIPTERRORS ? " -showScriptErrors" : "");
             startupString.Append(STARTUP_FILEPATCHING ? " -filePatching" : "");
             startupString.Append(STARTUP_HUGEPAGES ? " -hugepages" : "");

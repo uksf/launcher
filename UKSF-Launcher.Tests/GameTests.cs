@@ -19,7 +19,6 @@ namespace UKSF_Launcher.Tests {
         public void GameTestsStartupString() {
             Global.PROFILE = "TESTPROFILE";
             Global.STARTUP_NOSPLASH = true;
-            Global.STARTUP_EMPTYWORLD = true;
             Global.STARTUP_SCRIPTERRORS = true;
             Global.STARTUP_FILEPATCHING = true;
             Global.STARTUP_HUGEPAGES = true;

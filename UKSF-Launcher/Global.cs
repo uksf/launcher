@@ -89,9 +89,6 @@ namespace UKSF_Launcher {
         // No splash screen
         public static bool STARTUP_NOSPLASH = true;
 
-        // Empty world
-        public static bool STARTUP_EMPTYWORLD = true;
-
         // Show script errors
         public static bool STARTUP_SCRIPTERRORS = false;
 

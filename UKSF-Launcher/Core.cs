@@ -59,7 +59,6 @@ namespace UKSF_Launcher {
 
             // Startup
             STARTUP_NOSPLASH = SettingsHandler.ParseSetting("STARTUP_NOSPLASH", true);
-            STARTUP_EMPTYWORLD = SettingsHandler.ParseSetting("STARTUP_EMPTYWORLD", true);
             STARTUP_SCRIPTERRORS = SettingsHandler.ParseSetting("STARTUP_SCRIPTERRORS", false);
             STARTUP_HUGEPAGES = SettingsHandler.ParseSetting("STARTUP_HUGEPAGES", false);
             STARTUP_MALLOC = SettingsHandler.ParseSetting("STARTUP_MALLOC", MALLOC_SYSTEM_DEFAULT);

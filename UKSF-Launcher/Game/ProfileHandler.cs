@@ -51,6 +51,7 @@ namespace UKSF_Launcher.Game {
              where parts.Length == 3
              where PROFILE_PREFIXES.Contains(parts.ElementAt(0), StringComparer.OrdinalIgnoreCase)
              select profile).FirstOrDefault();
+        // TODO: Use sorting for rank prefixes
 
         /// <summary>
         ///     Prompts user to select a rank, enter a surname and first initial. Then creates a new Profile and directory in other
@@ -73,6 +74,35 @@ namespace UKSF_Launcher.Game {
             }
         }
 
+        /// <summary>
+        ///     Updates profile file with correct squad URL settings.
+        /// </summary>
+        /// <param name="profileName">Profile to update</param>
+        public static void UpdateProfileSquad(string profileName) {
+            Profile profile = GetProfilesAll().FirstOrDefault(profileCheck => profileCheck.DisplayName.Equals(profileName));
+            if (profile == null) return;
+            if (!File.Exists(profile.FilePath)) return;
+            if (!PROFILE_PREFIXES.Any(prefix => profile.DisplayName.Contains(prefix))) {
+                LogSeverity(Severity.WARNING, $"Profile '{profile.DisplayName}' is not a UKSF profile, will not force Squad info.");
+                return;
+            }
+
+            string[] lines = File.ReadAllLines(profile.FilePath);
+            for (int index = 0; index < lines.Length; index++) {
+                if (lines[index].Contains("glasses=")) {
+                    lines[index] = @"	glasses=""None"";";
+                } else if (lines[index].Contains("unitType=")) {
+                    lines[index] = @"	unitType=1;";
+                } else if (lines[index].Contains("unitId=")) {
+                    lines[index] = @"	unitId=-1;";
+                } else if (lines[index].Contains("squad=")) {
+                    lines[index] = @"	squad=""http://uk-sf.com/squadtag/A3/squad.xml"";";
+                }
+            }
+            File.WriteAllLines(profile.FilePath, lines);
+            LogInfo($"Squad info forced for profile '{profile.DisplayName}'");
+        }
+
         public class Profile {
             // Delimiter for joining elements of profile string. Replaces '.' characters
             private const string PROFILE_JOINER = "%2e";
@@ -85,7 +115,7 @@ namespace UKSF_Launcher.Game {
                 FilePath = fileName;
                 Name = Path.GetFileNameWithoutExtension(fileName);
                 DisplayName = Regex.Replace(Name ?? throw new InvalidOperationException(), PROFILE_JOINER, ".");
-                LogInfo("Found profile: " + Name + " / " + DisplayName + "");
+                LogInfo($"Found profile: {Name} / {DisplayName}");
             }
 
             /// <summary>
@@ -98,7 +128,7 @@ namespace UKSF_Launcher.Game {
                 FilePath = "";
                 Name = rank + PROFILE_JOINER + surname + PROFILE_JOINER + initial.ToUpper();
                 DisplayName = Regex.Replace(Name, PROFILE_JOINER, ".");
-                LogInfo("Found profile: " + Name + " / " + DisplayName + "");
+                LogInfo($"Found profile: {Name} / {DisplayName}");
             }
 
             public string FilePath { get; }

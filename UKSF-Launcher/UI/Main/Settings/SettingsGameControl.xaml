@@ -38,10 +38,6 @@
                                               x:Name="SettingsGameControlCheckboxSplash"
                                               Click="SettingsGameControlCheckbox_Click"
                                               Style="{StaticResource Uksf.CheckBox}" />
-                                    <CheckBox Content="Empty World" Margin="2"
-                                              x:Name="SettingsGameControlCheckboxWorld"
-                                              Click="SettingsGameControlCheckbox_Click"
-                                              Style="{StaticResource Uksf.CheckBox}" />
                                     <CheckBox Content="Show Script Errors" Margin="2"
                                               x:Name="SettingsGameControlCheckboxScript"
                                               Click="SettingsGameControlCheckbox_Click"
