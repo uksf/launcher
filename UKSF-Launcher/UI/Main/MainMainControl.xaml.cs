@@ -36,6 +36,7 @@ namespace UKSF_Launcher.UI.Main {
             InitializeComponent();
 
             MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
+            // TODO: Sims-esque loading messages
         }
 
         /// <summary>

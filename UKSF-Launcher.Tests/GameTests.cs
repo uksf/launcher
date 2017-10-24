@@ -23,9 +23,10 @@ namespace UKSF_Launcher.Tests {
             Global.STARTUP_FILEPATCHING = true;
             Global.STARTUP_HUGEPAGES = true;
             Global.STARTUP_MALLOC = Global.MALLOC_SYSTEM_DEFAULT;
+            Global.SERVER = new ServerHandler.Server {Active = false, Ip = "test.com", Name = "Primary Server", Password = "l85", Port = 2303};
             string startupString = GameHandler.GetStartupParameters();
 
-            Assert.AreEqual(startupString, "-name=TESTPROFILE -nosplash -world=empty -showScriptErrors -filePatching -hugepages -malloc=system");
+            Assert.AreEqual(startupString, "-name=TESTPROFILE -nosplash -showScriptErrors -filePatching -hugepages -malloc=system -connect=test.com -port=2303 -password=l85");
         }
     }
 }
