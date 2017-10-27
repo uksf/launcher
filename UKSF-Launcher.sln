@@ -27,6 +27,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1982ACB5-08AF-4144-994B-07E489677CD4}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		tests.bat = tests.bat
 	EndProjectSection
 EndProject
 Global
