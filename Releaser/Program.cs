@@ -10,6 +10,7 @@ namespace Releaser {
             Process.Start("git", @"merge master")?.WaitForExit();
             Process.Start("git", @"commit -am ""Release build""")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
+            Process.Start("git", @"checkout master")?.WaitForExit();
         }
     }
 }
