@@ -46,6 +46,8 @@ artifacts:
     name: Patching
   - path: release\Network.dll
     name: Network
+  - path: release\ServerService.exe
+    name: ServerService
 deploy:
 - provider: FTP
   host: ftp.uk-sf.com
@@ -54,7 +56,7 @@ deploy:
   password:
     secure: 1k1dPMXwKdh+kVVv5GxYyA==
   folder: /wamp/www/uksfnew/public/launcher
-  artifact: UKSF-Launcher,Updater,VersionUpdater,Patching,Network
+  artifact: UKSF-Launcher,Updater,VersionUpdater,Patching,Network,ServerService
   on:
     branch: release
 after_deploy:
