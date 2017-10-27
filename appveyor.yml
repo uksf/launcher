@@ -23,6 +23,9 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
   - nuget restore
+  - ps: "$env:ApplicationVersion=$env:APPVEYOR_BUILD_VERSION;$env:PublishUrl='http://www.uk-sf.com/launcher/release/';
+    $mypwd = ConvertTo-SecureString -String \"$env:KEY_PASSPHRASE" -Force –AsPlainText\nImport-PfxCertificate –FilePath
+    C:\\projects\\launcher\\Launcher\\Launcher_TemporaryKey.pfx cert:\\currentuser\\my -Password $mypwd"
 build:
   project: UKSF-Launcher.sln
   verbosity: minimal
