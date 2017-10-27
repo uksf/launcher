@@ -2,6 +2,8 @@ version: "1.0.0.{build}"
 environment:
   COVERALLS_REPO_TOKEN:
     secure: 3fEK++DqcBYsFmUUVtJ3keqDdrtJ3p8CFaLIWw70SloLgqDSi6DSDgr5fMF1Yke0
+  KEY_PASSPHRASE:
+    secure: QOZIH+ecNjB/jVbZ8k6FrxLcpnepCp/ADHMw3WOIV8A=
 branches:
   only:
   - master
@@ -22,8 +24,11 @@ cache:
 before_build:
   - nuget restore
 build:
-  project: UKSF-Launcher.sln
-  verbosity: minimal
+  #project: UKSF-Launcher.sln
+  #verbosity: minimal
+build_script:
+  - ps: >-
+    
 test_script:
 - cmd: >-
     cd C:\projects\launcher

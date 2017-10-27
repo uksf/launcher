@@ -42,4 +42,3 @@ using System.Windows;
 )]
 [assembly: InternalsVisibleTo("Launcher.Tests")]
 [assembly: InternalsVisibleTo("UKSF-Launcher.Explorables")]
-
