@@ -22,7 +22,7 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
   - nuget restore
-  - ps: "$env:ApplicationVersion=$env:APPVEYOR_BUILD_VERSION;$env:PublishUrl='http://www.uk-sf.com/launcher/release/';$mypwd = ConvertTo-SecureString -String \"ELAtEeCtIoNTaGNOOkeyWcUPIcar\" -Force –AsPlainText
+  - ps: "$env:PublishUrl='http://www.uk-sf.com/launcher/release/';$mypwd = ConvertTo-SecureString -String \"ELAtEeCtIoNTaGNOOkeyWcUPIcar\" -Force –AsPlainText
     \nImport-PfxCertificate –FilePath C:\\projects\\launcher\\Launcher\\Launcher_TemporaryKey.pfx cert:\\currentuser\\my -Password $mypwd"
 build:
   project: UKSF-Launcher.sln
@@ -35,7 +35,7 @@ test_script:
 
     packages\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i coverage.xml
 artifacts:
-  - path: release\UKSF-Launcher.exe
+  - path: release\app.publish\UKSF-Launcher.exe
     name: UKSF-Launcher
   - path: release\Updater.exe
     name: Updater
