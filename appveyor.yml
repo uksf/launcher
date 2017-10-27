@@ -1,4 +1,5 @@
 version: "1.0.0.{build}"
+versionflags: ":F:R:"
 environment:
   COVERALLS_REPO_TOKEN:
     secure: bIg0bHabZSbRpu6KG/YPae8nrv1Gd1gOYRyJrFJiQGAcNK2YUFNBgeYltICJs77M
@@ -14,6 +15,7 @@ assembly_info:
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
+  assembly_invormational_version: '{versionflags}'
 cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
