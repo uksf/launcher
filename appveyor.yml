@@ -24,11 +24,8 @@ cache:
 before_build:
   - nuget restore
 build:
-  #project: UKSF-Launcher.sln
-  #verbosity: minimal
-build_script:
-  - ps: >-
-    
+  project: UKSF-Launcher.sln
+  verbosity: minimal
 test_script:
 - cmd: >-
     cd C:\projects\launcher
