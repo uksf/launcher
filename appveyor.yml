@@ -27,7 +27,7 @@ test_script:
 - cmd: >-
     cd C:\projects\launcher
 
-    packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -returntargetcode -filter:"+[Launcher*]* -[Launcher.Tests]* -[Launcher]UKSF_Launcher.UI.* -[Launcher]UKSF_Launcher.Global -[Launcher]UKSF_Launcher.Core -[Launcher]UKSF_Launcher.Properties.*" -excludebyattribute:*.ExcludeFromCoverageAttribute "-target:tests.bat" -output:coverage.xml
+    packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -returntargetcode -filter:"+[UKSF-Launcher*]* -[UKSF-Launcher.Tests]* -[UKSF-Launcher]UKSF_Launcher.UI.* -[UKSF-Launcher]UKSF_Launcher.Global -[UKSF-Launcher]UKSF_Launcher.Core -[UKSF-Launcher]UKSF_Launcher.Properties.*" -excludebyattribute:*.ExcludeFromCoverageAttribute "-target:tests.bat" -output:coverage.xml
 
     packages\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i coverage.xml
 artifacts:
