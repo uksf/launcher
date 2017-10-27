@@ -9,10 +9,7 @@ namespace VersionUpdater {
             string flags = FileVersionInfo.GetVersionInfo(Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe")).ProductVersion;
 
             string versionFile = Path.Combine(Environment.CurrentDirectory, "version");
-            if (!File.Exists(versionFile)) {
-                File.Create(versionFile).Close();
-            }
-            using (StreamWriter writer = new StreamWriter(versionFile)) {
+            using (StreamWriter writer = new StreamWriter(File.Create(versionFile))) {
                 writer.Write(newVersion + flags);
             }
 
