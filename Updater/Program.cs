@@ -16,7 +16,17 @@ namespace Updater {
             string launcher = Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe");
             File.SetAttributes(launcher, FileAttributes.Normal);
             File.Delete(launcher);
+            string patching = Path.Combine(Environment.CurrentDirectory, "Patching.dll");
+            File.SetAttributes(patching, FileAttributes.Normal);
+            File.Delete(patching);
+            string network = Path.Combine(Environment.CurrentDirectory, "Network.dll");
+            File.SetAttributes(network, FileAttributes.Normal);
+            File.Delete(network);
+
             new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/UKSF-Launcher.exe", launcher);
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Patching.dll", patching);
+            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Network.dll", network);
+
             Process launcherProcess = new Process {
                 StartInfo = {UseShellExecute = false, FileName = Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe"), Arguments = "-u"}
             };
