@@ -9,100 +9,98 @@ namespace Network {
         private const int BUFFER_SIZE = 4096;
         private const int MAX_RECEIVE_ATTEMPT = 10;
         private readonly byte[] _buffer = new byte[BUFFER_SIZE];
-        private readonly Action<string> _callbackAction, _callbackLogAction;
-        private readonly Thread _watchThread;
+        private readonly Timer _serverWatchTimer;
+        private int _connectAttempts;
         private int _receiveAttempts;
         private Socket _serverSocket;
-        private bool _stopWatch;
+        public readonly AutoResetEvent AutoResetEvent;
 
-        public ServerSocket(Action<string> callbackAction, Action<string> callbackLogAction) {
-            _callbackAction = callbackAction;
-            _callbackLogAction = callbackLogAction;
-            _watchThread = new Thread(WatchThreadStart);
-            _watchThread.Start();
+        public ServerSocket() {
+            AutoResetEvent = new AutoResetEvent(false);
+            _serverWatchTimer = new Timer(CheckServer, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
 
-        private void WatchThreadStart() {
-            _callbackLogAction.Invoke("Connecting to server...");
-            while (!_stopWatch) {
-                if (_serverSocket?.Connected != true) {
-                    _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    if (Connect()) {
-                        try {
-                            _serverSocket.Send(Encoding.ASCII.GetBytes("connect"));
-                            _callbackLogAction.Invoke("Connected to server");
-                            _callbackAction.Invoke("connected");
-                        } catch (Exception) {
-                            _callbackLogAction.Invoke("Failed to send connect message");
-                        }
-                    } else {
-                        _callbackLogAction.Invoke("Failed to connect to server");
-                    }
-                }
-                Thread.Sleep(3000);
+        public event EventHandler<string> ServerConnectedEvent;
+        public event EventHandler<string> ServerLogEvent;
+        public event EventHandler<string> ServerCommandEvent;
+
+        private void CheckServer(object state) {
+            if (_serverSocket?.Connected == true) return;
+            if (_connectAttempts == 3) {
+                ServerCommandEvent?.Invoke(this, "command::unlock");
+            }
+            _connectAttempts++;
+            if (_connectAttempts <= 5 || _connectAttempts % 30 == 0) {
+                ServerLogEvent?.Invoke(this, "Connecting to server...");
+            }
+            _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            if (Connect()) return;
+            _serverSocket = null;
+            if (_connectAttempts <= 5 || _connectAttempts % 30 == 0) {
+                ServerLogEvent?.Invoke(this, "Failed to connect to server");
+            }
+            if (_connectAttempts == 30) {
+                _serverWatchTimer.Change(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
             }
         }
 
-        public void WatchThreadStop() {
-            _stopWatch = true;
-            _watchThread.Join(100);
-            if (_watchThread.IsAlive) {
-                _watchThread.Abort();
-            }
+        public void StopCheck() {
+            _serverWatchTimer.Dispose();
             Disconnect();
+            AutoResetEvent.Set();
         }
 
         private bool Connect() {
-            int attempts = 0;
-            while (!_serverSocket.Connected && attempts < 10) {
-                try {
-                    attempts++;
-                    IAsyncResult result = _serverSocket.BeginConnect(Dns.GetHostAddresses("uk-sf.com")[0], 48900, EndConnectCallback, _serverSocket);
-                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
-                    break;
-                } catch (Exception) {
-                    //Ignore
-                }
-                Thread.Sleep(500);
+            try {
+                IAsyncResult result = _serverSocket.BeginConnect(Dns.GetHostAddresses("uk-sf.com")[0], 48900, EndConnectCallback, _serverSocket);
+                result.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(250));
+                return true;
+            } catch (Exception) {
+                //Ignore
             }
-            return _serverSocket.Connected;
+            return false;
         }
 
         private void Disconnect() {
+            _connectAttempts = 0;
             try {
-                _serverSocket.Send(Encoding.ASCII.GetBytes("disconnect"));
+                SendMessage("disconnect");
             } catch (Exception) {
-                _callbackLogAction.Invoke("Failed to send disconnect message (hard exit)");
+                ServerLogEvent?.Invoke(this, "Failed to send disconnect message (hard disconnect)");
             }
-            _serverSocket.Close();
+            _serverSocket?.Close();
             _serverSocket = null;
-            _callbackLogAction.Invoke("Disconnected from server");
-            _callbackAction.Invoke("disconnected");
+            ServerLogEvent?.Invoke(this, "Disconnected from server");
+            ServerCommandEvent?.Invoke(this, "disconnected");
         }
 
         public void SendMessage(string message) {
-            _serverSocket.Send(Encoding.ASCII.GetBytes(message));
-            _callbackLogAction.Invoke($"Message sent to server ({message})");
+            _serverSocket.Send(Encoding.ASCII.GetBytes($"{message}::end"));
+            ServerLogEvent?.Invoke(this, $"Message sent to server '{message}'");
         }
 
         private void EndConnectCallback(IAsyncResult asyncResult) {
-            if (_serverSocket != asyncResult.AsyncState as Socket) return;
+            if (_serverSocket != (Socket) asyncResult.AsyncState) return;
             try {
                 if (_serverSocket == null) return;
                 _serverSocket.EndConnect(asyncResult);
                 if (_serverSocket.Connected) {
                     _serverSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceiveCallback, _serverSocket);
+                    SendMessage("connect");
+                    ServerLogEvent?.Invoke(this, "Connected to server");
+                    ServerConnectedEvent?.Invoke(this, "");
                 } else {
-                    _callbackAction.Invoke("failconnect");
+                    ServerCommandEvent?.Invoke(this, "failconnect");
                 }
             } catch (Exception exception) {
-                _callbackLogAction.Invoke(exception.Message);
+                ServerLogEvent?.Invoke(this, exception.Message);
             }
         }
 
         private void ReceiveCallback(IAsyncResult result) {
             try {
                 Socket socket = (Socket) result.AsyncState;
+                if (_serverSocket != socket) return;
                 if (!socket.Connected) return;
                 int received = socket.EndReceive(result);
                 if (received > 0) {
@@ -113,7 +111,7 @@ namespace Network {
                     if (fullmessage.Contains("::end")) {
                         string[] messages = fullmessage.Split(new[] {"::end"}, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string message in messages) {
-                            _callbackAction.Invoke(message);
+                            ServerCommandEvent?.Invoke(this, message);
                         }
                     }
                     socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceiveCallback, socket);
@@ -121,13 +119,13 @@ namespace Network {
                     _receiveAttempts++;
                     socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceiveCallback, socket);
                 } else {
-                    _callbackLogAction.Invoke("Failed to receive from server");
-                    _callbackAction.Invoke("failreceive");
+                    ServerLogEvent?.Invoke(this, "Failed to receive from server");
                     _receiveAttempts = 0;
+                    Disconnect();
                 }
             } catch (Exception) {
-                _callbackLogAction.Invoke("Failed to receive from server");
-                _callbackAction.Invoke("failreceive");
+                ServerLogEvent?.Invoke(this, "Failed to receive from server");
+                Disconnect();
             }
         }
     }

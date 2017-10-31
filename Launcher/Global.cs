@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Network;
+using Patching.Repo;
 
 // ReSharper disable InconsistentNaming
 
@@ -51,8 +52,8 @@ namespace UKSF_Launcher {
         // 64-bit OS
         public static readonly bool IS64BIT = Environment.Is64BitOperatingSystem;
 
-        // Logs directory path
-        public static readonly string LOGS = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
+        // Appdata directory path
+        public static readonly string APPDATA = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF-Launcher");
 
         // Folder name of default profile location
         public static readonly string PROFILE_LOCATION_DEFAULT = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Arma 3");
@@ -104,5 +105,8 @@ namespace UKSF_Launcher {
         // ---------------- Additional Mods ---------------- \\
         // ShackTac HUD
         public static bool MODS_SHACKTAC = true;
+
+        // ######################################### Objects ######################################### \\
+        public static Repo REPO = null;
     }
 }

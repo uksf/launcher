@@ -8,8 +8,8 @@ namespace UKSF_Launcher.Tests {
         [Test]
         public void UpdateTestsHandleAllFlags() {
             Core.SettingsHandler = new SettingsHandler(@"SOFTWARE\Launcher.Tests");
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
 
             string[] newFlags = {"1.0.0.0", Global.UPDATE_FLAG_FORCE, Global.UPDATE_FLAG_RESET, Global.UPDATE_FLAG_CLEAN};
@@ -24,8 +24,8 @@ namespace UKSF_Launcher.Tests {
         [Test]
         public void UpdateTestsHandleNoFlags() {
             Core.SettingsHandler = new SettingsHandler(@"SOFTWARE\Launcher.Tests");
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
 
             string[] newFlags = { "1.0.0.0", Global.UPDATE_FLAG_FORCE, Global.UPDATE_FLAG_RESET, Global.UPDATE_FLAG_CLEAN };

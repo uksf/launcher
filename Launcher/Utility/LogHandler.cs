@@ -5,7 +5,6 @@ using static UKSF_Launcher.Global;
 
 namespace UKSF_Launcher.Utility {
     internal static class LogHandler {
-
         // Log file
         private static string _logFile;
 
@@ -13,17 +12,20 @@ namespace UKSF_Launcher.Utility {
         ///     Starts logging. Creates a new log file, and deletes the oldest if there are more than 9 files.
         /// </summary>
         public static void StartLogging() {
-            Console.WriteLine(LOGS);
-            Directory.CreateDirectory(LOGS);
-            string[] logFiles = new DirectoryInfo(LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
+            Console.WriteLine(APPDATA);
+            Directory.CreateDirectory(APPDATA);
+            string[] logFiles = new DirectoryInfo(APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
             if (logFiles.Length > 9) {
-                File.Delete(Path.Combine(LOGS, logFiles.Last()));
+                File.Delete(Path.Combine(APPDATA, logFiles.Last()));
             }
-            _logFile = Path.Combine(LOGS, $"L__{DateTime.Now.ToString(FORMAT_DATE)}.log");
-            try {
-                File.Create(_logFile).Close();
-            } catch (Exception e) {
-                Console.WriteLine($"Log file not created: {_logFile}. {e.Message}");
+            // ReSharper disable once InconsistentlySynchronizedField
+            _logFile = Path.Combine(APPDATA, $"L__{DateTime.Now.ToString(FORMAT_DATE)}.log");
+            lock (_logFile) {
+                try {
+                    File.Create(_logFile).Close();
+                } catch (Exception e) {
+                    Console.WriteLine($"Log file not created: {_logFile}. {e.Message}");
+                }
             }
             LogInfo("Log Created");
         }
@@ -34,8 +36,10 @@ namespace UKSF_Launcher.Utility {
         /// <param name="message">Message to log</param>
         private static void LogToFile(string message) {
             if (_logFile == null) return;
-            using (StreamWriter writer = new StreamWriter(_logFile, true)) {
-                writer.WriteLine(message);
+            lock (_logFile) {
+                using (StreamWriter writer = new StreamWriter(_logFile, true)) {
+                    writer.WriteLine(message);
+                }
             }
         }
 

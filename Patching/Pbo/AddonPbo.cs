@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -6,6 +7,7 @@ using System.Security.Cryptography;
 namespace Patching.Pbo {
     internal class AddonPbo : AddonFile {
         public AddonPbo(string filePath, string addonPath, string addonName, Action<string> progressAction) : base(filePath, addonPath, addonName, progressAction) { }
+        public AddonPbo(IReadOnlyList<string> lines, TextReader stringReader, Action<string> progressAction) : base(lines, stringReader, progressAction) { }
 
         public override void ProcessFiles(FileInfo file) {
             using (FileStream fileStream = file.OpenRead()) {

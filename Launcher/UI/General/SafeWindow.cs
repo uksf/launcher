@@ -20,6 +20,17 @@ namespace UKSF_Launcher.UI.General {
             public string Text { get; set; }
         }
 
+        public class BoolRoutedEventArgs : RoutedEventArgs {
+            public BoolRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public bool State { get; set; }
+        }
+
+        public class ProgressRoutedEventArgs : RoutedEventArgs {
+            public ProgressRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public float Value { get; set; }
+            public string Message { get; set; }
+        }
+
         public class WarningRoutedEventArgs : RoutedEventArgs {
             public WarningRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
             public bool Block { get; set; }

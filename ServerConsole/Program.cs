@@ -1,40 +1,38 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Network;
 
 namespace ServerConsole {
     internal static class Program {
+        private static string[] _args;
         private static ServerSocket _serverSocket;
-        private static string _callbackCommand = "";
 
         private static void Main(string[] args) {
             SetConsoleCtrlHandler(ConsoleControlCheck, true);
-            _serverSocket = new ServerSocket(ServerMessageCallback, ServerMessageLogCallback);
+            _args = args;
+            _serverSocket = new ServerSocket();
+            _serverSocket.ServerLogEvent += ServerMessageLogCallback;
+            _serverSocket.ServerCommandEvent += ServerMessageCallback;
+            _serverSocket.ServerConnectedEvent += ServerSocketOnServerConnectedEvent;
+            _serverSocket.AutoResetEvent.WaitOne();
+        }
 
-            while (_callbackCommand != "connected") {
-                Thread.Sleep(1000);
-            }
-
-            string argsString = string.Join(" ", args);
+        private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
+            string argsString = string.Join(" ", _args);
             _serverSocket.SendMessage(string.IsNullOrEmpty(argsString) ? "help" : argsString);
-
-            while (_callbackCommand != "stop") {
-                Thread.Sleep(1000);
-            }
-            _serverSocket.WatchThreadStop();
-            _serverSocket = null;
         }
 
-        private static void ServerMessageCallback(string message) {
-            if (message.Contains("message::")) {
-                Console.WriteLine(message.Replace("message::", ""));
+        private static void ServerMessageCallback(object sender, string message) {
+            if (message.Contains("command::")) {
+                if (!message.Contains("stop")) return;
+                _serverSocket.StopCheck();
+                _serverSocket = null;
             } else {
-                _callbackCommand = message.Replace("command::", "");
+                Console.WriteLine(message.Replace("message::", ""));
             }
         }
 
-        private static void ServerMessageLogCallback(string message) {
+        private static void ServerMessageLogCallback(object sender, string message) {
             Console.WriteLine(message);
         }
 
@@ -48,7 +46,7 @@ namespace ServerConsole {
                 case ControlTypes.CTRL_LOGOFF_EVENT:
                 case ControlTypes.CTRL_SHUTDOWN_EVENT:
                 case ControlTypes.CTRL_CLOSE_EVENT:
-                    _serverSocket.WatchThreadStop();
+                    _serverSocket.StopCheck();
                     _serverSocket = null;
                     Environment.Exit(0);
                     break;

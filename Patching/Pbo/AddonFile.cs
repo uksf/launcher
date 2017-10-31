@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Patching.Actions;
+using Action = Patching.Actions.Action;
 
 namespace Patching.Pbo {
-    internal class AddonFile : ProgressReporter {
+    public class AddonFile : ProgressReporter {
         private string _fileName;
 
         public AddonFile(string filePath, string addonPath, string addonName, Action<string> progressAction) : base(progressAction) {
@@ -17,12 +19,24 @@ namespace Patching.Pbo {
             Parts = new Dictionary<string, Part>();
         }
 
+        public AddonFile(IReadOnlyList<string> fileList, TextReader stringReader, Action<string> progressAction) : base(progressAction) {
+            RelativeFilePath = fileList[1];
+            CheckSumBytes = Convert.FromBase64String(fileList[3]);
+            Parts = new Dictionary<string, Part>();
+            int fileCount = Convert.ToInt32(fileList[4]);
+            for (int i = 0; i < fileCount; i++) {
+                Part part = Part.DeSerialize(stringReader.ReadLine());
+                Parts.Add(Utility.Hash(part.Path), part);
+            }
+        }
+
         private string FilePath { get; }
-        public string FileName { get => _fileName ?? Path.GetFileName(RelativeFilePath); private set => _fileName = value; }
+        public string FileName { get => _fileName ?? Path.GetFileName(RelativeFilePath); set => _fileName = value; }
         public string RelativeFilePath { get; }
-        private string AddonName { get; }
+        public string AddonName { get; set; }
         public byte[] CheckSumBytes { get; protected set; }
-        protected Dictionary<string, Part> Parts { get; }
+        public int Length { get { return Parts.Values.Sum(part => part.Length); } }
+        public Dictionary<string, Part> Parts { get; }
 
         public virtual void ProcessFiles(FileInfo file) {
             using (Stream stream = file.OpenRead()) {
@@ -57,5 +71,20 @@ namespace Patching.Pbo {
         }
 
         public bool Compare(AddonFile to) => Parts.Count == to.Parts.Count && CheckSumBytes.SequenceEqual(to.CheckSumBytes);
+
+        public List<Action> Differences(AddonFile remoteAddonFile) {
+            List<Part> parts = new List<Part>();
+            foreach (Part remotePart in remoteAddonFile.Parts.Values) {
+                string key = Utility.Hash(remotePart.Path);
+                if (!Parts.ContainsKey(key)) {
+                    parts.Add(remotePart);
+                } else {
+                    if (!Parts[key].Compare(remotePart)) {
+                        parts.Add(remotePart);
+                    }
+                }
+            }
+            return new List<Action> {new Modified(remoteAddonFile, this, parts)};
+        }
     }
 }

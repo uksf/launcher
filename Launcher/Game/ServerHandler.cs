@@ -1,26 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Network;
-using UKSF_Launcher.UI.General;
-using UKSF_Launcher.UI.Main;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Game {
     public class ServerHandler {
         public static readonly Server NO_SERVER = new Server("No Server", "", 0, "", false);
 
-        private readonly List<Server> _servers = new List<Server>();
+        private static ServerSocket _serverSocket;
+        public static BackgroundWorker ParentWorker;
 
-        private readonly ServerSocket _serverSocket;
+        public static void StartServerHandler(object sender) {
+            ParentWorker = (BackgroundWorker) sender;
+            _serverSocket = new ServerSocket();
+            _serverSocket.ServerLogEvent += ServerMessageLogCallback;
+            _serverSocket.ServerCommandEvent += ServerMessageCallback;
+            _serverSocket.ServerConnectedEvent += ServerSocketOnServerConnectedEvent;
+            _serverSocket.AutoResetEvent.WaitOne();
+        }
 
-        public ServerHandler() => _serverSocket = new ServerSocket(ServerMessageCallback, ServerMessageLogCallback);
+        private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
+            new Task(async () => await SendDelayedServerMessage("reporequest uksf", 500)).Start();
+        }
 
-        public void SendServerMessage(string message) {
+        private static async Task SendDelayedServerMessage(string message, int delay) {
+            await Task.Delay(delay);
+            SendServerMessage(message);
+        }
+
+        private static void SendServerMessage(string message) {
             _serverSocket.SendMessage(message);
         }
 
-        private void ServerMessageCallback(string message) {
+        private static void ServerMessageCallback(object sender, string message) {
             if (message.Contains("message::")) {
                 LogHandler.LogInfo(message.Replace("message::", ""));
             } else {
@@ -28,28 +41,19 @@ namespace UKSF_Launcher.Game {
             }
         }
 
-        private void HandleMessage(string message) {
-            LogHandler.LogInfo(message);
+        private static void HandleMessage(string message) {
             if (!message.Contains("command::")) return;
             string[] parts = new Regex("::").Split(message.Replace("command::", ""), 2);
-            switch (parts[0]) {
-                case "servers":
-                    _servers.Clear();
-                    string[] serverParts = parts[1].Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (string serverPart in serverParts) {
-                        _servers.Add(Server.DeSerialize(serverPart));
-                    }
-                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ServerRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_SERVER_EVENT) {Servers = _servers});
-                    break;
-            }
+            ServerWorker unused = new ServerWorker(parts[0], parts.Length > 1 ? parts[1] : "");
         }
 
-        private static void ServerMessageLogCallback(string message) {
+        private static void ServerMessageLogCallback(object sender, string message) {
             LogHandler.LogInfo(message);
         }
 
-        public void Stop() {
-            _serverSocket.WatchThreadStop();
+        public static void Stop() {
+            _serverSocket.StopCheck();
+            _serverSocket = null;
         }
     }
 }

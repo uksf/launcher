@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ServerService {
     public class ServerService : ServiceBase {
@@ -23,11 +24,9 @@ namespace ServerService {
         private static int _receiveAttempt;
 
         private static List<Client> _clients;
-        private static Dictionary<Client, Thread> _clientThreads;
 
         private Container _components;
-        private Thread _serverThread, _cleanupThread;
-        private bool _stopServer, _stopCleanup;
+        private Timer _gameServerTimer, _cleanupTimer;
 
         public ServerService() {
             InitializeComponent();
@@ -55,61 +54,46 @@ namespace ServerService {
 
         protected override void OnStart(string[] args) {
             EventLog.WriteEntry("Started");
-            //Debugger.Launch();
-            _serverThread = new Thread(ServerThreadStart);
-            _cleanupThread = new Thread(CleanupThreadStart) {Priority = ThreadPriority.Lowest};
-            _serverThread.Start();
-            _cleanupThread.Start();
-        }
-
-        private void ServerThreadStart() {
             // ReSharper disable once InconsistentlySynchronizedField
             _clients = new List<Client>();
-            _clientThreads = new Dictionary<Client, Thread>();
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _serverSocket.Bind(new IPEndPoint(IPAddress.Any, PORT));
             _serverSocket.Listen(100);
-            _serverSocket.BeginAccept(AcceptCallback, null);
-
-            while (!_stopServer) {
-                Thread.Sleep(5000);
-                ServerHandler.CheckServers();
-                lock (_clients) {
-                    foreach (Client client in _clients) {
-                        client.SendCommand(ServerHandler.SERVERS.Where(server => server.Active)
-                                                            .Aggregate("servers", (current, server) => string.Join("::", current, $"{server.Serialize()}")));
-                    }
-                }
-            }
+            _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
+            _gameServerTimer = new Timer(CheckGameServers, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+            _cleanupTimer = new Timer(Cleanup, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
-        private static void AcceptCallback(IAsyncResult result) {
+        private static void AcceptCallback(IAsyncResult asyncResult) {
+            if (_serverSocket != (Socket) asyncResult.AsyncState) return;
             try {
-                Client client = new Client(_serverSocket.EndAccept(result));
+                Client client = new Client(_serverSocket.EndAccept(asyncResult));
                 client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
-                _serverSocket.BeginAccept(AcceptCallback, null);
+                _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
                 EventLog.WriteEntry($"Client connected {client.Guid}");
             } catch (Exception exception) {
                 EventLog.WriteEntry(exception.ToString());
             }
         }
 
-        private static void ReceiveCallback(IAsyncResult result) {
+        private static void ReceiveCallback(IAsyncResult asyncResult) {
             try {
-                Client client = (Client) result.AsyncState;
+                Client client = (Client) asyncResult.AsyncState;
                 if (!client.Socket.Connected) return;
-                int received = client.Socket.EndReceive(result);
+                int received = client.Socket.EndReceive(asyncResult);
                 if (received > 0) {
                     _receiveAttempt = 0;
                     byte[] data = new byte[received];
                     Buffer.BlockCopy(BUFFER, 0, data, 0, data.Length);
-                    if (!HandleMessage(client, Encoding.UTF8.GetString(data))) return;
+                    string message = Encoding.UTF8.GetString(data);
+                    if (message.Contains("::end")) {
+                        HandleMessage(client, message.Replace("::end", ""));
+                    }
                     client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
                 } else if (_receiveAttempt < MAX_RECEIVE_ATTEMPT) {
                     _receiveAttempt++;
                     client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
                 } else {
-                    EventLog.WriteEntry("Client receive failed");
                     _receiveAttempt = 0;
                 }
             } catch (Exception) {
@@ -117,7 +101,7 @@ namespace ServerService {
             }
         }
 
-        private static bool HandleMessage(Client client, string message) {
+        private static void HandleMessage(Client client, string message) {
             EventLog.WriteEntry($"Message '{message}' received from {client.Guid}");
             switch (message) {
                 case "connect":
@@ -128,35 +112,26 @@ namespace ServerService {
                     }
                     break;
                 case "disconnect":
+                    EventLog.WriteEntry($"Client disconnected {client.Guid}");
+                    client.Socket?.Close();
+                    client.Thread?.Abort();
                     lock (_clients) {
                         _clients.Remove(client);
                     }
-                    return false;
+                    break;
                 case "break":
-                    _clientThreads.TryGetValue(client, out Thread clientThreadBreak);
-                    if (clientThreadBreak?.IsAlive == true) {
-                        clientThreadBreak.Abort();
-                        _clientThreads[client] = null;
-                    }
+                    client.Thread?.Abort();
                     break;
                 default:
-                    if (_clientThreads.TryGetValue(client, out Thread clientThread)) {
-                        if (!clientThread.IsAlive) {
-                            _clientThreads[client] = new Thread(() => MessageThreadStart(client, message));
-                            _clientThreads[client].Start();
-                        }
-                    } else {
-                        _clientThreads.Add(client, new Thread(() => MessageThreadStart(client, message)));
-                        _clientThreads[client].Start();
-                    }
+                    client.Thread?.Abort();
+                    client.Thread = new Thread(() => MessageThreadStart(client, message));
+                    client.Thread.Start();
                     break;
             }
-            return true;
         }
 
-        private static void MessageThreadStart(Client client, string message) {
-            new MessageHandler(client, message);
-        }
+        // ReSharper disable once ObjectCreationAsStatement
+        private static void MessageThreadStart(Client client, string message) => new MessageHandler(client, message);
 
         protected override void OnStop() {
             EventLog.WriteEntry("Stopped");
@@ -164,54 +139,72 @@ namespace ServerService {
             _serverSocket?.Close();
             _serverSocket = null;
 
-            _stopServer = true;
-            _serverThread.Join(100);
-            if (_serverThread.IsAlive) {
-                _serverThread.Abort();
-            }
-            _stopCleanup = true;
-            _cleanupThread.Join(100);
-            if (_cleanupThread.IsAlive) {
-                _cleanupThread.Abort();
-            }
+            _gameServerTimer.Dispose();
+            _cleanupTimer.Dispose();
 
             lock (_clients) {
                 foreach (Client client in _clients) {
-                    client.Socket.Close();
+                    client.Socket?.Close();
+                    client.Thread?.Abort();
                 }
                 _clients.Clear();
             }
-            _clientThreads.Clear();
         }
 
-        private void CleanupThreadStart() {
-            while (!_stopCleanup) {
-                List<Client> delete = new List<Client>();
-                lock (_clients) {
-                    foreach (Client client in _clients.Where(client => !client.Socket.Connected)) {
-                        delete.Add(client);
-                        client.Socket.Shutdown(SocketShutdown.Both);
-                        client.Socket.Close();
-                    }
-                    foreach (Client client in delete) {
-                        EventLog.WriteEntry($"Client disconnected {client.Guid}");
-                        _clients.Remove(client);
-                    }
+        private static void CheckGameServers(object unused) {
+            // TODO: Add framework for launching servers. Switch to events instead of polling.
+            lock (_clients) {
+                if (_clients.Count <= 0) return;
+                ServerHandler.CheckServers();
+                foreach (Client client in _clients) {
+                    client.SendCommand(ServerHandler.SERVERS.Where(server => server.Active)
+                                                    .Aggregate("servers", (current, server) => string.Join("::", current, $"{server.Serialize()}")));
                 }
-                Thread.Sleep(5000);
             }
+        }
+
+        private void Cleanup(object unused) {
+            List<Client> delete = new List<Client>();
+            lock (_clients) {
+                foreach (Client client in _clients.Where(client => !client.Socket.Connected)) {
+                    delete.Add(client);
+                    client.Socket?.Shutdown(SocketShutdown.Both);
+                    client.Socket?.Close();
+                    client.Thread?.Abort();
+                }
+                foreach (Client client in delete) {
+                    EventLog.WriteEntry($"Client disconnected {client.Guid}");
+                    _clients.Remove(client);
+                }
+            }
+        }
+
+        public static void RepoUpdated(string message) {
+            Task unused = new Task(() => {
+                List<Client> clientsCopy;
+                lock (_clients) {
+                    if (_clients.Count <= 0) return;
+                    clientsCopy = _clients.Select(client => new Client(client.Socket) {Thread = client.Thread}).ToList();
+                }
+                foreach (Client client in clientsCopy) {
+                    HandleMessage(client, message);
+                }
+            });
         }
 
         public class Client {
             public Client(Socket socket) {
                 Socket = socket;
-                Guid = ((IPEndPoint) Socket.RemoteEndPoint).Address.ToString();
+                Guid = $"{((IPEndPoint) Socket.RemoteEndPoint).Address}_{System.Guid.NewGuid()}";
+                Thread = null;
             }
 
             public Socket Socket { get; }
             public string Guid { get; }
+            public Thread Thread { get; set; }
 
             public void SendCommand(string message) {
+                EventLog.WriteEntry($"Command '{message}' sent to {Guid}");
                 Socket.Send(Encoding.ASCII.GetBytes($"command::{message}::end"));
             }
 

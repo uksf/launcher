@@ -8,28 +8,28 @@ namespace UKSF_Launcher.Tests {
     internal class LogTests {
         [Test, Order(1)]
         public void LogTestsNoLogFile() {
-            Directory.CreateDirectory(Global.LOGS);
-            FileInfo[] oldLogFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
+            Directory.CreateDirectory(Global.APPDATA);
+            FileInfo[] oldLogFiles = new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").ToArray();
             LogHandler.LogInfo("PRESTARTTEST");
-            FileInfo[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").ToArray();
+            FileInfo[] logFiles = new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").ToArray();
 
             Assert.That(logFiles.Length == 0 || oldLogFiles[0] != logFiles[0]);
         }
 
         [Test, Order(2)]
         public void LogTestsStart() {
-            string[] logFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
+            string[] logFiles = new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
 
             Assert.DoesNotThrow(LogHandler.StartLogging);
-            string[] newLogFiles = new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
+            string[] newLogFiles = new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray();
 
             Assert.GreaterOrEqual(newLogFiles.Length, logFiles.Length);
         }
 
         [Test]
         public void LogTestsLogSeverity() {
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
             LogHandler.LogSeverity(Global.Severity.INFO, "SEVERITYINFOTEST");
             LogHandler.LogSeverity(Global.Severity.WARNING, "SEVERITYWARNINGTEST");
@@ -42,8 +42,8 @@ namespace UKSF_Launcher.Tests {
 
         [Test]
         public void LogTestsLogHashSpace() {
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
             LogHandler.LogHashSpace();
 
@@ -52,8 +52,8 @@ namespace UKSF_Launcher.Tests {
 
         [Test]
         public void LogTestsLogHashSpaceMessage() {
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
             LogHandler.LogHashSpaceMessage(Global.Severity.INFO, "HASHMESSAGETEST");
 
@@ -64,8 +64,8 @@ namespace UKSF_Launcher.Tests {
 
         [Test]
         public void LogTestsLogInfo() {
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
             LogHandler.LogInfo("SINGLEINFOTEST");
 
@@ -74,8 +74,8 @@ namespace UKSF_Launcher.Tests {
 
         [Test]
         public void LogTestsClose() {
-            string logFile = Path.Combine(Global.LOGS,
-                                          new DirectoryInfo(Global.LOGS).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
+            string logFile = Path.Combine(Global.APPDATA,
+                                          new DirectoryInfo(Global.APPDATA).EnumerateFiles("*.log").OrderByDescending(file => file.LastWriteTime).Select(file => file.Name).ToArray()
                                                                         .First());
             LogHandler.CloseLog();
 

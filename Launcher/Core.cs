@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
+using Patching.Repo;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
 using UKSF_Launcher.UI.FTS;
@@ -11,7 +13,7 @@ using static UKSF_Launcher.Utility.LogHandler;
 namespace UKSF_Launcher {
     public class Core {
         public static SettingsHandler SettingsHandler;
-        private static ServerHandler _serverHandler;
+        public static CancellationTokenSource CancellationTokenSource;
 
         /// <summary>
         ///     Application starting point.
@@ -20,6 +22,7 @@ namespace UKSF_Launcher {
         public Core(bool updated) {
             try {
                 Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                CancellationTokenSource = new CancellationTokenSource();
 
                 StartLogging();
                 LogHashSpaceMessage(Severity.INFO, "Launcher Started");
@@ -39,7 +42,7 @@ namespace UKSF_Launcher {
                 mainWindow.Activate();
                 mainWindow.Focus();
 
-                _serverHandler = new ServerHandler();
+                REPO = new Repo(MOD_LOCATION, "uksf", LogInfo);
             } catch (Exception exception) {
                 Error(exception);
             }
@@ -85,7 +88,8 @@ namespace UKSF_Launcher {
         ///     If there is no instance of Applicaiton, exit forcefully.
         /// </summary>
         public static void ShutDown() {
-            _serverHandler?.Stop();
+            CancellationTokenSource.Cancel();
+            ServerHandler.Stop();
             if (Application.Current == null) {
                 Environment.Exit(0);
             } else {

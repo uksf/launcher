@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,11 +20,16 @@ namespace UKSF_Launcher.UI.Main {
             PROFILE
         }
 
+        public static readonly RoutedEvent MAIN_MAIN_CONTROL_PLAY_EVENT =
+            EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_PLAY_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
+
         public static readonly RoutedEvent MAIN_MAIN_CONTROL_WARNING_EVENT =
             EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_WARNING_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
 
         public static readonly RoutedEvent MAIN_MAIN_CONTROL_SERVER_EVENT =
             EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_SERVER_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
+
+        private bool _block = true;
 
         private CurrentWarning _currentWarning = CurrentWarning.NONE;
 
@@ -31,13 +38,43 @@ namespace UKSF_Launcher.UI.Main {
         ///     Creates new MainMainControl object.
         /// </summary>
         public MainMainControl() {
+            AddHandler(MAIN_MAIN_CONTROL_PLAY_EVENT, new RoutedEventHandler(MainMainControlPlay_Update));
             AddHandler(MAIN_MAIN_CONTROL_WARNING_EVENT, new RoutedEventHandler(MainMainControlWarning_Update));
             AddHandler(MAIN_MAIN_CONTROL_SERVER_EVENT, new RoutedEventHandler(MainMainControlServer_Update));
 
             InitializeComponent();
 
+            MainMainControlProgressBar.Visibility = Visibility.Collapsed;
+            MainMainControlProgressText.Visibility = Visibility.Collapsed;
             MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
             // TODO: Sims-esque loading messages
+            // TODO: Implement background workers for all non-ui code, using progresschanged event for updating ui
+            BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
+            repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler(sender);
+            repoBackgroundWorker.ProgressChanged += MainMainControlProgress_Update;
+            repoBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void MainMainControlPlay_Update(object sender, RoutedEventArgs args) {
+            Dispatcher.Invoke(() => {
+                SafeWindow.BoolRoutedEventArgs boolArgs = (SafeWindow.BoolRoutedEventArgs) args;
+                if (_block && !string.Equals(MainMainControlWarningText.Text, "", StringComparison.InvariantCultureIgnoreCase)) return;
+                MainMainControlButtonPlay.IsEnabled = boolArgs.State;
+                MainMainControlDropdownServer.IsEnabled = boolArgs.State;
+            });
+        }
+
+        private void MainMainControlProgress_Update(object sender, ProgressChangedEventArgs args) {
+            if (!args.UserState.ToString().Contains("stop")) {
+                MainMainControlProgressBar.Visibility = Visibility.Visible;
+                MainMainControlProgressText.Visibility = Visibility.Visible;
+                MainMainControlProgressBar.Value = args.ProgressPercentage;
+                MainMainControlProgressText.Text = args.UserState.ToString();
+            } else {
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                MainMainControlProgressBar.Visibility = Visibility.Collapsed;
+                MainMainControlProgressText.Visibility = Visibility.Collapsed;
+            }
         }
 
         /// <summary>
@@ -46,16 +83,18 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="sender">Sender object</param>
         /// <param name="args">Warning arguments</param>
         private void MainMainControlWarning_Update(object sender, RoutedEventArgs args) {
-            SafeWindow.WarningRoutedEventArgs warningArgs = (SafeWindow.WarningRoutedEventArgs) args;
-            CurrentWarning previousWarning = _currentWarning;
-            if (_currentWarning != CurrentWarning.NONE && _currentWarning != warningArgs.CurrentWarning) return;
-            MainMainControlWarningText.Text = warningArgs.Warning;
-            MainMainControlButtonPlay.IsEnabled = !warningArgs.Block;
-            MainMainControlDropdownServer.IsEnabled = !warningArgs.Block;
-            _currentWarning = warningArgs.Warning == "" ? CurrentWarning.NONE : warningArgs.CurrentWarning;
-            if (_currentWarning != previousWarning) {
-                MainWindow.Instance.MainSettingsControl.RaiseEvent(new RoutedEventArgs(MainSettingsControl.MAIN_SETTINGS_CONTROL_WARNING_EVENT));
-            }
+            Dispatcher.Invoke(() => {
+                SafeWindow.WarningRoutedEventArgs warningArgs = (SafeWindow.WarningRoutedEventArgs) args;
+                CurrentWarning previousWarning = _currentWarning;
+                if (_currentWarning != CurrentWarning.NONE && _currentWarning != warningArgs.CurrentWarning) return;
+                _block = warningArgs.Block;
+                MainMainControlWarningText.Text = warningArgs.Warning;
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_PLAY_EVENT) {State = !_block});
+                _currentWarning = warningArgs.Warning == "" ? CurrentWarning.NONE : warningArgs.CurrentWarning;
+                if (_currentWarning != previousWarning) {
+                    MainWindow.Instance.MainSettingsControl.RaiseEvent(new RoutedEventArgs(MainSettingsControl.MAIN_SETTINGS_CONTROL_WARNING_EVENT));
+                }
+            });
         }
 
         /// <summary>
@@ -102,7 +141,6 @@ namespace UKSF_Launcher.UI.Main {
         private void MainMainControlDropdownServer_Selected(object sender, SelectionChangedEventArgs args) {
             if (MainMainControlDropdownServer.SelectedItem != null) {
                 Global.SERVER = ((ServerComboBoxItem) MainMainControlDropdownServer.SelectedItem).Server;
-
                 if (Equals(Global.SERVER, ServerHandler.NO_SERVER)) {
                     MainMainControlButtonPlay.Content = "Play";
                     MainMainControlButtonPlay.FontSize = 50;

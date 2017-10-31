@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedParameter.Global
 
 namespace ServerService {
     internal class MessageHandler {
-        private const string HELP = "\thelp\n\tcreate [name]\n\tupdate [name]\n";
+        private const string HELP = "\thelp\n\tcreate [name]\n\tupdate [name]\n\treporequest [name]\n";
         private readonly ServerService.Client _client;
 
         public MessageHandler(ServerService.Client client, string message) {
@@ -17,7 +16,7 @@ namespace ServerService {
             string[] parameters = parts.Skip(1).ToArray();
             Tuple<int, string> result = (Tuple<int, string>) GetType().GetMethod(command)?.Invoke(this, new object[] {parameters});
             if (result == null) {
-                _client.SendMessage($"\nCommand not found.\n{HELP}");
+                _client.SendMessage($"\nCommand '{message}' not found.\n{HELP}");
             } else {
                 ServerService.EventLog.WriteEntry($"Handle message result: {result.Item2}");
                 switch (result.Item1) {
@@ -34,7 +33,11 @@ namespace ServerService {
         }
 
         private void Progress(string message) {
-            _client.SendMessage(message);
+            if (message.Contains("command::")) {
+                _client.SendCommand(message.Replace("command::", ""));
+            } else {
+                _client.SendMessage(message);
+            }
         }
 
         // help
@@ -46,7 +49,9 @@ namespace ServerService {
                 return new Tuple<int, string>(2, "Failed");
             }
             bool result = RepoHandler.Create(parameters[0], Progress);
-            return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
+            if (!result) return new Tuple<int, string>(1, "Failed");
+            ServerService.RepoUpdated($"reporequest {parameters[0]}");
+            return new Tuple<int, string>(0, "Success");
         }
 
         // update [name]
@@ -55,6 +60,17 @@ namespace ServerService {
                 return new Tuple<int, string>(2, "Failed");
             }
             bool result = RepoHandler.Update(parameters[0], Progress);
+            if (!result) return new Tuple<int, string>(1, "Failed");
+            ServerService.RepoUpdated($"reporequest {parameters[0]}");
+            return new Tuple<int, string>(0, "Success");
+        }
+
+        // reporequest [name]
+        public Tuple<int, string> reporequest(string[] parameters) {
+            if (parameters.Length != 1) {
+                return new Tuple<int, string>(2, "Failed");
+            }
+            bool result = RepoHandler.GetRepoData(parameters[0], Progress);
             return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
         }
     }

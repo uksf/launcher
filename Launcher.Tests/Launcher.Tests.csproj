@@ -34,7 +34,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>uksf.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDev|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -83,7 +84,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="packages.config" />
-    <None Include="uksf.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Launcher\Launcher.csproj">

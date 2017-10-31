@@ -5,15 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="464" d:DesignWidth="500">
-    <Grid>
+    <Grid Height="464">
         <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
                HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
                RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" Panel.ZIndex="0" />
-        <ComboBox x:Name="MainMainControlDropdownServer" Width="375" Height="75" Margin="0,50,0,0"
+        <ComboBox x:Name="MainMainControlDropdownServer" IsEnabled="False" Width="375" Height="75" Margin="0,50,0,0"
                   VerticalAlignment="Center" HorizontalAlignment="Center"
                   SelectionChanged="MainMainControlDropdownServer_Selected"
                   Panel.ZIndex="2" Style="{StaticResource Uksf.ComboBoxPlay}" />
-        <Button x:Name="MainMainControlButtonPlay" Content="Play" FontSize="50" Width="375" Height="75"
+        <Button x:Name="MainMainControlButtonPlay" Content="Play" IsEnabled="False" FontSize="50" Width="375"
+                Height="75"
                 Click="MainMainControlButtonPlay_Click" Margin="0,50,0,0"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1"
                 Style="{StaticResource Uksf.Button}" />
@@ -21,10 +22,13 @@
                      Margin="1,175,0,0" SnapsToDevicePixels="True"
                      Background="{StaticResource Uksf.BackgroundDark}" Foreground="{StaticResource Uksf.Foreground}"
                      BorderBrush="{StaticResource Uksf.BackgroundLight}" Panel.ZIndex="2" />
-        <TextBlock x:Name="MainMainControlProgressText" Text="Downloading: lots of porn" FontSize="14"
-                   FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   TextAlignment="Center" MaxWidth="450" Margin="0,215,0,0" Panel.ZIndex="2"
-                   Style="{StaticResource Uksf.SettingsTextBlock}" />
+        <Grid Margin="0,330,0,0" VerticalAlignment="Top" >
+            <TextBlock x:Name="MainMainControlProgressText" Text="Downloading: lots of porn" FontSize="14"
+                       FontWeight="Normal" HorizontalAlignment="Center"
+                       TextAlignment="Center" TextWrapping="WrapWithOverflow"
+                       MaxWidth="450" Panel.ZIndex="2"
+                       Style="{StaticResource Uksf.SettingsTextBlock}" />
+        </Grid>
         <TextBlock x:Name="MainMainControlWarningText" FontSize="24"
                    FontWeight="Bold" HorizontalAlignment="Center" MaxWidth="450"
                    VerticalAlignment="Bottom" TextAlignment="Center" Margin="0,0,0,10"
