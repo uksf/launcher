@@ -12,7 +12,7 @@
             <StackPanel>
                 <Label x:Name="FtsMainControlTitle" Content="Game Executable" FontSize="24"
                        Style="{StaticResource Uksf.SettingsLabel}" />
-                <TextBlock x:Name="FtsMainControlDescription" Text="Test" MinHeight="130" FontSize="14"
+                <TextBlock x:Name="FtsMainControlDescription" MinHeight="130" FontSize="14"
                            Style="{StaticResource Uksf.TextBlock}" />
                 <Grid Margin="5">
                     <TextBlock x:Name="FtsMainControlWarningText" Text="Warning" FontWeight="Bold" FontSize="14" Padding="2,2,2,2" Height="20"

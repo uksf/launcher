@@ -52,7 +52,7 @@ namespace UKSF_Launcher.UI.Main {
             BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
             repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler(sender);
             repoBackgroundWorker.ProgressChanged += MainMainControlProgress_Update;
-            repoBackgroundWorker.RunWorkerAsync();
+            //repoBackgroundWorker.RunWorkerAsync();
         }
 
         private void MainMainControlPlay_Update(object sender, RoutedEventArgs args) {

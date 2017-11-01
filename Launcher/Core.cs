@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
+using Patching;
 using Patching.Repo;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
@@ -41,8 +42,15 @@ namespace UKSF_Launcher {
                 mainWindow.Show();
                 mainWindow.Activate();
                 mainWindow.Focus();
+                
+                //REPO = new Repo(MOD_LOCATION, "uksf", LogInfo);
+                
+                /*RsyncTest.CalculateSignature(@"C:\Users\timbe\Desktop\test\@uksf\addons\uksf_air.pbo", @"C:\Users\timbe\Desktop\test\repo\signatures\uksf_air.pbo.sig");
+                RsyncTest.CalculateDelta(@"C:\Users\timbe\Desktop\test\@uksf - Copy\addons\uksf_air.pbo", @"C:\Users\timbe\Desktop\test\repo\signatures\uksf_air.pbo.sig", @"C:\Users\timbe\Desktop\test\repo\deltas\uksf_air.pbo.del");
+                RsyncTest.ApplyDelta(@"C:\Users\timbe\Desktop\test\@uksf\addons\uksf_air.pbo", @"C:\Users\timbe\Desktop\test\repo\deltas\uksf_air.pbo.del", @"C:\Users\timbe\Desktop\test\@uksf - Copy\addons\uksf_air.pbo");*/
+                //RsyncTest.All();
 
-                REPO = new Repo(MOD_LOCATION, "uksf", LogInfo);
+                //ShutDown();
             } catch (Exception exception) {
                 Error(exception);
             }

@@ -52,7 +52,7 @@ namespace UKSF_Launcher.Game {
         }
 
         public static void Stop() {
-            _serverSocket.StopCheck();
+            _serverSocket?.StopCheck();
             _serverSocket = null;
         }
     }

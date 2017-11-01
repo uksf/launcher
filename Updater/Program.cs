@@ -2,16 +2,22 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace Updater {
     internal static class Program {
         private static void Main() {
-            foreach (Process process in Process.GetProcessesByName("UKSF-Launcher")) {
-                process.WaitForExit(2500);
-                if (!process.HasExited) {
-                    process.Kill();
+            Process[] processes = Process.GetProcessesByName("UKSF-Launcher");
+            while (processes.Length > 0) {
+                foreach (Process process in processes) {
+                    process.WaitForExit(500);
+                    if (!process.HasExited) {
+                        process.Kill();
+                    }
                 }
+                processes = Process.GetProcessesByName("UKSF-Launcher");
             }
+            Thread.Sleep(500);
             
             string launcher = Path.Combine(Environment.CurrentDirectory, "UKSF-Launcher.exe");
             string patching = Path.Combine(Environment.CurrentDirectory, "Patching.dll");
