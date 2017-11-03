@@ -54,6 +54,7 @@ namespace Patching {
                 }
             }
             DeltaBuilder deltaBuilder = new DeltaBuilder { ProgressReport = new ConsoleProgressReporter() };
+            
             using (FileStream newFileStream = new FileStream(pathNew, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 using (FileStream signatureStream = new FileStream(pathSignature, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (FileStream deltaStream = new FileStream(pathDelta, FileMode.Create, FileAccess.Write, FileShare.Read)) {

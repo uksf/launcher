@@ -10,6 +10,7 @@ namespace ServerService {
         private readonly ServerService.Client _client;
 
         public MessageHandler(ServerService.Client client, string message) {
+            ServerHandler.CheckServers();
             _client = client;
             string[] parts = message.Split(' ');
             string command = parts[0];
@@ -26,6 +27,9 @@ namespace ServerService {
                         break;
                     case 2: // Param fail
                         _client.SendMessage($"\nIncorrect usage.\n{HELP}");
+                        break;
+                    case 3: // Server running fail
+                        _client.SendMessage("\nCannot execute command, there is a server running");
                         break;
                 }
             }
@@ -45,9 +49,8 @@ namespace ServerService {
 
         // create [name]
         public Tuple<int, string> create(string[] parameters) {
-            if (parameters.Length != 1) {
-                return new Tuple<int, string>(2, "Failed");
-            }
+            if (ServerHandler.ServerRunning) return new Tuple<int, string>(3, "Failed");
+            if (parameters.Length != 1) return new Tuple<int, string>(2, "Failed");
             bool result = RepoHandler.Create(parameters[0], Progress);
             if (!result) return new Tuple<int, string>(1, "Failed");
             ServerService.RepoUpdated($"reporequest {parameters[0]}");
@@ -56,9 +59,8 @@ namespace ServerService {
 
         // update [name]
         public Tuple<int, string> update(string[] parameters) {
-            if (parameters.Length != 1) {
-                return new Tuple<int, string>(2, "Failed");
-            }
+            if (ServerHandler.ServerRunning) return new Tuple<int, string>(3, "Failed");
+            if (parameters.Length != 1) return new Tuple<int, string>(2, "Failed");
             bool result = RepoHandler.Update(parameters[0], Progress);
             if (!result) return new Tuple<int, string>(1, "Failed");
             ServerService.RepoUpdated($"reporequest {parameters[0]}");

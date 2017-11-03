@@ -164,32 +164,35 @@ namespace ServerService {
         }
 
         private void Cleanup(object unused) {
-            List<Client> delete = new List<Client>();
-            lock (_clients) {
-                foreach (Client client in _clients.Where(client => !client.Socket.Connected)) {
-                    delete.Add(client);
-                    client.Socket?.Shutdown(SocketShutdown.Both);
-                    client.Socket?.Close();
-                    client.Thread?.Abort();
+            try {
+                List<Client> delete = new List<Client>();
+                lock (_clients) {
+                    foreach (Client client in _clients.Where(client => !client.Socket.Connected)) {
+                        delete.Add(client);
+                        client.Socket?.Shutdown(SocketShutdown.Both);
+                        client.Socket?.Close();
+                        client.Thread?.Abort();
+                    }
+                    foreach (Client client in delete) {
+                        EventLog.WriteEntry($"Client disconnected {client.Guid}");
+                        _clients.Remove(client);
+                    }
                 }
-                foreach (Client client in delete) {
-                    EventLog.WriteEntry($"Client disconnected {client.Guid}");
-                    _clients.Remove(client);
-                }
+            } catch {
+                // ignored
             }
         }
 
         public static void RepoUpdated(string message) {
-            Task unused = new Task(() => {
-                List<Client> clientsCopy;
+            Task repoUpdatedTask = new Task(() => {
                 lock (_clients) {
                     if (_clients.Count <= 0) return;
-                    clientsCopy = _clients.Select(client => new Client(client.Socket) {Thread = client.Thread}).ToList();
-                }
-                foreach (Client client in clientsCopy) {
-                    HandleMessage(client, message);
+                    foreach (Client client in _clients) {
+                        HandleMessage(client, message);
+                    }
                 }
             });
+            repoUpdatedTask.Start();
         }
 
         public class Client {
@@ -204,12 +207,20 @@ namespace ServerService {
             public Thread Thread { get; set; }
 
             public void SendCommand(string message) {
-                EventLog.WriteEntry($"Command '{message}' sent to {Guid}");
-                Socket.Send(Encoding.ASCII.GetBytes($"command::{message}::end"));
+                try {
+                    EventLog.WriteEntry($"Command '{message}' sent to {Guid}");
+                    Socket.Send(Encoding.ASCII.GetBytes($"command::{message}::end"));
+                } catch (Exception exception) {
+                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
+                }
             }
 
             public void SendMessage(string message) {
-                Socket.Send(Encoding.ASCII.GetBytes($"message::{message}::end"));
+                try {
+                    Socket.Send(Encoding.ASCII.GetBytes($"message::{message}::end"));
+                } catch (Exception exception) {
+                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
+                }
             }
         }
     }

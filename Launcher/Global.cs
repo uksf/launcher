@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Network;
-using Patching.Repo;
+using Patching;
 
 // ReSharper disable InconsistentNaming
 
@@ -107,6 +107,6 @@ namespace UKSF_Launcher {
         public static bool MODS_SHACKTAC = true;
 
         // ######################################### Objects ######################################### \\
-        public static Repo REPO = null;
+        public static RepoClient REPO = null;
     }
 }

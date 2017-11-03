@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Patching.Repo;
+using Patching;
 
 namespace ServerService {
     internal static class RepoHandler {
@@ -8,7 +8,7 @@ namespace ServerService {
 
         public static bool Create(string name, Action<string> progress) {
             try {
-                Repo repo = new Repo(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
                 progress.Invoke($"Creating '{repo.RepoName}' repository");
                 repo.CreateRepo();
                 progress.Invoke("Creation complete");
@@ -21,7 +21,7 @@ namespace ServerService {
 
         public static bool Update(string name, Action<string> progress) {
             try {
-                Repo repo = new Repo(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
                 progress.Invoke($"Updating '{repo.RepoName}' repository");
                 repo.UpdateRepo();
                 progress.Invoke("Update complete");
@@ -34,7 +34,7 @@ namespace ServerService {
 
         public static bool GetRepoData(string name, Action<string> progress) {
             try {
-                Repo repo = new Repo(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
                 repo.GetRepoData();
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");

@@ -29,8 +29,9 @@ namespace UKSF_Launcher.Game {
                         _repoCheckTask = new Task(() => {
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate) && !Core.CancellationTokenSource.IsCancellationRequested) {
-                                Global.REPO.SynchroniseLocalRepo();
+                                //Global.REPO.SynchroniseLocalRepo();
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
+                                break;
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                             _repoCheckTask = null;
