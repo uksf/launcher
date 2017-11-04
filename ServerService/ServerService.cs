@@ -13,13 +13,10 @@ using System.Threading.Tasks;
 namespace ServerService {
     public class ServerService : ServiceBase {
         private const int PORT = 48900;
-
-        private const int BUFFER_SIZE = 4096;
-
         private const int MAX_RECEIVE_ATTEMPT = 10;
         public new static EventLog EventLog;
-        private static Socket _serverSocket;
-        private static readonly byte[] BUFFER = new byte[BUFFER_SIZE];
+        private static Socket _socket;
+        private static readonly byte[] BUFFER = new byte[8192];
 
         private static int _receiveAttempt;
 
@@ -56,20 +53,20 @@ namespace ServerService {
             EventLog.WriteEntry("Started");
             // ReSharper disable once InconsistentlySynchronizedField
             _clients = new List<Client>();
-            _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _serverSocket.Bind(new IPEndPoint(IPAddress.Any, PORT));
-            _serverSocket.Listen(100);
-            _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(new IPEndPoint(IPAddress.Any, PORT));
+            _socket.Listen(100);
+            _socket.BeginAccept(AcceptCallback, _socket);
             _gameServerTimer = new Timer(CheckGameServers, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
             _cleanupTimer = new Timer(Cleanup, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
         private static void AcceptCallback(IAsyncResult asyncResult) {
-            if (_serverSocket != (Socket) asyncResult.AsyncState) return;
+            if (_socket != (Socket) asyncResult.AsyncState) return;
             try {
-                Client client = new Client(_serverSocket.EndAccept(asyncResult));
+                Client client = new Client(_socket.EndAccept(asyncResult));
                 client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
-                _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
+                _socket.BeginAccept(AcceptCallback, _socket);
                 EventLog.WriteEntry($"Client connected {client.Guid}");
             } catch (Exception exception) {
                 EventLog.WriteEntry(exception.ToString());
@@ -114,38 +111,32 @@ namespace ServerService {
                 case "disconnect":
                     EventLog.WriteEntry($"Client disconnected {client.Guid}");
                     client.Socket?.Close();
-                    client.Thread?.Abort();
                     lock (_clients) {
                         _clients.Remove(client);
                     }
                     break;
                 case "break":
-                    client.Thread?.Abort();
+                    client.Socket?.EndReceive(null);
                     break;
                 default:
-                    client.Thread?.Abort();
-                    client.Thread = new Thread(() => MessageThreadStart(client, message));
-                    client.Thread.Start();
+                    // ReSharper disable once ObjectCreationAsStatement
+                    new MessageHandler(client, message);
                     break;
             }
         }
-
-        // ReSharper disable once ObjectCreationAsStatement
-        private static void MessageThreadStart(Client client, string message) => new MessageHandler(client, message);
-
+        
         protected override void OnStop() {
             EventLog.WriteEntry("Stopped");
-            _serverSocket?.Dispose();
-            _serverSocket?.Close();
-            _serverSocket = null;
+            _socket?.Dispose();
+            _socket?.Close();
+            _socket = null;
 
-            _gameServerTimer.Dispose();
-            _cleanupTimer.Dispose();
+            _gameServerTimer?.Dispose();
+            _cleanupTimer?.Dispose();
 
             lock (_clients) {
                 foreach (Client client in _clients) {
                     client.Socket?.Close();
-                    client.Thread?.Abort();
                 }
                 _clients.Clear();
             }
@@ -171,7 +162,6 @@ namespace ServerService {
                         delete.Add(client);
                         client.Socket?.Shutdown(SocketShutdown.Both);
                         client.Socket?.Close();
-                        client.Thread?.Abort();
                     }
                     foreach (Client client in delete) {
                         EventLog.WriteEntry($"Client disconnected {client.Guid}");
@@ -199,12 +189,10 @@ namespace ServerService {
             public Client(Socket socket) {
                 Socket = socket;
                 Guid = $"{((IPEndPoint) Socket.RemoteEndPoint).Address}_{System.Guid.NewGuid()}";
-                Thread = null;
             }
 
             public Socket Socket { get; }
             public string Guid { get; }
-            public Thread Thread { get; set; }
 
             public void SendCommand(string message) {
                 try {

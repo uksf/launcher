@@ -42,5 +42,32 @@ namespace ServerService {
             }
             return true;
         }
+
+        public static string BuildDelta(string name, string path, string signaturePath, Action<string> progress) {
+            string deltaPath = $"{path}::";
+            try {
+                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+                deltaPath += repo.BuildDelta(path, Path.Combine(REPOSITORY_LOCATION, name, ".repo", signaturePath));
+            } catch (Exception exception) {
+                progress.Invoke($"Error: {exception}");
+            }
+            return deltaPath;
+        }
+
+        public static bool DeleteDelta(string path, Action<string> progress) {
+            path = Path.Combine(REPOSITORY_LOCATION, path);
+            try {
+                if (File.Exists(path)) {
+                    File.Delete(path);
+                    if (Directory.GetFiles(Path.GetDirectoryName(path)).Length == 0) {
+                        Directory.Delete(Path.GetDirectoryName(path));
+                    }
+                }
+            } catch (Exception exception) {
+                progress.Invoke($"Error: {exception}");
+                return false;
+            }
+            return true;
+        }
     }
 }

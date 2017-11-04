@@ -10,10 +10,11 @@ namespace Network {
         private const int MAX_RECEIVE_ATTEMPT = 10;
         private readonly byte[] _buffer = new byte[BUFFER_SIZE];
         private readonly Timer _serverWatchTimer;
+        public readonly AutoResetEvent AutoResetEvent;
         private int _connectAttempts;
         private int _receiveAttempts;
+        private readonly object _sendLock = new object();
         private Socket _serverSocket;
-        public readonly AutoResetEvent AutoResetEvent;
 
         public ServerSocket() {
             AutoResetEvent = new AutoResetEvent(false);
@@ -75,8 +76,17 @@ namespace Network {
         }
 
         public void SendMessage(string message) {
-            _serverSocket.Send(Encoding.ASCII.GetBytes($"{message}::end"));
-            ServerLogEvent?.Invoke(this, $"Message sent to server '{message}'");
+            lock (_sendLock) {
+                _serverSocket.Send(Encoding.ASCII.GetBytes($"{message}::end"));
+                ServerLogEvent?.Invoke(this, $"Message sent to server '{message}'");
+            }
+        }
+
+        public void SendMessage(byte[] bytes) {
+            lock (_sendLock) {
+                _serverSocket.Send(bytes);
+                ServerLogEvent?.Invoke(this, "Upload message sent to server");
+            }
         }
 
         private void EndConnectCallback(IAsyncResult asyncResult) {

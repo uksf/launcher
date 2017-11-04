@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using FastRsync.Core;
+using FastRsync.Delta;
+using FastRsync.Signature;
+
+// ReSharper disable ObjectCreationAsStatement
 
 namespace Patching {
     public class RepoServer : ProgressReporter {
@@ -28,11 +34,11 @@ namespace Patching {
             }
             ProgressAction.Invoke("Creating .repo folder");
             repoDirectory.Create();
-            foreach (AddonNew addon in GetAddonFolders().Select(addonFolder => new AddonNew(addonFolder.FullName))) {
-                ProgressAction.Invoke($"Processing addon '{addon.Name}'");
-                addon.GenerateAllSignatures(repoDirectory);
+            Parallel.ForEach(GetAddonFolders().Select(addonFolder => new Addon(addonFolder.FullName, repoDirectory)), addon => {
+                addon.GenerateAllSignatures();
+                ProgressAction.Invoke($"Processed addon '{addon.Name}'");
                 _repoFileDictionary.Add(addon.FolderPath, addon.SignaturesCheckSum);
-            }
+            });
             if (_repoFileDictionary.Count == 0) {
                 throw new Exception("No addons processed");
             }
@@ -49,12 +55,10 @@ namespace Patching {
             }
             Dictionary<string, string> currentFileDictionary = File.ReadAllLines(Path.Combine(RepoPath, ".repo", ".repo.urf")).Select(line => line.Split(';'))
                                                                    .ToDictionary(values => values[0], values => values[1]);
-            List<AddonNew> addons = new List<AddonNew>();
             foreach (DirectoryInfo addonFolder in GetAddonFolders()) {
                 if (string.IsNullOrEmpty(currentFileDictionary.Keys.FirstOrDefault(key => string.Equals(key, addonFolder.FullName, StringComparison.InvariantCultureIgnoreCase)))) {
                     ProgressAction.Invoke($"Found new addon '{addonFolder.Name}'");
-                    AddonNew addon = new AddonNew(addonFolder.FullName);
-                    addons.Add(addon);
+                    new Addon(addonFolder.FullName, repoDirectory);
                 } else {
                     ProgressAction.Invoke($"Checking for changes in '{addonFolder.Name}'");
                     string[] addonFiles = Directory.GetFiles(addonFolder.FullName, "*", SearchOption.AllDirectories);
@@ -85,15 +89,15 @@ namespace Patching {
                             continue;
                         }
                     }
-                    AddonNew addon = new AddonNew(addonFolder.FullName);
-                    addons.Add(addon);
+                    new Addon(addonFolder.FullName, repoDirectory);
                 }
             }
-            foreach (AddonNew addon in addons) {
-                ProgressAction.Invoke($"Processing addon '{addon.Name}'");
-                addon.GenerateAllSignatures(repoDirectory);
-                _repoFileDictionary.Add(addon.FolderPath, addon.SignaturesCheckSum);
-            }
+            Parallel.ForEach(GetAddonFolders().Where(addonFolder => !_repoFileDictionary.ContainsKey(addonFolder.FullName)).Select(addonFolder => new Addon(addonFolder.FullName, repoDirectory)),
+                             addon => {
+                                 addon.GenerateAllSignatures();
+                                 ProgressAction.Invoke($"Processed addon '{addon.Name}'");
+                                 _repoFileDictionary.Add(addon.FolderPath, addon.SignaturesCheckSum);
+                             });
             if (_repoFileDictionary.Count == 0) {
                 ProgressAction.Invoke("No addons changed");
             } else {
@@ -135,6 +139,29 @@ namespace Patching {
             }
             string[] repoFileLines = File.ReadAllLines(Path.Combine(RepoPath, ".repo", ".repo.urf"));
             ProgressAction.Invoke(repoFileLines.Aggregate("command::repodata", (current, line) => string.Join("::", current, line)));
+        }
+
+        public string BuildDelta(string addonPath, string signaturePath) {
+            DeltaBuilder delta = new DeltaBuilder();
+            string deltaPath = Path.Combine(RepoPath, ".repo", Path.GetRandomFileName());
+            Directory.CreateDirectory(Path.GetDirectoryName(deltaPath));
+            try {
+                using (FileStream updatedStream = new FileStream(Path.Combine(RepoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                    using (FileStream signatureStream = new FileStream(signaturePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                        using (FileStream deltaStream = new FileStream(deltaPath, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+                            delta.BuildDelta(updatedStream, new SignatureReader(signatureStream, delta.ProgressReport),
+                                             new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
+                        }
+                    }
+                }
+                File.Delete(signaturePath);
+                return Path.GetFileName(deltaPath);
+            } catch (Exception) {
+                if (File.Exists(deltaPath)) {
+                    File.Delete(deltaPath);
+                }
+                return "";
+            }
         }
     }
 }

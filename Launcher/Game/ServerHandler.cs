@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Network;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Game {
-    public class ServerHandler {
+    public static class ServerHandler {
         public static readonly Server NO_SERVER = new Server("No Server", "", 0, "", false);
 
         private static ServerSocket _serverSocket;
@@ -31,6 +32,14 @@ namespace UKSF_Launcher.Game {
 
         private static void SendServerMessage(string message) {
             _serverSocket.SendMessage(message);
+        }
+
+        public static void SendDeltaRequest(string name, string path, string remotePath) {
+            _serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltarequest {name}::{path}::{remotePath}::end"));
+        }
+
+        internal static void SendDeltaDelete(string path) {
+            _serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltadelete {path}::end"));
         }
 
         private static void ServerMessageCallback(object sender, string message) {

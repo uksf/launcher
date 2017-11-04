@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using Patching;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
 using UKSF_Launcher.UI.FTS;
+using UKSF_Launcher.UI.General;
 using UKSF_Launcher.UI.Main;
 using UKSF_Launcher.Utility;
 using static UKSF_Launcher.Global;
@@ -41,8 +43,19 @@ namespace UKSF_Launcher {
                 mainWindow.Show();
                 mainWindow.Activate();
                 mainWindow.Focus();
-                
+
                 REPO = new RepoClient(MOD_LOCATION, APPDATA, "uksf", LogInfo);
+                REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(REPO.RepoName, requestTuple.Item1, requestTuple.Item2);
+                REPO.DeleteEvent += (sender, path) => ServerHandler.SendDeltaDelete(path);
+
+                BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
+                repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler(sender);
+                repoBackgroundWorker.ProgressChanged += (sender, args) =>
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {
+                        Value = args.ProgressPercentage,
+                        Message = args.UserState.ToString()
+                    });
+                repoBackgroundWorker.RunWorkerAsync();
             } catch (Exception exception) {
                 Error(exception);
             }

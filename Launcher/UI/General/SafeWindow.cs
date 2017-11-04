@@ -27,7 +27,7 @@ namespace UKSF_Launcher.UI.General {
 
         public class ProgressRoutedEventArgs : RoutedEventArgs {
             public ProgressRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
-            public float Value { get; set; }
+            public int Value { get; set; }
             public string Message { get; set; }
         }
 

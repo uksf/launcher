@@ -29,9 +29,7 @@ namespace UKSF_Launcher.Game {
                         _repoCheckTask = new Task(() => {
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate) && !Core.CancellationTokenSource.IsCancellationRequested) {
-                                //Global.REPO.SynchroniseLocalRepo();
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
-                                break;
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                             _repoCheckTask = null;
@@ -43,6 +41,14 @@ namespace UKSF_Launcher.Game {
                         LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process remote repo\n{exception}");
                     }
                     break;
+                case "deltaresponse":
+                    try {
+                        Task repoDeltaTask = new Task(() => Global.REPO.ProcessDelta(commandArguments));
+                        repoDeltaTask.Start();
+                    } catch (Exception exception) {
+                        LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process delta\n{exception}");
+                    }
+                    break;
                 case "unlock":
                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                     break;
@@ -50,7 +56,6 @@ namespace UKSF_Launcher.Game {
         }
 
         private static void ProgressUpdate(float value, string message) {
-            LogHandler.LogInfo(message);
             if (Core.CancellationTokenSource.IsCancellationRequested) return;
             ServerHandler.ParentWorker.ReportProgress((int) (value * 100), message);
         }

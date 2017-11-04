@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +22,9 @@ namespace UKSF_Launcher.UI.Main {
         public static readonly RoutedEvent MAIN_MAIN_CONTROL_PLAY_EVENT =
             EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_PLAY_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
 
+        public static readonly RoutedEvent MAIN_MAIN_CONTROL_PROGRESS_EVENT =
+            EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_PROGRESS_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
+
         public static readonly RoutedEvent MAIN_MAIN_CONTROL_WARNING_EVENT =
             EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_WARNING_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
 
@@ -39,6 +41,7 @@ namespace UKSF_Launcher.UI.Main {
         /// </summary>
         public MainMainControl() {
             AddHandler(MAIN_MAIN_CONTROL_PLAY_EVENT, new RoutedEventHandler(MainMainControlPlay_Update));
+            AddHandler(MAIN_MAIN_CONTROL_PROGRESS_EVENT, new RoutedEventHandler(MainMainControlProgress_Update));
             AddHandler(MAIN_MAIN_CONTROL_WARNING_EVENT, new RoutedEventHandler(MainMainControlWarning_Update));
             AddHandler(MAIN_MAIN_CONTROL_SERVER_EVENT, new RoutedEventHandler(MainMainControlServer_Update));
 
@@ -49,10 +52,6 @@ namespace UKSF_Launcher.UI.Main {
             MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
             // TODO: Sims-esque loading messages
             // TODO: Implement background workers for all non-ui code, using progresschanged event for updating ui
-            BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
-            repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler(sender);
-            repoBackgroundWorker.ProgressChanged += MainMainControlProgress_Update;
-            repoBackgroundWorker.RunWorkerAsync();
         }
 
         private void MainMainControlPlay_Update(object sender, RoutedEventArgs args) {
@@ -64,12 +63,13 @@ namespace UKSF_Launcher.UI.Main {
             });
         }
 
-        private void MainMainControlProgress_Update(object sender, ProgressChangedEventArgs args) {
-            if (!args.UserState.ToString().Contains("stop")) {
+        private void MainMainControlProgress_Update(object sender, RoutedEventArgs args) {
+            SafeWindow.ProgressRoutedEventArgs progressArgs = (SafeWindow.ProgressRoutedEventArgs) args;
+            if (!progressArgs.Message.Contains("stop")) {
                 MainMainControlProgressBar.Visibility = Visibility.Visible;
                 MainMainControlProgressText.Visibility = Visibility.Visible;
-                MainMainControlProgressBar.Value = args.ProgressPercentage;
-                MainMainControlProgressText.Text = args.UserState.ToString();
+                MainMainControlProgressBar.Value = progressArgs.Value;
+                MainMainControlProgressText.Text = progressArgs.Message;
             } else {
                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                 MainMainControlProgressBar.Visibility = Visibility.Collapsed;

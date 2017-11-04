@@ -42,18 +42,11 @@ namespace Patching {
 
 
         public static string ShaFromFile(string path) {
-            string hash;
-            using (FileStream stream = File.OpenRead(path)) {
-                using (SHA1Managed sha = new SHA1Managed()) {
-                    byte[] bytes = sha.ComputeHash(stream);
-                    StringBuilder stringBuilder = new StringBuilder(bytes.Length * 2);
-                    foreach (byte hashByte in bytes) {
-                        stringBuilder.Append(hashByte.ToString("x2"));
-                    }
-                    hash = stringBuilder.ToString();
+            using (BufferedStream stream = new BufferedStream(File.OpenRead(path), 16777216)) {
+                using (SHA1 sha = SHA1.Create()) {
+                    return BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
                 }
             }
-            return hash;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedParameter.Global
@@ -12,10 +14,10 @@ namespace ServerService {
         public MessageHandler(ServerService.Client client, string message) {
             ServerHandler.CheckServers();
             _client = client;
-            string[] parts = message.Split(' ');
+            string[] parts = new Regex(" ").Split(message, 2);
             string command = parts[0];
             string[] parameters = parts.Skip(1).ToArray();
-            Tuple<int, string> result = (Tuple<int, string>) GetType().GetMethod(command)?.Invoke(this, new object[] {parameters});
+            Tuple<int, string> result = (Tuple<int, string>) GetType().GetMethod(command)?.Invoke(this, new object[] { parameters });
             if (result == null) {
                 _client.SendMessage($"\nCommand '{message}' not found.\n{HELP}");
             } else {
@@ -67,12 +69,42 @@ namespace ServerService {
             return new Tuple<int, string>(0, "Success");
         }
 
+        // updateforce [name]
+        public Tuple<int, string> updateforce(string[] parameters) {
+            if (parameters.Length != 1) return new Tuple<int, string>(2, "Failed");
+            bool result = RepoHandler.Update(parameters[0], Progress);
+            if (!result) return new Tuple<int, string>(1, "Failed");
+            ServerService.RepoUpdated($"reporequest {parameters[0]}");
+            return new Tuple<int, string>(0, "Success");
+        }
+
         // reporequest [name]
         public Tuple<int, string> reporequest(string[] parameters) {
             if (parameters.Length != 1) {
                 return new Tuple<int, string>(2, "Failed");
             }
             bool result = RepoHandler.GetRepoData(parameters[0], Progress);
+            return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
+        }
+
+        // deltarequest [addon name]::[signature path]::[remote signature path]
+        public Tuple<int, string> deltarequest(string[] parameters) {
+            if (parameters.Length != 1) {
+                return new Tuple<int, string>(2, "Failed");
+            }
+            string[] parts = parameters[0].Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
+            string response = RepoHandler.BuildDelta(parts[0], parts[1], parts[2], Progress);
+            _client.SendCommand($"deltaresponse::{response}");
+            bool result = string.IsNullOrEmpty(response);
+            return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
+        }
+
+        // deltadelete [name]
+        public Tuple<int, string> deltadelete(string[] parameters) {
+            if (parameters.Length != 1) {
+                return new Tuple<int, string>(2, "Failed");
+            }
+            bool result = RepoHandler.DeleteDelta(parameters[0], Progress);
             return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
         }
     }
