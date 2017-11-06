@@ -164,6 +164,15 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.HashFunction.Core, Version=1.8.2.2, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.HashFunction.Core.1.8.2.2\lib\net45\System.Data.HashFunction.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.HashFunction.Interfaces, Version=1.0.0.2, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.HashFunction.Interfaces.1.0.0.2\lib\net45\System.Data.HashFunction.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.HashFunction.xxHash, Version=1.8.2.2, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.HashFunction.xxHash.1.8.2.2\lib\net45\System.Data.HashFunction.xxHash.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
@@ -397,7 +406,7 @@
     <Resource Include="light.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FastRsyncNet-master\source\FastRsync\FastRsync.csproj">
+    <ProjectReference Include="..\FastRsync\FastRsync.csproj">
       <Project>{7B6474F5-8EE1-4D09-A48A-5A295E2DF8E2}</Project>
       <Name>FastRsync</Name>
     </ProjectReference>

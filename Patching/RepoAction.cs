@@ -1,28 +1,24 @@
 ﻿namespace Patching {
     internal class RepoAction {
-        public RepoAction(Addon addon, string signatureFile) {
+        public RepoAction(Addon addon, string addonFile) {
             Addon = addon;
-            SignatureFile = signatureFile;
+            AddonFile = addonFile;
         }
 
         public Addon Addon { get; }
-        public string SignatureFile { get; set; }
-
-        public virtual void Consume() { }
+        public string AddonFile { get; set; }
 
 
         public class AddedAction : RepoAction {
-            public AddedAction(Addon addon, string signatureFile) : base(addon, signatureFile) { }
-
-            public override void Consume() { }
+            public AddedAction(Addon addon, string addonFile) : base(addon, addonFile) { }
         }
 
         public class DeletedAction : RepoAction {
-            public DeletedAction(Addon addon, string signatureFile) : base(addon, signatureFile) { }
+            public DeletedAction(Addon addon, string addonFile) : base(addon, addonFile) { }
         }
 
         public class ModifiedAction : RepoAction {
-            public ModifiedAction(Addon addon, string signatureFile) : base(addon, signatureFile) { }
+            public ModifiedAction(Addon addon, string addonFile) : base(addon, addonFile) { }
         }
     }
 }

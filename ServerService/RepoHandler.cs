@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Patching;
 
 namespace ServerService {
@@ -68,6 +69,12 @@ namespace ServerService {
                 return false;
             }
             return true;
+        }
+
+        public static void CleanRepos() {
+            foreach (string file in Directory.GetFiles(REPOSITORY_LOCATION, "*", SearchOption.AllDirectories).Where(file => file.Contains(".repo") && !file.Contains(".urf"))) {
+                File.Delete(file);
+            }
         }
     }
 }

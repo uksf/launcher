@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionUpdater", "VersionUpdater\VersionUpdater.csproj", "{E07E23ED-8DC9-494F-9A51-7A2AD441CCD4}"
 EndProject
@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releaser", "Releaser\Releas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patching.Tests", "Patching.Tests\Patching.Tests.csproj", "{D5F20B60-E2FA-47D8-897A-63115EB157F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastRsync", "..\..\FastRsyncNet-master\source\FastRsync\FastRsync.csproj", "{7B6474F5-8EE1-4D09-A48A-5A295E2DF8E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastRsync", "FastRsync\FastRsync.csproj", "{7B6474F5-8EE1-4D09-A48A-5A295E2DF8E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

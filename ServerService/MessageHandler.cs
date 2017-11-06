@@ -95,8 +95,7 @@ namespace ServerService {
             string[] parts = parameters[0].Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
             string response = RepoHandler.BuildDelta(parts[0], parts[1], parts[2], Progress);
             _client.SendCommand($"deltaresponse::{response}");
-            bool result = string.IsNullOrEmpty(response);
-            return !result ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
+            return string.IsNullOrEmpty(response) ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
         }
 
         // deltadelete [name]

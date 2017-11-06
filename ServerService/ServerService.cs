@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,7 +59,7 @@ namespace ServerService {
             _socket.Listen(100);
             _socket.BeginAccept(AcceptCallback, _socket);
             _gameServerTimer = new Timer(CheckGameServers, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
-            _cleanupTimer = new Timer(Cleanup, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+            _cleanupTimer = new Timer(Cleanup, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
         }
 
         private static void AcceptCallback(IAsyncResult asyncResult) {
@@ -82,11 +83,21 @@ namespace ServerService {
                     _receiveAttempt = 0;
                     byte[] data = new byte[received];
                     Buffer.BlockCopy(BUFFER, 0, data, 0, data.Length);
-                    string message = Encoding.UTF8.GetString(data);
-                    if (message.Contains("::end")) {
-                        HandleMessage(client, message.Replace("::end", ""));
+                    string fullMessage = Encoding.UTF8.GetString(data);
+                    if (fullMessage.Contains("::end")) {
+                        string[] messages = Regex.Split(fullMessage, @"(?<=::end)");
+                        int done = 0;
+                        foreach (string message in messages.Where(message => message.Contains("::end"))) {
+                            HandleMessage(client, message);
+                            done++;
+                        }
+                        if (done != messages.Length) {
+                            fullMessage = messages[messages.Length - 1];
+                        }
+                        data = Encoding.UTF8.GetBytes(fullMessage);
+                        Buffer.BlockCopy(BUFFER, 0, data, 0, data.Length);
                     }
-                    client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
+                    client.Socket?.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
                 } else if (_receiveAttempt < MAX_RECEIVE_ATTEMPT) {
                     _receiveAttempt++;
                     client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
@@ -100,6 +111,7 @@ namespace ServerService {
 
         private static void HandleMessage(Client client, string message) {
             EventLog.WriteEntry($"Message '{message}' received from {client.Guid}");
+            message = message.Replace("::end", "");
             switch (message) {
                 case "connect":
                     lock (_clients) {
@@ -166,6 +178,9 @@ namespace ServerService {
                     foreach (Client client in delete) {
                         EventLog.WriteEntry($"Client disconnected {client.Guid}");
                         _clients.Remove(client);
+                    }
+                    if (_clients.Count == 0) {
+                        RepoHandler.CleanRepos();
                     }
                 }
             } catch {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,45 +7,42 @@ using System.Text;
 
 namespace Patching {
     public static class Utility {
-        public static string ShaFromConcurrent(ConcurrentDictionary<string, string> filesDictionary) {
-            SHA1 sha1 = SHA1.Create();
-            foreach (byte[] bytes in from pair in filesDictionary
-                                     orderby pair.Key
-                                     select Enumerable.Range(0, pair.Value.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(pair.Value.Substring(x, 2), 16)).ToArray()) {
-                sha1.TransformBlock(bytes, 0, 16, null, 0);
-            }
-            sha1.TransformFinalBlock(new byte[0], 0, 0);
-            StringBuilder hexString = new StringBuilder();
-            foreach (string hex in from hashByte in sha1.Hash select hashByte.ToString("x2")) {
-                hexString.Append(hex);
-            }
-            sha1.Dispose();
-            return hexString.ToString();
-        }
 
         public static string ShaFromDictionary(Dictionary<string, string> filesDictionary) {
-            SHA1 sha1 = SHA1.Create();
-            foreach (byte[] bytes in from pair in filesDictionary
-                                     orderby pair.Key
-                                     select Enumerable.Range(0, pair.Value.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(pair.Value.Substring(x, 2), 16)).ToArray()) {
-                sha1.TransformBlock(bytes, 0, 16, null, 0);
+            using (SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider()) {
+                return HashBytesToString(sha.ComputeHash(new MemoryStream(Encoding.UTF8.GetBytes(string.Join(",", filesDictionary.Values.ToArray())))));
             }
-            sha1.TransformFinalBlock(new byte[0], 0, 0);
-            StringBuilder hexString = new StringBuilder();
-            foreach (string hex in from hashByte in sha1.Hash select hashByte.ToString("x2")) { // TODO: WRITE TESTS FOR THIS SHITE
-                hexString.Append(hex);
-            }
-            sha1.Dispose();
-            return hexString.ToString();
         }
-
 
         public static string ShaFromFile(string path) {
             using (BufferedStream stream = new BufferedStream(File.OpenRead(path), 16777216)) {
-                using (SHA1 sha = SHA1.Create()) {
-                    return BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
+                using (SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider()) {
+                    return HashBytesToString(sha.ComputeHash(stream));
                 }
             }
+        }
+
+        private static string HashBytesToString(IReadOnlyList<byte> hashBytes) {
+            int characterArrayLength = hashBytes.Count * 2;
+            char[] characterArray = new char[characterArrayLength];
+            int i;
+            int index = 0;
+            for (i = 0; i < characterArrayLength; i += 2) {
+                byte b = hashBytes[index++];
+                characterArray[i] = GetHexValue(b / 16);
+                characterArray[i + 1] = GetHexValue(b % 16);
+            }
+            return new string(characterArray);
+        }
+
+        private static char GetHexValue(int i) {
+            if (i < 0 || i > 15) {
+                throw new ArgumentOutOfRangeException(nameof(i), "i must be between 0 and 15.");
+            }
+            if (i < 10) {
+                return (char)(i + '0');
+            }
+            return (char)(i - 10 + 'a');
         }
     }
 }
