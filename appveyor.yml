@@ -7,8 +7,8 @@ branches:
   - master
   - release
 image: Visual Studio 2017
-configuration: Debug
-platform: Any CPU
+configuration: Release
+platform: x64
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -16,9 +16,9 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: ':::'
 cache:
-  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
-  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+  - packages -> **\packages.config
+  - '%LocalAppData%\NuGet\Cache'
+  - '%LocalAppData%\NuGet\v3-cache'
 before_build:
   - nuget restore
 build:
@@ -28,20 +28,24 @@ test_script:
 - cmd: >-
     cd C:\projects\launcher
 
-    packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -returntargetcode -filter:"+[UKSF-Launcher*]* -[UKSF-Launcher.Tests]* -[UKSF-Launcher]UKSF_Launcher.UI.* -[UKSF-Launcher]UKSF_Launcher.Global -[UKSF-Launcher]UKSF_Launcher.Core -[UKSF-Launcher]UKSF_Launcher.Properties.*" -excludebyattribute:*.ExcludeFromCoverageAttribute "-target:tests.bat" -output:coverage.xml
+    packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -returntargetcode -filter:"+[Launcher*]* -[Launcher.Tests]* -[Launcher]UKSF_Launcher.UI.* -[Launcher]UKSF_Launcher.Global -[Launcher]UKSF_Launcher.Core -[Launcher]UKSF_Launcher.Properties.*" -excludebyattribute:*.ExcludeFromCoverageAttribute "-target:tests.bat" -output:coverage.xml
 
     packages\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i coverage.xml
 artifacts:
-  - path: release\UKSF-Launcher.exe
-    name: UKSF-Launcher
-  - path: release\Updater.exe
-    name: Updater
-  - path: release\VersionUpdater.exe
-    name: VersionUpdater
+  - path: release\Setup.msi
+    name: Setup
+  - path: release\Launcher.exe
+    name: Launcher
   - path: release\Patching.dll
     name: Patching
   - path: release\Network.dll
     name: Network
+  - path: release\FastRsync.exe
+    name: FastRsync
+  - path: release\Updater.exe
+    name: Updater
+  - path: release\VersionUpdater.exe
+    name: VersionUpdater
   - path: release\ServerService.exe
     name: ServerService
 deploy:
@@ -52,7 +56,7 @@ deploy:
   password:
     secure: 1k1dPMXwKdh+kVVv5GxYyA==
   folder: /wamp/www/uksfnew/public/launcher
-  artifact: UKSF-Launcher,Updater,VersionUpdater,Patching,Network,ServerService
+  artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,VersionUpdater,ServerService
   on:
     branch: release
 after_deploy:

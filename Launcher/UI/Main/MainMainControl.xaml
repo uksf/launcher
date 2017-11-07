@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              d:DesignHeight="464" d:DesignWidth="500">
     <Grid Height="464">
-        <Image Source="pack://application:,,,/UKSF-Launcher;component/Resources/Icons/Watermark.png"
+        <Image Source="pack://application:,,,/Launcher;component/Resources/Icons/Watermark.png"
                HorizontalAlignment="Center" Width="464" Height="464" VerticalAlignment="Bottom"
                RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" Panel.ZIndex="0" />
         <ComboBox x:Name="MainMainControlDropdownServer" IsEnabled="False" Width="375" Height="75" Margin="0,50,0,0"
