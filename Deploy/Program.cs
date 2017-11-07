@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 
 namespace Deploy {
     internal static class Program {
@@ -46,6 +47,9 @@ namespace Deploy {
             ServiceController serviceController = new ServiceController {ServiceName = "ServerService"};
             if (serviceController.CanStop) {
                 serviceController.Stop();
+            }
+            while (serviceController.Status != ServiceControllerStatus.Stopped) {
+                Task.Delay(100).Wait();
             }
             File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"), true);
