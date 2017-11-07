@@ -40,10 +40,13 @@ namespace Updater {
                 File.Delete(fastrsync);
             }
 
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Launcher.exe", launcher);
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Patching.dll", patching);
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Network.dll", network);
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/FastRsync.dll", fastrsync);
+            using (WebClient webClient = new WebClient()) {
+                webClient.Credentials = new NetworkCredential("launcherdeploy", "sikrit");
+                webClient.DownloadFile("ftp://uk-sf.com/Launcher.exe", launcher);
+                webClient.DownloadFile("ftp://uk-sf.com/Patching.dll", patching);
+                webClient.DownloadFile("ftp://uk-sf.com/Network.dll", network);
+                webClient.DownloadFile("ftp://uk-sf.com/FastRsync.dll", fastrsync);
+            }
 
             Process launcherProcess = new Process {
                 StartInfo = {UseShellExecute = false, FileName = Path.Combine(Environment.CurrentDirectory, "Launcher.exe"), Arguments = "-u"}

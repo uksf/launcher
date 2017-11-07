@@ -18,7 +18,7 @@ namespace UKSF_Launcher.Utility {
             string[] currentFlags = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).ProductVersion.Split(':');
             LogInfo($"Current version: {VERSION}");
 
-            string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/release/version").Split(':');
+            string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/version").Split(':');
             Version latestVersion = Version.Parse(versionString[0]);
             bool force = HandleFlags(versionString, currentFlags);
             LogInfo($"Latest version: {latestVersion} - Force update: {force}");
@@ -55,7 +55,10 @@ namespace UKSF_Launcher.Utility {
         ///     Downloads the latest updater file and runs it. Running instance of Launcher will shutdown.
         /// </summary>
         private static void Update() {
-            new WebClient().DownloadFile("http://www.uk-sf.com/launcher/release/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+            using (WebClient webClient = new WebClient()) {
+                webClient.Credentials = new NetworkCredential("launcherdeploy", "sikrit");
+                webClient.DownloadFile("ftp://uk-sf.com/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+            }
             Process updater = new Process();
             try {
                 updater.StartInfo.UseShellExecute = false;

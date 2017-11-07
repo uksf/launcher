@@ -40,24 +40,23 @@ artifacts:
     name: Patching
   - path: release\Network.dll
     name: Network
-  - path: release\FastRsync.exe
+  - path: release\FastRsync.dll
     name: FastRsync
   - path: release\Updater.exe
     name: Updater
-  - path: release\VersionUpdater.exe
-    name: VersionUpdater
+  - path: release\Deploy.exe
+    name: Deploy
   - path: release\ServerService.exe
     name: ServerService
 deploy:
 - provider: FTP
   host: ftp.uk-sf.com
   protocol: ftp
-  username: main
+  username: launcherdeploy
   password:
-    secure: 1k1dPMXwKdh+kVVv5GxYyA==
-  folder: /wamp/www/uksfnew/public/launcher
-  artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,VersionUpdater,ServerService
+    secure: YibxKCtSgR09TYdeKxMzrA==
+  artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,Deploy,ServerService
   on:
     branch: release
 after_deploy:
-- cmd: '%APPVEYOR_BUILD_FOLDER%\release\PostDeployment.exe'
+- cmd: '%APPVEYOR_BUILD_FOLDER%\release\Deployment.exe'

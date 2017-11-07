@@ -117,10 +117,10 @@ namespace Patching {
                 _actions = new ConcurrentBag<RepoAction>();
                 Parallel.ForEach(changedAddons, changedAddon => {
                     _progressUpdate.Invoke((float) progressIndex++ / changedAddons.Count, "Finding changes");
-                    WebClient webClient = new WebClient();
+                    WebClient webClient = new WebClient {Credentials = new NetworkCredential(USERNAME, PASSWORD)};
                     Dictionary<string, string[]> remoteAddonDictionary = new Dictionary<string, string[]>();
                     try {
-                        using (Stream stream = webClient.OpenRead($"http://www.uk-sf.com/launcher/repos/{RepoName}/.repo/{changedAddon.Name}.urf")) {
+                        using (Stream stream = webClient.OpenRead($"ftp://uk-sf.com/{RepoName}/.repo/{changedAddon.Name}.urf")) {
                             using (StreamReader reader = new StreamReader(stream)) {
                                 string line;
                                 while (!string.IsNullOrEmpty(line = reader.ReadLine())) {

@@ -5,7 +5,7 @@ using Patching;
 
 namespace ServerService {
     internal static class RepoHandler {
-        private const string REPOSITORY_LOCATION = @"C:\wamp\www\uksfnew\public\launcher\repos";
+        private const string REPOSITORY_LOCATION = @"C:\Users\root\Documents\Launcher\repos";
 
         public static bool Create(string name, Action<string> progress) {
             try {
