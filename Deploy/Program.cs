@@ -45,10 +45,10 @@ namespace Deploy {
             // Restart Service
             ServiceController serviceController = new ServiceController {ServiceName = "ServerService"};
             serviceController.Stop();
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "service", "ServerService.exe"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "service", "Patching.dll"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "service", "Network.dll"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "service", "FastRsync.dll"));
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"));
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"));
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Network.dll"));
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "FastRsync.dll"));
             serviceController.Start();
         }
 

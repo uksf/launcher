@@ -42,10 +42,10 @@ namespace Updater {
 
             using (WebClient webClient = new WebClient()) {
                 webClient.Credentials = new NetworkCredential("launcherdeploy", "sikrit");
-                webClient.DownloadFile("ftp://uk-sf.com/Launcher.exe", launcher);
-                webClient.DownloadFile("ftp://uk-sf.com/Patching.dll", patching);
-                webClient.DownloadFile("ftp://uk-sf.com/Network.dll", network);
-                webClient.DownloadFile("ftp://uk-sf.com/FastRsync.dll", fastrsync);
+                webClient.DownloadFile("ftp://uk-sf.com/release/Launcher.exe", launcher);
+                webClient.DownloadFile("ftp://uk-sf.com/release/Patching.dll", patching);
+                webClient.DownloadFile("ftp://uk-sf.com/release/Network.dll", network);
+                webClient.DownloadFile("ftp://uk-sf.com/release/FastRsync.dll", fastrsync);
             }
 
             Process launcherProcess = new Process {
