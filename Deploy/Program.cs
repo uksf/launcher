@@ -32,7 +32,7 @@ namespace Deploy {
             string[] appveyorLines = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"));
             appveyorLines[0] = "version: \"" + newVersion.Major + "." + newVersion.Minor + "." + newVersion.Build + ".{build}\"";
             File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "appveyor.yml"), appveyorLines);
-            Process.Start("git", @"commit -am ""Release version: " + newVersion + "\"")?.WaitForExit();
+            Process.Start("git", @"commit -am ""Released version: " + newVersion + "\"")?.WaitForExit();
             Process.Start("git", @"push")?.WaitForExit();
 
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
@@ -40,15 +40,17 @@ namespace Deploy {
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
             
             // Copy Setup.msi
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Setup.msi"), @"C:\wamp\www\uksfnew\public\launcher\Setup.msi");
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Setup.msi"), @"C:\wamp\www\uksfnew\public\launcher\Setup.msi", true);
 
             // Restart Service
             ServiceController serviceController = new ServiceController {ServiceName = "ServerService"};
-            serviceController.Stop();
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Network.dll"));
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "FastRsync.dll"));
+            if (serviceController.CanStop) {
+                serviceController.Stop();
+            }
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"), true);
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"), true);
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Network.dll"), true);
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "FastRsync.dll"), true);
             serviceController.Start();
         }
 
