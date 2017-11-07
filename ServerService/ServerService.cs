@@ -17,7 +17,6 @@ namespace ServerService {
         private const int MAX_RECEIVE_ATTEMPT = 10;
         public new static EventLog EventLog;
         private static Socket _socket;
-        private static readonly byte[] BUFFER = new byte[8192];
 
         private static int _receiveAttempt;
 
@@ -65,8 +64,8 @@ namespace ServerService {
         private static void AcceptCallback(IAsyncResult asyncResult) {
             if (_socket != (Socket) asyncResult.AsyncState) return;
             try {
-                Client client = new Client(_socket.EndAccept(asyncResult));
-                client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
+                Client client = new Client(_socket.EndAccept(asyncResult)) {Buffer = new byte[8192]};
+                client.Socket.BeginReceive(client.Buffer, 0, client.Buffer.Length, SocketFlags.None, ReceiveCallback, client);
                 _socket.BeginAccept(AcceptCallback, _socket);
                 EventLog.WriteEntry($"Client connected {client.Guid}");
             } catch (Exception exception) {
@@ -82,7 +81,7 @@ namespace ServerService {
                 if (received > 0) {
                     _receiveAttempt = 0;
                     byte[] data = new byte[received];
-                    Buffer.BlockCopy(BUFFER, 0, data, 0, data.Length);
+                    Buffer.BlockCopy(client.Buffer, 0, data, 0, data.Length);
                     string fullMessage = Encoding.UTF8.GetString(data);
                     if (fullMessage.Contains("::end")) {
                         string[] messages = Regex.Split(fullMessage, @"(?<=::end)");
@@ -95,12 +94,12 @@ namespace ServerService {
                             fullMessage = messages[messages.Length - 1];
                         }
                         data = Encoding.UTF8.GetBytes(fullMessage);
-                        Buffer.BlockCopy(BUFFER, 0, data, 0, data.Length);
+                        Buffer.BlockCopy(client.Buffer, 0, data, 0, data.Length);
                     }
-                    client.Socket?.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
+                    client.Socket?.BeginReceive(client.Buffer, 0, client.Buffer.Length, SocketFlags.None, ReceiveCallback, client);
                 } else if (_receiveAttempt < MAX_RECEIVE_ATTEMPT) {
                     _receiveAttempt++;
-                    client.Socket.BeginReceive(BUFFER, 0, BUFFER.Length, SocketFlags.None, ReceiveCallback, client);
+                    client.Socket.BeginReceive(client.Buffer, 0, client.Buffer.Length, SocketFlags.None, ReceiveCallback, client);
                 } else {
                     _receiveAttempt = 0;
                 }
@@ -136,7 +135,7 @@ namespace ServerService {
                     break;
             }
         }
-        
+
         protected override void OnStop() {
             EventLog.WriteEntry("Stopped");
             _socket?.Dispose();
@@ -201,13 +200,16 @@ namespace ServerService {
         }
 
         public class Client {
+            public readonly string Guid;
+
+            public readonly Socket Socket;
+
+            public byte[] Buffer;
+
             public Client(Socket socket) {
                 Socket = socket;
                 Guid = $"{((IPEndPoint) Socket.RemoteEndPoint).Address}_{System.Guid.NewGuid()}";
             }
-
-            public Socket Socket { get; }
-            public string Guid { get; }
 
             public void SendCommand(string message) {
                 try {

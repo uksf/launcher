@@ -17,7 +17,7 @@ namespace ServerService {
             string[] parts = new Regex(" ").Split(message, 2);
             string command = parts[0];
             string[] parameters = parts.Skip(1).ToArray();
-            Tuple<int, string> result = (Tuple<int, string>) GetType().GetMethod(command)?.Invoke(this, new object[] { parameters });
+            Tuple<int, string> result = (Tuple<int, string>) GetType().GetMethod(command)?.Invoke(this, new object[] {parameters});
             if (result == null) {
                 _client.SendMessage($"\nCommand '{message}' not found.\n{HELP}");
             } else {

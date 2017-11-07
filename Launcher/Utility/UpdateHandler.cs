@@ -8,7 +8,6 @@ using static UKSF_Launcher.Utility.LogHandler;
 
 namespace UKSF_Launcher.Utility {
     internal static class UpdateHandler {
-
         /// <summary>
         ///     Checks for a new version of the launcher from the website.
         /// </summary>

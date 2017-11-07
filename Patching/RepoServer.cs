@@ -15,19 +15,19 @@ namespace Patching {
         private readonly Dictionary<string, string> _repoFileDictionary;
         private readonly string _repoFilePath;
 
+        private readonly string _repoPath;
+        public readonly string RepoName;
+
         public RepoServer(string path, string name, Action<string> progressAction) : base(progressAction) {
-            RepoPath = path;
+            _repoPath = path;
             RepoName = name;
-            _repoFilePath = Path.Combine(RepoPath, ".repo", ".repo.urf");
+            _repoFilePath = Path.Combine(_repoPath, ".repo", ".repo.urf");
             Directory.CreateDirectory(Path.GetDirectoryName(_repoFilePath));
             _repoFileDictionary = new Dictionary<string, string>();
         }
 
-        private string RepoPath { get; }
-        public string RepoName { get; }
-
         private List<DirectoryInfo> GetAddonFolders() {
-            List<DirectoryInfo> addonFolders = new DirectoryInfo(RepoPath).EnumerateDirectories("@*").ToList();
+            List<DirectoryInfo> addonFolders = new DirectoryInfo(_repoPath).EnumerateDirectories("@*").ToList();
             if (addonFolders.Count == 0) {
                 throw new Exception("There are no addons in this location");
             }
@@ -46,8 +46,8 @@ namespace Patching {
         }
 
         public void CreateRepo() {
-            ProgressAction.Invoke($"Creating directory '{RepoPath}'");
-            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(RepoPath, ".repo"));
+            ProgressAction.Invoke($"Creating directory '{_repoPath}'");
+            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(_repoPath, ".repo"));
             while (repoDirectory.Exists) {
                 try {
                     repoDirectory.Delete(true);
@@ -71,21 +71,21 @@ namespace Patching {
         }
 
         public void UpdateRepo() {
-            if (!Directory.Exists(RepoPath)) {
+            if (!Directory.Exists(_repoPath)) {
                 throw new Exception($"Repo '{RepoName}' does not exist");
             }
-            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(RepoPath, ".repo"));
+            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(_repoPath, ".repo"));
             if (!repoDirectory.Exists) {
                 throw new Exception("Repo folder does not exist");
             }
             List<Addon> changedAddons = new List<Addon>();
-            Dictionary<string, string[]> currentRepoDictionary = File.ReadAllLines(Path.Combine(RepoPath, ".repo", ".repo.urf")).Select(line => line.Split(';'))
+            Dictionary<string, string[]> currentRepoDictionary = File.ReadAllLines(Path.Combine(_repoPath, ".repo", ".repo.urf")).Select(line => line.Split(';'))
                                                                      .ToDictionary(values => values[0], values => values[1].Split(':'));
             List<DirectoryInfo> addonFolders = GetAddonFolders();
             foreach (KeyValuePair<string, string[]> addonPair in currentRepoDictionary) {
                 if (addonFolders.Count(addonFolder => addonFolder.FullName.Equals(addonPair.Key)) == 0) {
                     ProgressAction.Invoke($"Addon deleted '{addonPair.Key}'");
-                    File.Delete(Path.Combine(RepoPath, ".repo", $"{Path.GetFileName(addonPair.Key)}.urf"));
+                    File.Delete(Path.Combine(_repoPath, ".repo", $"{Path.GetFileName(addonPair.Key)}.urf"));
                 } else {
                     string[] addonFiles = Directory.GetFiles(addonPair.Key, "*", SearchOption.AllDirectories);
                     if (Convert.ToInt32(addonPair.Value[1]) != addonFiles.Length ||
@@ -93,11 +93,11 @@ namespace Patching {
                         ProgressAction.Invoke($"Addon changed '{addonPair.Key}'");
                         changedAddons.Add(new Addon(addonPair.Key, repoDirectory));
                     } else {
-                        Dictionary<string, string[]> addonDictionary = File.ReadAllLines(Path.Combine(RepoPath, ".repo", $"{Path.GetFileName(addonPair.Key)}.urf"))
+                        Dictionary<string, string[]> addonDictionary = File.ReadAllLines(Path.Combine(_repoPath, ".repo", $"{Path.GetFileName(addonPair.Key)}.urf"))
                                                                            .Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
                         if ((from dataPair in addonDictionary
                              let addonFile =
-                                 addonFiles.FirstOrDefault(file => file.Replace($"{Path.Combine(RepoPath, Path.GetFileName(addonPair.Key))}{Path.DirectorySeparatorChar}", "")
+                                 addonFiles.FirstOrDefault(file => file.Replace($"{Path.Combine(_repoPath, Path.GetFileName(addonPair.Key))}{Path.DirectorySeparatorChar}", "")
                                                                        .Equals(dataPair.Key))
                              where !string.IsNullOrEmpty(addonFile)
                              where Convert.ToInt64(dataPair.Value[1]) != new FileInfo(addonFile).Length ||
@@ -131,23 +131,23 @@ namespace Patching {
         }
 
         public void GetRepoData() {
-            if (!Directory.Exists(RepoPath)) {
+            if (!Directory.Exists(_repoPath)) {
                 throw new Exception($"Repo '{RepoName}' does not exist");
             }
-            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(RepoPath, ".repo"));
+            DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(_repoPath, ".repo"));
             if (!repoDirectory.Exists) {
                 throw new Exception("Repo file does not exist");
             }
-            string[] repoFileLines = File.ReadAllLines(Path.Combine(RepoPath, ".repo", ".repo.urf"));
+            string[] repoFileLines = File.ReadAllLines(Path.Combine(_repoPath, ".repo", ".repo.urf"));
             ProgressAction.Invoke(repoFileLines.Aggregate("command::repodata", (current, line) => string.Join("::", current, line)));
         }
 
         public string BuildDelta(string addonPath, string signaturePath) {
             DeltaBuilder delta = new DeltaBuilder();
-            string deltaPath = Path.Combine(RepoPath, ".repo", Path.GetRandomFileName());
+            string deltaPath = Path.Combine(_repoPath, ".repo", Path.GetRandomFileName());
             Directory.CreateDirectory(Path.GetDirectoryName(deltaPath));
             try {
-                using (FileStream updatedStream = new FileStream(Path.Combine(RepoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream updatedStream = new FileStream(Path.Combine(_repoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (FileStream signatureStream = new FileStream(signaturePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                         using (FileStream deltaStream = new FileStream(deltaPath, FileMode.Create, FileAccess.Write, FileShare.Read)) {
                             delta.BuildDelta(updatedStream, new SignatureReader(signatureStream), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));

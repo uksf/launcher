@@ -112,6 +112,11 @@ namespace UKSF_Launcher.Game {
             // Delimiter for joining elements of profile string. Replaces '.' characters
             private const string PROFILE_JOINER = "%2e";
 
+            public readonly string DisplayName;
+
+            public readonly string FilePath;
+            public readonly string Name;
+
             /// <summary>
             ///     Create new profile from given file name.
             /// </summary>
@@ -135,10 +140,6 @@ namespace UKSF_Launcher.Game {
                 DisplayName = Regex.Replace(Name, PROFILE_JOINER, ".");
                 LogInfo($"Found profile: {Name} / {DisplayName}");
             }
-
-            public string FilePath { get; }
-            public string Name { get; }
-            public string DisplayName { get; }
         }
     }
 }

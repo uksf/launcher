@@ -21,6 +21,8 @@ namespace UKSF_Launcher.Game {
         }
 
         public class Malloc {
+            public readonly string Name;
+
             /// <summary>
             ///     Create new malloc from given file name.
             /// </summary>
@@ -29,8 +31,6 @@ namespace UKSF_Launcher.Game {
                 Name = Path.GetFileNameWithoutExtension(fileName);
                 LogInfo("Found malloc: " + Name);
             }
-
-            public string Name { get; }
         }
     }
 }

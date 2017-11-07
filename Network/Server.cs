@@ -3,6 +3,13 @@
 namespace Network {
     [Serializable]
     public class Server {
+        public readonly string Ip;
+
+        public readonly string Name;
+        public readonly string Password;
+        public readonly int Port;
+        public bool Active;
+
         public Server(string name, string ip, int port, string password, bool active) {
             Name = name;
             Ip = ip;
@@ -11,11 +18,6 @@ namespace Network {
             Active = active;
         }
 
-        public string Name { get; }
-        public string Ip { get; }
-        public int Port { get; }
-        public string Password { get; }
-        public bool Active { get; set; }
         public string Serialize() => $"{Name}:{Ip}:{Port}:{Password}:{Active}";
 
         public static Server DeSerialize(string serialized) {

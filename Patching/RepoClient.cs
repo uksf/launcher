@@ -17,6 +17,10 @@ namespace Patching {
         private static int _completedDeltas;
         private static DateTime _lastReport = DateTime.Now;
         private readonly string _repoFilePath;
+        private readonly string _repoLocalPath;
+
+        private readonly string _repoPath;
+        public readonly string RepoName;
         private ConcurrentBag<RepoAction> _actions;
         private ConcurrentDictionary<string, bool> _deltas;
 
@@ -24,17 +28,14 @@ namespace Patching {
         private Dictionary<string, string[]> _repoFileDictionary;
 
         public RepoClient(string path, string localPath, string name, Action<string> progressAction) : base(progressAction) {
-            RepoPath = path;
+            _repoPath = path;
             RepoName = name;
-            RepoLocalPath = Path.Combine(localPath, RepoName);
-            _repoFilePath = string.IsNullOrEmpty(RepoLocalPath) ? Path.Combine(RepoPath, ".repo", ".repo.urf") : Path.Combine(RepoLocalPath, ".repo.urf");
+            _repoLocalPath = Path.Combine(localPath, RepoName);
+            _repoFilePath = string.IsNullOrEmpty(_repoLocalPath) ? Path.Combine(_repoPath, ".repo", ".repo.urf") : Path.Combine(_repoLocalPath, ".repo.urf");
             Directory.CreateDirectory(Path.GetDirectoryName(_repoFilePath));
             _repoFileDictionary = new Dictionary<string, string[]>();
         }
 
-        private string RepoPath { get; }
-        private string RepoLocalPath { get; }
-        public string RepoName { get; }
         public event EventHandler<Tuple<string, string>> UploadEvent;
         public event EventHandler<string> DeleteEvent;
 
@@ -52,13 +53,13 @@ namespace Patching {
             try {
                 CleanRepo();
                 _progressUpdate = progressUpdate;
-                if (!Directory.Exists(RepoPath)) {
+                if (!Directory.Exists(_repoPath)) {
                     ProgressAction.Invoke($"Creating mods location for {RepoName}");
-                    Directory.CreateDirectory(RepoPath);
+                    Directory.CreateDirectory(_repoPath);
                 }
-                if (!Directory.Exists(RepoLocalPath)) {
+                if (!Directory.Exists(_repoLocalPath)) {
                     ProgressAction.Invoke($"Creating repo location for {RepoName}");
-                    Directory.CreateDirectory(RepoLocalPath);
+                    Directory.CreateDirectory(_repoLocalPath);
                 }
                 if (!File.Exists(_repoFilePath)) {
                     ProgressAction.Invoke($"Creating repo file for {RepoName}");
@@ -74,12 +75,12 @@ namespace Patching {
                     string addonName = Path.GetFileName(remoteAddonPair.Key);
                     _progressUpdate.Invoke((float) progressIndex / remoteRepoDictionary.Count, $"Checking '{addonName}'");
                     string localAddon = _repoFileDictionary.Keys.FirstOrDefault(key => key != null && Path.GetFileName(key).Equals(addonName));
-                    localAddon = string.IsNullOrEmpty(localAddon) ? Path.Combine(RepoPath, addonName) : localAddon;
+                    localAddon = string.IsNullOrEmpty(localAddon) ? Path.Combine(_repoPath, addonName) : localAddon;
                     // ReSharper disable once PossibleNullReferenceException
-                    if (!Path.GetDirectoryName(localAddon).Equals(RepoPath)) {
-                        localAddon = Path.Combine(RepoPath, addonName);
+                    if (!Path.GetDirectoryName(localAddon).Equals(_repoPath)) {
+                        localAddon = Path.Combine(_repoPath, addonName);
                     }
-                    Addon addon = new Addon(localAddon, new DirectoryInfo(RepoLocalPath));
+                    Addon addon = new Addon(localAddon, new DirectoryInfo(_repoLocalPath));
                     if (!Directory.Exists(addon.FolderPath)) {
                         ProgressAction.Invoke($"Could not find mod folder for '{addon.Name}'");
                         changedAddons.Add(addon);
@@ -100,8 +101,8 @@ namespace Patching {
                         if (remoteRepoDictionary.Keys.All(key => key != null && !Path.GetFileName(key).Equals(addonName))) {
                             _progressUpdate.Invoke((float) progressIndex++ / remoteRepoDictionary.Count, $"Deleting '{addonName}'");
                             Directory.Delete(localDataPair.Key, true);
-                            Directory.Delete(Path.Combine(RepoLocalPath, addonName), true);
-                            File.Delete(Path.Combine(RepoLocalPath, $"{addonName}.urf"));
+                            Directory.Delete(Path.Combine(_repoLocalPath, addonName), true);
+                            File.Delete(Path.Combine(_repoLocalPath, $"{addonName}.urf"));
                         }
                     }
                     progressIndex++;
@@ -130,12 +131,12 @@ namespace Patching {
                     } catch (Exception) {
                         ProgressAction.Invoke($"Could not get remote addon data for '{changedAddon.Name}'");
                     }
-                    if (!File.Exists(Path.Combine(RepoLocalPath, $"{changedAddon.Name}.urf"))) {
+                    if (!File.Exists(Path.Combine(_repoLocalPath, $"{changedAddon.Name}.urf"))) {
                         foreach (KeyValuePair<string, string[]> remoteAddonFile in remoteAddonDictionary) {
                             _actions.Add(new RepoAction.AddedAction(changedAddon, remoteAddonFile.Key));
                         }
                     } else {
-                        Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(RepoLocalPath, $"{changedAddon.Name}.urf"))
+                        Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{changedAddon.Name}.urf"))
                                                                                 .Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
                         foreach (KeyValuePair<string, string[]> remoteAddonFile in remoteAddonDictionary) {
                             if (localAddonDictionary.Keys.Any(key => key.Equals(remoteAddonFile.Key))) {
@@ -176,7 +177,7 @@ namespace Patching {
                             break;
                         case RepoAction.DeletedAction _:
                             File.Delete(Path.Combine(action.Addon.FolderPath, action.AddonFile));
-                            File.Delete(Path.Combine(RepoLocalPath, action.Addon.Name, $"{action.AddonFile}.urf"));
+                            File.Delete(Path.Combine(_repoLocalPath, action.Addon.Name, $"{action.AddonFile}.urf"));
                             _completedDeltas++;
                             break;
                     }
@@ -205,8 +206,8 @@ namespace Patching {
             string[] addonFiles = Directory.GetFiles(addon.FolderPath, "*", SearchOption.AllDirectories);
             long ticks = addonFiles.Length == 0 ? 0 : addonFiles.ToList().Max(file => new FileInfo(file).LastWriteTime).Ticks;
             // Does addon exist in repo urf and does addon.urf exist
-            if (!_repoFileDictionary.Keys.Any(key => key != null && Path.GetFileName(key).Equals(addon.Name)) || !File.Exists(Path.Combine(RepoLocalPath, $"{addon.Name}.urf"))) {
-                if (!File.Exists(Path.Combine(RepoLocalPath, $"{addon.Name}.urf"))) {
+            if (!_repoFileDictionary.Keys.Any(key => key != null && Path.GetFileName(key).Equals(addon.Name)) || !File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
+                if (!File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
                     ProgressAction.Invoke($"Could not find addon.urf '{addon.Name}'");
                     _progressUpdate.Invoke((float) progressIndex / progressCount, $"Generating cache '{addon.Name}'");
                     addon.GenerateAllHashes();
@@ -218,7 +219,7 @@ namespace Patching {
                 }
                 UpdateAddonCache(addon, addonFiles.Length, ticks);
             }
-            Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(RepoLocalPath, $"{addon.Name}.urf")).Select(line => line.Split(';'))
+            Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{addon.Name}.urf")).Select(line => line.Split(';'))
                                                                     .ToDictionary(values => values[0], values => values[1].Split(':'));
 
             foreach (FileInfo addonFile in from addonFilePair in localAddonDictionary
@@ -303,20 +304,20 @@ namespace Patching {
             string addonPath = parts[0];
             string remoteDeltaPath = parts[1];
             try {
-                string deltaPath = Path.Combine(RepoLocalPath, Path.GetFileName(remoteDeltaPath));
+                string deltaPath = Path.Combine(_repoLocalPath, Path.GetFileName(remoteDeltaPath));
                 DownloadWholeFile($".repo/{remoteDeltaPath}", deltaPath);
                 DeltaApplier deltaApplier = new DeltaApplier {SkipHashCheck = true};
-                using (FileStream basisStream = new FileStream(Path.Combine(RepoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream basisStream = new FileStream(Path.Combine(_repoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (FileStream deltaStream = new FileStream(deltaPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        using (FileStream newFileStream = new FileStream(Path.Combine(RepoPath, $"{addonPath}.urf"), FileMode.Create, FileAccess.ReadWrite, FileShare.Read)) {
+                        using (FileStream newFileStream = new FileStream(Path.Combine(_repoPath, $"{addonPath}.urf"), FileMode.Create, FileAccess.ReadWrite, FileShare.Read)) {
                             deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream), newFileStream);
                         }
                     }
                 }
-                File.Delete(Path.Combine(RepoPath, addonPath));
+                File.Delete(Path.Combine(_repoPath, addonPath));
                 File.Delete(deltaPath);
-                File.Copy(Path.Combine(RepoPath, $"{addonPath}.urf"), Path.Combine(RepoPath, $"{addonPath}"));
-                File.Delete(Path.Combine(RepoPath, $"{addonPath}.urf"));
+                File.Copy(Path.Combine(_repoPath, $"{addonPath}.urf"), Path.Combine(_repoPath, $"{addonPath}"));
+                File.Delete(Path.Combine(_repoPath, $"{addonPath}.urf"));
             } catch (Exception exception) {
                 ProgressAction.Invoke($"An error occured processing delta '{response}'\n{exception}");
             } finally {
@@ -327,10 +328,10 @@ namespace Patching {
         }
 
         private void CleanRepo() {
-            foreach (string file in Directory.GetFiles(RepoLocalPath, "*", SearchOption.AllDirectories).Where(file => !file.Contains(".urf"))) {
+            foreach (string file in Directory.GetFiles(_repoLocalPath, "*", SearchOption.AllDirectories).Where(file => !file.Contains(".urf"))) {
                 File.Delete(file);
             }
-            foreach (string file in Directory.GetFiles(RepoPath, "*", SearchOption.AllDirectories).Where(file => file.Contains(".urf"))) {
+            foreach (string file in Directory.GetFiles(_repoPath, "*", SearchOption.AllDirectories).Where(file => file.Contains(".urf"))) {
                 File.Delete(file);
             }
         }

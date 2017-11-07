@@ -49,14 +49,13 @@ namespace UKSF_Launcher.Game {
                 LogInfo($"Startup Parameters {game.StartInfo.Arguments}");
                 ProfileHandler.UpdateProfileSquad(PROFILE);
                 game.Start();
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Core.Error(exception);
             }
         }
 
         /// <summary>
-        /// Compiles startup parameter variables into a startup string.
+        ///     Compiles startup parameter variables into a startup string.
         /// </summary>
         /// <returns>String of parameters</returns>
         public static string GetStartupParameters() {

@@ -1,12 +1,12 @@
 ﻿namespace Patching {
     internal class RepoAction {
-        public RepoAction(Addon addon, string addonFile) {
+        public readonly Addon Addon;
+        public readonly string AddonFile;
+
+        private RepoAction(Addon addon, string addonFile) {
             Addon = addon;
             AddonFile = addonFile;
         }
-
-        public Addon Addon { get; }
-        public string AddonFile { get; set; }
 
 
         public class AddedAction : RepoAction {

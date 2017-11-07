@@ -9,11 +9,11 @@ namespace Network {
         private const int BUFFER_SIZE = 4096;
         private const int MAX_RECEIVE_ATTEMPT = 10;
         private readonly byte[] _buffer = new byte[BUFFER_SIZE];
+        private readonly object _sendLock = new object();
         private readonly Timer _serverWatchTimer;
         public readonly AutoResetEvent AutoResetEvent;
         private int _connectAttempts;
         private int _receiveAttempts;
-        private readonly object _sendLock = new object();
         private Socket _serverSocket;
 
         public ServerSocket() {

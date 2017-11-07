@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Patching {
     public static class Utility {
-
         public static string ShaFromDictionary(Dictionary<string, string> filesDictionary) {
             using (SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider()) {
                 return HashBytesToString(sha.ComputeHash(new MemoryStream(Encoding.UTF8.GetBytes(string.Join(",", filesDictionary.Values.ToArray())))));
@@ -40,9 +39,9 @@ namespace Patching {
                 throw new ArgumentOutOfRangeException(nameof(i), "i must be between 0 and 15.");
             }
             if (i < 10) {
-                return (char)(i + '0');
+                return (char) (i + '0');
             }
-            return (char)(i - 10 + 'a');
+            return (char) (i - 10 + 'a');
         }
     }
 }

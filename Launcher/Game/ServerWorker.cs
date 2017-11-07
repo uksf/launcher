@@ -10,6 +10,7 @@ using UKSF_Launcher.Utility;
 namespace UKSF_Launcher.Game {
     internal class ServerWorker {
         private Task _repoCheckTask;
+
         public ServerWorker(string command, string commandArguments) {
             switch (command) {
                 case "servers":
@@ -29,7 +30,7 @@ namespace UKSF_Launcher.Game {
                         _repoCheckTask = new Task(() => {
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate) && !Core.CancellationTokenSource.IsCancellationRequested) {
-                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
+                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                             _repoCheckTask = null;
