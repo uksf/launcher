@@ -50,6 +50,7 @@ namespace Deploy {
             }
             while (serviceController.Status != ServiceControllerStatus.Stopped) {
                 Task.Delay(100).Wait();
+                serviceController.Refresh();
             }
             File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"), true);
