@@ -55,6 +55,7 @@ deploy:
   username: launcherdeploy
   password:
     secure: YibxKCtSgR09TYdeKxMzrA==
+  folder: /release
   artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,Deploy,ServerService
   on:
     branch: release
