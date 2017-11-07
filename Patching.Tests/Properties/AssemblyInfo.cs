@@ -9,11 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("1.0.0.294")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: ComVisible(false)]
 
 [assembly: Guid("d5f20b60-e2fa-47d8-897a-63115eb157f4")]
-
-[assembly: AssemblyVersion("1.0.0.294")]
-[assembly: AssemblyVersion("1.0.0.294")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
