@@ -10,12 +10,12 @@
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <OutputPath>E:\Workspace\UKSF-Launcher\UKSF-Launcher\release\</OutputPath>
+    <OutputPath>..\release\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>E:\Workspace\UKSF-Launcher\UKSF-Launcher\release\</OutputPath>
+    <OutputPath>..\release\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
