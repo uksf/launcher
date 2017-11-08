@@ -39,9 +39,6 @@ namespace Deploy {
             Directory.SetCurrentDirectory(Path.Combine(Environment.CurrentDirectory, ".."));
             SetAttributes(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "launcher")));
             Directory.Delete(Path.Combine(Environment.CurrentDirectory, "launcher"), true);
-            
-            // Copy Setup.msi
-            File.Copy(Path.Combine(Environment.CurrentDirectory, "Setup.msi"), @"C:\wamp\www\uksfnew\public\launcher\Setup.msi", true);
 
             // Restart Service
             ServiceController serviceController = new ServiceController {ServiceName = "ServerService"};
@@ -57,6 +54,10 @@ namespace Deploy {
             File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Network.dll"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "FastRsync.dll"), true);
             serviceController.Start();
+
+            // Copy and sign Setup.msi
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "Setup.msi"), @"C:\wamp\www\uksfnew\public\launcher\Setup.msi", true);
+            Process.Start(@"C:\Users\root\Documents\Code Signing\signtool.exe", @"sign /f ""C:\Users\root\Documents\Code Signing\uksf.pfx"" /p 1 /d ""UKSF Launcher Setup"" /t http://timestamp.verisign.com/scripts/timstamp.dll /v ""C:\wamp\www\uksfnew\public\launcher\Setup.msi""")?.WaitForExit();
         }
 
         private static void SetAttributes(DirectoryInfo directory) {
