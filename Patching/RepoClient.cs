@@ -147,7 +147,7 @@ namespace Patching {
                                 _actions.Add(new RepoAction.AddedAction(changedAddon, remoteAddonFile.Key));
                             }
                         }
-                        foreach (KeyValuePair<string, string[]> localAddonFile in remoteAddonDictionary.Where(localFile => !remoteAddonDictionary.Keys.Contains(localFile.Key))) {
+                        foreach (KeyValuePair<string, string[]> localAddonFile in localAddonDictionary.Where(localFile => !remoteAddonDictionary.Keys.Contains(localFile.Key))) {
                             _actions.Add(new RepoAction.DeletedAction(changedAddon, localAddonFile.Key));
                         }
                     }
@@ -176,7 +176,6 @@ namespace Patching {
                             break;
                         case RepoAction.DeletedAction _:
                             File.Delete(Path.Combine(action.Addon.FolderPath, action.AddonFile));
-                            File.Delete(Path.Combine(_repoLocalPath, action.Addon.Name, $"{action.AddonFile}.urf"));
                             invalidatedAddons.Add(action.Addon.RemoveHash(filePath));
                             _completedDeltas++;
                             break;
