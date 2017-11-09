@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Network;
@@ -108,5 +109,7 @@ namespace UKSF_Launcher {
 
         // ######################################### Objects ######################################### \\
         public static RepoClient REPO = null;
+
+        public static Process GAME_PROCESS = null;
     }
 }

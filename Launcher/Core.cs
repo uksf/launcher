@@ -44,6 +44,7 @@ namespace UKSF_Launcher {
                 mainWindow.Show();
                 mainWindow.Activate();
                 mainWindow.Focus();
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
 
                 REPO = new RepoClient(MOD_LOCATION, APPDATA, "uksf", LogInfo);
                 REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(REPO.RepoName, requestTuple.Item1, requestTuple.Item2);

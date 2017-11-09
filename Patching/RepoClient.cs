@@ -76,7 +76,6 @@ namespace Patching {
                     _progressUpdate.Invoke((float) progressIndex / remoteRepoDictionary.Count, $"Checking '{addonName}'");
                     string localAddon = _repoFileDictionary.Keys.FirstOrDefault(key => key != null && Path.GetFileName(key).Equals(addonName));
                     localAddon = string.IsNullOrEmpty(localAddon) ? Path.Combine(_repoPath, addonName) : localAddon;
-                    // ReSharper disable once PossibleNullReferenceException
                     if (!Path.GetDirectoryName(localAddon).Equals(_repoPath)) {
                         localAddon = Path.Combine(_repoPath, addonName);
                     }
@@ -363,5 +362,7 @@ namespace Patching {
                 }
             }
         }
+
+        public List<string> GetRepoMods() => File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList();
     }
 }

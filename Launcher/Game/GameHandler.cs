@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Win32;
+using UKSF_Launcher.UI.General;
+using UKSF_Launcher.UI.Main;
 using static UKSF_Launcher.Global;
 using static UKSF_Launcher.Utility.LogHandler;
 
@@ -40,18 +43,27 @@ namespace UKSF_Launcher.Game {
         ///     Starts the game.
         /// </summary>
         public static void StartGame() {
-            LogHashSpaceMessage(Severity.INFO, "Starting game...");
-            Process game = new Process();
-            try {
-                game.StartInfo.UseShellExecute = false;
-                game.StartInfo.FileName = GAME_LOCATION;
-                game.StartInfo.Arguments = GetStartupParameters();
-                LogInfo($"Startup Parameters {game.StartInfo.Arguments}");
-                ProfileHandler.UpdateProfileSquad(PROFILE);
-                game.Start();
-            } catch (Exception exception) {
-                Core.Error(exception);
-            }
+            new Task(() => {
+                LogHashSpaceMessage(Severity.INFO, "Starting game...");
+                GAME_PROCESS = new Process();
+                try {
+                    GAME_PROCESS.StartInfo.UseShellExecute = false;
+                    GAME_PROCESS.StartInfo.FileName = GAME_LOCATION;
+                    GAME_PROCESS.StartInfo.Arguments = GetStartupParameters();
+                    LogInfo($"Startup Parameters {GAME_PROCESS.StartInfo.Arguments}");
+                    ProfileHandler.UpdateProfileSquad(PROFILE);
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 2});
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
+                    GAME_PROCESS.Start();
+                    GAME_PROCESS.WaitForExit();
+                } catch (Exception exception) {
+                    Core.Error(exception);
+                } finally {
+                    GAME_PROCESS = null;
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 0 });
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = true });
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -70,9 +82,14 @@ namespace UKSF_Launcher.Game {
             } else {
                 startupString.Append(" -malloc=system");
             }
-            if (SERVER != null || SERVER != ServerHandler.NO_SERVER) {
+            if (SERVER != null && SERVER != ServerHandler.NO_SERVER) {
                 startupString.Append($" -connect={SERVER?.Ip} -port={SERVER?.Port - 1} -password={SERVER?.Password}");
             }
+            StringBuilder modsString = new StringBuilder();
+            foreach (string mod in REPO.GetRepoMods()) {
+                modsString.Append($"{mod};");
+            }
+            startupString.Append($" \"-mod={modsString}\"");
             return startupString.ToString();
         }
     }

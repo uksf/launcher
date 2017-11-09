@@ -137,8 +137,18 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="args">Server arguments</param>
         private void MainMainControlState_Update(object sender, RoutedEventArgs args) {
             Dispatcher.Invoke(() => {
-                SafeWindow.BoolRoutedEventArgs stateArgs = (SafeWindow.BoolRoutedEventArgs) args;
-                MainMainControlRefreshCancelButton.Content = stateArgs.State ? "Cancel" : "Refresh";
+                SafeWindow.IntRoutedEventArgs stateArgs = (SafeWindow.IntRoutedEventArgs) args;
+                switch (stateArgs.Value) {
+                    case 1:
+                        MainMainControlRefreshCancelButton.Content = "Cancel";
+                        break;
+                    case 2:
+                        MainMainControlRefreshCancelButton.Content = "Kill Game";
+                        break;
+                    default:
+                        MainMainControlRefreshCancelButton.Content = "Refresh";
+                        break;
+                }
             });
         }
 
@@ -174,13 +184,18 @@ namespace UKSF_Launcher.UI.Main {
 
         private async void MainMainControlRefreshCancelButton_Click(object sender, RoutedEventArgs args) {
             MainMainControlRefreshCancelButton.IsEnabled = false;
-            if (MainMainControlRefreshCancelButton.Content.Equals("Cancel")) {
-                Core.CancellationTokenSource.Cancel();
-                await Task.Delay(250);
-                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MAIN_MAIN_CONTROL_PROGRESS_EVENT) {Value = 1, Message = "stop"});
+            if (Global.GAME_PROCESS == null) {
+                if (MainMainControlRefreshCancelButton.Content.Equals("Cancel")) {
+                    Core.CancellationTokenSource.Cancel();
+                    await Task.Delay(250);
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MAIN_MAIN_CONTROL_PROGRESS_EVENT) { Value = 1, Message = "stop" });
+                } else if (MainMainControlRefreshCancelButton.Content.Equals("Refresh")) {
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 1 });
+                    ServerHandler.SendServerMessage("reporequest uksf");
+                }
             } else {
-                MainMainControlRefreshCancelButton.Content = "Cancel";
-                ServerHandler.SendServerMessage("reporequest uksf");
+                Global.GAME_PROCESS.Kill();
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 0 });
             }
             await Task.Delay(250);
             MainMainControlRefreshCancelButton.IsEnabled = true;

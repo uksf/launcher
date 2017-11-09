@@ -8,16 +8,16 @@ namespace Patching.Tests {
             Dictionary<string, string> signaturesDictionary =
                 new Dictionary<string, string> {{"1", "78e10ca71a8e8060f5fba1b261fdff222806bc79"}, {"2", "d09adbeb611cde10bfe1c52353cbfabc320bb5df"}};
             string sha = Utility.ShaFromDictionary(signaturesDictionary);
-            Assert.AreEqual(sha, "86e8daea7b9031ed233a013bbc4d26b02f7b7a5b");
+            Assert.AreEqual(sha, "e53c7d28f7db6642cc3ac3f89ed4a98d1e2cb7b1");
         }
 
         [Test]
         public void UtilityTestsSha() {
-            string sha1 = Utility.ShaFromFile(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\release\Patching.dll");
-            string sha2 = Utility.ShaFromFile(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\release\FastRsync.dll");
+            string sha1 = Utility.ShaFromFile(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\Patching.Tests\test\1.txt");
+            string sha2 = Utility.ShaFromFile(@"E:\Workspace\UKSF-Launcher\UKSF-Launcher\Patching.Tests\test\2.txt");
             Dictionary<string, string> signaturesDictionary = new Dictionary<string, string> {{"1", sha1}, {"2", sha2}};
             string sha = Utility.ShaFromDictionary(signaturesDictionary);
-            Assert.AreEqual(sha, "f8c0d960a5a7e3454b29920d71bd28e4fadcf1e4");
+            Assert.AreEqual(sha, "c082728de4069d1c3747b262bf0d728e8eb009a4");
         }
 
         [Test]

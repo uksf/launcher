@@ -30,7 +30,7 @@ namespace UKSF_Launcher.Game {
         }
 
         private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
-            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {State = true});
+            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
             new Task(async () => await SendDelayedServerMessage("reporequest uksf", 500)).Start();
         }
 
@@ -86,7 +86,7 @@ namespace UKSF_Launcher.Game {
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {State = false});
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 0 });
                             Core.CancellationTokenSource.Cancel();
                             _repoCheckTask = null;
                         });

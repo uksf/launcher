@@ -130,6 +130,10 @@
       <Project>{549178BE-2D41-4928-A4CA-7411F11F816A}</Project>
       <Name>Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Patching\Patching.csproj">
+      <Project>{CC4418EF-7C47-471E-B10F-A8C82CAF9E3B}</Project>
+      <Name>Patching</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
