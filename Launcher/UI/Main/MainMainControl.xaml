@@ -22,7 +22,7 @@
                      Margin="1,175,0,0" SnapsToDevicePixels="True"
                      Background="{StaticResource Uksf.BackgroundDark}" Foreground="{StaticResource Uksf.Foreground}"
                      BorderBrush="{StaticResource Uksf.BackgroundLight}" Panel.ZIndex="2" />
-        <Grid Margin="0,330,0,0" VerticalAlignment="Top" >
+        <Grid Margin="0,330,0,0" VerticalAlignment="Top">
             <TextBlock x:Name="MainMainControlProgressText" Text="Downloading: lots of porn" FontSize="14"
                        FontWeight="Normal" HorizontalAlignment="Center"
                        TextAlignment="Center" TextWrapping="WrapWithOverflow"
@@ -31,8 +31,14 @@
         </Grid>
         <TextBlock x:Name="MainMainControlWarningText" FontSize="24"
                    FontWeight="Bold" HorizontalAlignment="Center" MaxWidth="450"
-                   VerticalAlignment="Bottom" TextAlignment="Center" Margin="0,0,0,10"
+                   VerticalAlignment="Bottom" TextAlignment="Center" Margin="0,0,0,15"
                    Foreground="{StaticResource Uksf.Foreground}" Panel.ZIndex="2"
                    Style="{StaticResource Uksf.TextBlock}" />
+        <Button x:Name="MainMainControlRefreshCancelButton" 
+                Content="Refresh" Margin="0,0,0,5" Padding="0"
+                Click="MainMainControlRefreshCancelButton_Click"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                Background="{StaticResource Uksf.Transparent}"
+                BorderBrush="{StaticResource Uksf.Transparent}" Panel.ZIndex="2" Style="{StaticResource Uksf.RefreshButton}" />
     </Grid>
 </UserControl>

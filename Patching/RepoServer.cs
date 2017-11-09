@@ -59,7 +59,7 @@ namespace Patching {
             ProgressAction.Invoke("Creating .repo folder");
             repoDirectory.Create();
             Parallel.ForEach(GetAddonFolders().Select(addonFolder => new Addon(addonFolder.FullName, repoDirectory)), addon => {
-                addon.GenerateAllHashes();
+                addon.GenerateAllHashes(new CancellationToken());
                 addon.GenerateFullHash();
                 ProgressAction.Invoke($"Processed addon '{addon.Name}'");
                 _repoFileDictionary.Add(addon.FolderPath, addon.FullHash);
@@ -118,7 +118,7 @@ namespace Patching {
                 ProgressAction.Invoke("No addons changed");
             }
             foreach (Addon changedAddon in changedAddons) {
-                changedAddon.GenerateAllHashes();
+                changedAddon.GenerateAllHashes(new CancellationToken());
                 changedAddon.GenerateFullHash();
                 ProgressAction.Invoke($"Processed addon '{changedAddon.Name}'");
                 if (_repoFileDictionary.ContainsKey(changedAddon.FolderPath)) {

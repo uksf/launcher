@@ -86,7 +86,6 @@ namespace Patching {
                         changedAddons.Add(addon);
                     } else {
                         CheckAddonCache(addon, progressIndex, remoteRepoDictionary.Count);
-                        // Local repo.urf is up to date with local files, start checking against remote
                         if (_repoFileDictionary[addon.FolderPath][0] != remoteAddonPair.Value[0] ||
                             Convert.ToInt32(_repoFileDictionary[addon.FolderPath][1]) != Convert.ToInt32(remoteAddonPair.Value[1])) {
                             changedAddons.Add(addon);
@@ -115,7 +114,7 @@ namespace Patching {
                 }
                 progressIndex = 0;
                 _actions = new ConcurrentBag<RepoAction>();
-                Parallel.ForEach(changedAddons, changedAddon => {
+                Parallel.ForEach(changedAddons, new ParallelOptions {CancellationToken = _downloadCancellationTokenSource.Token}, changedAddon => {
                     _progressUpdate.Invoke((float) progressIndex++ / changedAddons.Count, "Finding changes");
                     WebClient webClient = new WebClient {Credentials = new NetworkCredential(USERNAME, PASSWORD)};
                     Dictionary<string, string[]> remoteAddonDictionary = new Dictionary<string, string[]>();
@@ -205,12 +204,11 @@ namespace Patching {
         private void CheckAddonCache(Addon addon, int progressIndex, int progressCount) {
             string[] addonFiles = Directory.GetFiles(addon.FolderPath, "*", SearchOption.AllDirectories);
             long ticks = addonFiles.Length == 0 ? 0 : addonFiles.ToList().Max(file => new FileInfo(file).LastWriteTime).Ticks;
-            // Does addon exist in repo urf and does addon.urf exist
             if (!_repoFileDictionary.Keys.Any(key => key != null && Path.GetFileName(key).Equals(addon.Name)) || !File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
                 if (!File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
                     ProgressAction.Invoke($"Could not find addon.urf '{addon.Name}'");
                     _progressUpdate.Invoke((float) progressIndex / progressCount, $"Generating cache '{addon.Name}'");
-                    addon.GenerateAllHashes();
+                    addon.GenerateAllHashes(_downloadCancellationTokenSource.Token);
                     addon.GenerateFullHash();
                 } else {
                     _progressUpdate.Invoke((float) progressIndex / progressCount, $"Updating cache '{addon.Name}'");
@@ -259,7 +257,7 @@ namespace Patching {
                     using (FileStream fileStream = File.OpenWrite(filePath)) {
                         using (Stream responseStream = response.GetResponseStream()) {
                             int count = -1;
-                            while ((uint) count > 0U) {
+                            while ((uint) count > 0U && !_downloadCancellationTokenSource.Token.IsCancellationRequested) {
                                 if (responseStream != null) count = responseStream.Read(buffer, 0, buffer.Length);
                                 ReportProgress(count);
                                 fileStream.Write(buffer, 0, count);
@@ -273,14 +271,16 @@ namespace Patching {
             }
         }
 
-        private void UploadFile(RepoAction action) {
+        private async void UploadFile(RepoAction action) {
             string signaturePath = action.Addon.GenerateSignature(Path.Combine(action.Addon.FolderPath, action.AddonFile));
             try {
                 _deltas.TryAdd(Path.Combine(action.Addon.Name, action.AddonFile), false);
                 string remotePath = Path.GetRandomFileName();
                 using (WebClient webClient = new WebClient()) {
+                    _downloadCancellationTokenSource.Token.Register(webClient.CancelAsync);
                     webClient.Credentials = new NetworkCredential(USERNAME, PASSWORD);
-                    webClient.UploadFile($"ftp://uk-sf.com/{RepoName}/.repo/{remotePath}", "STOR", signaturePath);
+                    Task task = webClient.UploadFileTaskAsync(new Uri($"ftp://uk-sf.com/{RepoName}/.repo/{remotePath}"), "STOR", signaturePath);
+                    await task;
                 }
                 UploadEvent?.Invoke(this, new Tuple<string, string>(Path.Combine(action.Addon.Name, action.AddonFile), remotePath));
                 ProgressAction.Invoke($"Uploaded '{signaturePath}'");

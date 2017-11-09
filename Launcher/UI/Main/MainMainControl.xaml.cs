@@ -31,6 +31,9 @@ namespace UKSF_Launcher.UI.Main {
         public static readonly RoutedEvent MAIN_MAIN_CONTROL_SERVER_EVENT =
             EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_SERVER_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
 
+        public static readonly RoutedEvent MAIN_MAIN_CONTROL_STATE_EVENT =
+            EventManager.RegisterRoutedEvent("MAIN_MAIN_CONTROL_STATE_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(MainMainControl));
+
         private bool _block = true;
 
         private CurrentWarning _currentWarning = CurrentWarning.NONE;
@@ -44,6 +47,7 @@ namespace UKSF_Launcher.UI.Main {
             AddHandler(MAIN_MAIN_CONTROL_PROGRESS_EVENT, new RoutedEventHandler(MainMainControlProgress_Update));
             AddHandler(MAIN_MAIN_CONTROL_WARNING_EVENT, new RoutedEventHandler(MainMainControlWarning_Update));
             AddHandler(MAIN_MAIN_CONTROL_SERVER_EVENT, new RoutedEventHandler(MainMainControlServer_Update));
+            AddHandler(MAIN_MAIN_CONTROL_STATE_EVENT, new RoutedEventHandler(MainMainControlState_Update));
 
             InitializeComponent();
 
@@ -124,6 +128,19 @@ namespace UKSF_Launcher.UI.Main {
             });
         }
 
+
+        /// <summary>
+        ///     Triggered by eventhandler to update refresh/cancel state.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Server arguments</param>
+        private void MainMainControlState_Update(object sender, RoutedEventArgs args) {
+            Dispatcher.Invoke(() => {
+                SafeWindow.BoolRoutedEventArgs stateArgs = (SafeWindow.BoolRoutedEventArgs)args;
+                MainMainControlRefreshCancelButton.Content = stateArgs.State ? "Cancel" : "Refresh";
+            });
+        }
+
         /// <summary>
         ///     Triggered when play button is clicked.
         /// </summary>
@@ -151,6 +168,17 @@ namespace UKSF_Launcher.UI.Main {
             } else {
                 MainMainControlButtonPlay.Content = "Play";
                 MainMainControlButtonPlay.FontSize = 50;
+            }
+        }
+
+        private void MainMainControlRefreshCancelButton_Click(object sender, RoutedEventArgs args) {
+            if (MainMainControlRefreshCancelButton.Content.Equals("Cancel")) {
+                Core.CancellationTokenSource.Cancel();
+            } else {
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) {
+                    State = true
+                });
+                ServerHandler.SendServerMessage("reporequest uksf");
             }
         }
     }

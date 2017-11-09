@@ -25,6 +25,11 @@ namespace UKSF_Launcher.UI.General {
             public bool State { get; set; }
         }
 
+        public class IntRoutedEventArgs : RoutedEventArgs {
+            public IntRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
+            public int Value { get; set; }
+        }
+
         public class ProgressRoutedEventArgs : RoutedEventArgs {
             public ProgressRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
             public int Value { get; set; }

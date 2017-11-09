@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Network;
+using UKSF_Launcher.UI.General;
+using UKSF_Launcher.UI.Main;
 using UKSF_Launcher.Utility;
 
 namespace UKSF_Launcher.Game {
@@ -22,6 +24,9 @@ namespace UKSF_Launcher.Game {
         }
 
         private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
+            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {
+                State = true
+            });
             new Task(async () => await SendDelayedServerMessage("reporequest uksf", 500)).Start();
         }
 
@@ -30,7 +35,7 @@ namespace UKSF_Launcher.Game {
             SendServerMessage(message);
         }
 
-        private static void SendServerMessage(string message) {
+        public static void SendServerMessage(string message) {
             _serverSocket.SendMessage(message);
         }
 

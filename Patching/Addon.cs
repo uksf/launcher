@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FastRsync.Core;
 using FastRsync.Signature;
@@ -28,9 +29,9 @@ namespace Patching {
             FullHash = Utility.ShaFromDictionary(hashDictionary);
         }
 
-        public void GenerateAllHashes() {
+        public void GenerateAllHashes(CancellationToken token) {
             ConcurrentDictionary<string, string> hashDictionary = new ConcurrentDictionary<string, string>();
-            Parallel.ForEach(new DirectoryInfo(FolderPath).EnumerateFiles("*", SearchOption.AllDirectories).ToList(),
+            Parallel.ForEach(new DirectoryInfo(FolderPath).EnumerateFiles("*", SearchOption.AllDirectories).ToList(), new ParallelOptions {CancellationToken = token},
                              file => hashDictionary.TryAdd(file.FullName, Utility.ShaFromFile(file.FullName)));
             using (StreamWriter streamWriter = new StreamWriter(File.Create(Path.Combine(_repoFolder, $"{Name}.urf")))) {
                 foreach (string key in from file in hashDictionary.Keys orderby file select file) {
