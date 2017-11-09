@@ -4,60 +4,48 @@
   <?define BUILDPATH = "../release"?>
   <?define VERSION="!(bind.FileVersion.Launcher.exe)"?>
 
-  <Product
-    Id="*"
-    Name="UKSF Launcher"
-    Language="1033"
-    Version="$(var.VERSION)"
-    Manufacturer="UKSF"
-    UpgradeCode="7B14E8C8-502D-4457-DD69-9D23A4AAD947">
-
-    <Package
-      Id="*"
-      Description="UKSF Launcher"
-      Manufacturer="UKSF"
-      InstallerVersion="200"
-      Compressed="yes"
-      InstallScope="perMachine" />
-
+  <Product Id="*" Name="UKSF Launcher" Language="1033" Version="$(var.VERSION)" Manufacturer="UKSF"
+           UpgradeCode="7B14E8C8-502D-4457-DD69-9D23A4AAD947">
+    <Package Id="*" Description="UKSF Launcher" Manufacturer="UKSF" InstallerVersion="200" Compressed="yes"
+             InstallScope="perMachine" />
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
-
     <MajorUpgrade AllowSameVersionUpgrades="yes"
                   DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
-
+    
     <Feature Id="ProductFeature" Title="UKSF Launcher" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
     
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <UIRef Id="WixUI_InstallDir" />
-
-    <Icon Id="icon.ico" SourceFile="..\Launcher\light.ico"/>
-    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
-
+    
+    <Icon Id="icon.exe" SourceFile="..\Launcher\light.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon.exe" />
+    
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\logo.png" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\banner.png" />
+    
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\licence.rtf" />
   </Product>
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
-          <Directory Id="INSTALLFOLDER" Name="UKSF Launcher">
+        <Directory Id="INSTALLFOLDER" Name="UKSF Launcher">
         </Directory>
       </Directory>
     </Directory>
-
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <!-- Binaries -->
       <Component Id="ProductFiles" Guid="13221C4A-910E-4121-A9A7-DDFC5253E370" Win64="yes">
         <File Id="Launcher.exe" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\Launcher.exe" />
         <File Id="Patching.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\Patching.dll" />
         <File Id="Network.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\Network.dll" />
         <File Id="FastRsync.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\FastRsync.dll" />
         <File Id="System.Data.HashFunction.Core.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.Core.dll" />
-        <File Id="System.Data.HashFunction.Interfaces.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.Interfaces.dll" />
+        <File Id="System.Data.HashFunction.Interfaces.dll"
+              Source="$(var.BUILDPATH)\System.Data.HashFunction.Interfaces.dll" />
         <File Id="System.Data.HashFunction.xxHash.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.xxHash.dll" />
       </Component>
-
     </ComponentGroup>
-
   </Fragment>
 </Wix>
