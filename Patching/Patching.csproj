@@ -91,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastRsync\FastRsync.csproj">
-      <Project>{7B6474F5-8EE1-4D09-A48A-5A295E2DF8E2}</Project>
+      <Project>{7b6474f5-8ee1-4d09-a48a-5a295e2df8e2}</Project>
       <Name>FastRsync</Name>
     </ProjectReference>
   </ItemGroup>

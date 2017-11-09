@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Patching;
 using UKSF_Launcher.Game;
@@ -114,12 +115,17 @@ namespace UKSF_Launcher {
         ///     Logs an error and displays a dialog with the error message.
         /// </summary>
         /// <param name="exception">Error exception to report</param>
-        public static void Error(Exception exception) {
+        public static async void Error(Exception exception) {
+            CancellationTokenSource.Cancel();
+            await Task.Delay(250);
+            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {Value = 1, Message = "stop"});
+
             string error = exception.Message + "\n" + exception.StackTrace;
             LogSeverity(Severity.ERROR, error);
             Clipboard.SetDataObject(error, true);
-            MessageBoxResult result = DialogWindow.Show("Error", "Something went wrong.\nThe message below has been copied to your clipboard. Please send it to us.\n\n" + error,
-                                                        DialogWindow.DialogBoxType.OK);
+            MessageBoxResult result =
+                DialogWindow.Show("Error", "Something went wrong.\nThe error below has been copied to your clipboard. Please create an issue with the error here: ::\n\n" + error,
+                                  DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
             if (result == MessageBoxResult.OK) {
                 ShutDown();
             }

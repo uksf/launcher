@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 
 namespace UKSF_Launcher.UI.Dialog {
     /// <inheritdoc cref="General.SafeWindow" />
@@ -47,13 +51,29 @@ namespace UKSF_Launcher.UI.Dialog {
         /// <param name="title">Display window title</param>
         /// <param name="message">Display message</param>
         /// <param name="type">Display button type</param>
+        /// <param name="link">Link to display</param>
+        /// <returns>Result of dialog window</returns>
+        public static MessageBoxResult Show(string title, string message, DialogBoxType type, string link) {
+            switch (type) {
+                case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK, link);
+                case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel, link);
+                default: return Show(title, message, MessageBoxButton.OKCancel, link);
+            }
+        }
+
+        /// <summary>
+        ///     Determines which message box buttons to display.
+        /// </summary>
+        /// <param name="title">Display window title</param>
+        /// <param name="message">Display message</param>
+        /// <param name="type">Display button type</param>
         /// <param name="control">UIElement object to display</param>
         /// <returns>Result of dialog window</returns>
         public static MessageBoxResult Show(string title, string message, DialogBoxType type, UIElement control) {
             switch (type) {
-                case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK, control);
-                case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel, control);
-                default: return Show(title, message, MessageBoxButton.OKCancel, control);
+                case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK, "", control);
+                case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel, "", control);
+                default: return Show(title, message, MessageBoxButton.OKCancel, "", control);
             }
         }
 
@@ -63,15 +83,31 @@ namespace UKSF_Launcher.UI.Dialog {
         /// <param name="title">Display window title</param>
         /// <param name="message">Display message</param>
         /// <param name="button">Display button type</param>
+        /// <param name="link">Link to display</param>
         /// <param name="control">UIElement object to display</param>
         /// <returns>Result of dialog window</returns>
-        private static MessageBoxResult Show(string title, string message, MessageBoxButton button, UIElement control = null) {
+        private static MessageBoxResult Show(string title, string message, MessageBoxButton button, string link = "", UIElement control = null) {
             _dialog = new DialogWindow();
             _dialog.DialogTitleBarControl.DialogTitleBarControlLabel.Content = title;
+            if (!string.IsNullOrEmpty(link)) {
+                _dialog.DialogMainControl.DialogMainControlTextBlock.Inlines.Clear();
+                string[] parts = message.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
+                _dialog.DialogMainControl.DialogMainControlTextBlock.Inlines.Add(parts[0]);
+                Hyperlink hyperLink = new Hyperlink {
+                    NavigateUri = new Uri(link)
+                };
+                hyperLink.Inlines.Add(link);
+                hyperLink.RequestNavigate += Hyperlink_RequestNavigate;
+                _dialog.DialogMainControl.DialogMainControlTextBlock.Inlines.Add(hyperLink);
+                foreach (string part in parts.Skip(1)) {
+                    _dialog.DialogMainControl.DialogMainControlTextBlock.Inlines.Add(part);
+                }
+            } else {
+                _dialog.DialogMainControl.DialogMainControlTextBlock.Text = message;
+            }
             if (control != null) {
                 _dialog.DialogMainControl.DialogMainControlGrid.Children.Add(control);
             }
-            _dialog.DialogMainControl.DialogMainControlTextBlock.Text = message;
             SetButton(button);
             _dialog.ShowDialog();
             return _result;
@@ -123,6 +159,10 @@ namespace UKSF_Launcher.UI.Dialog {
             _result = MessageBoxResult.Cancel;
             _dialog.Close();
             _dialog = null;
+        }
+
+        private static void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs args) {
+            System.Diagnostics.Process.Start(args.Uri.ToString());
         }
     }
 }
