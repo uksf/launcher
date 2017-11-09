@@ -196,7 +196,6 @@
     </ApplicationDefinition>
     <Compile Include="Game\MallocHandler.cs" />
     <Compile Include="Game\ServerHandler.cs" />
-    <Compile Include="Game\ServerWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Game\GameHandler.cs" />

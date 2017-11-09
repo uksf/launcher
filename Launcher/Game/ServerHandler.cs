@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Network;
 using UKSF_Launcher.UI.General;
@@ -14,6 +18,8 @@ namespace UKSF_Launcher.Game {
         private static ServerSocket _serverSocket;
         public static BackgroundWorker ParentWorker;
 
+        private static Task _repoCheckTask;
+
         public static void StartServerHandler(object sender) {
             ParentWorker = (BackgroundWorker) sender;
             _serverSocket = new ServerSocket();
@@ -24,9 +30,7 @@ namespace UKSF_Launcher.Game {
         }
 
         private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
-            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {
-                State = true
-            });
+            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {State = true});
             new Task(async () => await SendDelayedServerMessage("reporequest uksf", 500)).Start();
         }
 
@@ -56,9 +60,60 @@ namespace UKSF_Launcher.Game {
         }
 
         private static void HandleMessage(string message) {
-            if (!message.Contains("command::")) return;
             string[] parts = new Regex("::").Split(message.Replace("command::", ""), 2);
-            ServerWorker unused = new ServerWorker(parts[0], parts.Length > 1 ? parts[1] : "");
+            string commandArguments = parts.Length > 1 ? parts[1] : "";
+            if (!message.Contains("command::")) return;
+            switch (parts[0]) {
+                case "servers":
+                    Task serversUpdateTask = new Task(() => {
+                        List<Server> servers = new List<Server>();
+                        if (!string.IsNullOrEmpty(commandArguments)) {
+                            string[] serverParts = commandArguments.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
+                            servers.AddRange(serverParts.Select(Server.DeSerialize));
+                        }
+                        MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ServerRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_SERVER_EVENT) {Servers = servers});
+                    });
+                    serversUpdateTask.Start();
+                    break;
+                case "repodata":
+                    if (_repoCheckTask != null) return;
+                    try {
+                        _repoCheckTask = new Task(() => {
+                            Core.CancellationTokenSource = new CancellationTokenSource();
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
+                            while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate, Core.CancellationTokenSource) &&
+                                   !Core.CancellationTokenSource.IsCancellationRequested) {
+                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
+                            }
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {State = false});
+                            Core.CancellationTokenSource.Cancel();
+                            _repoCheckTask = null;
+                        });
+                        _repoCheckTask.Start();
+                    } catch (Exception exception) {
+                        ParentWorker.ReportProgress(1, "");
+                        LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process remote repo\n{exception}");
+                    }
+                    break;
+                case "deltaresponse":
+                    try {
+                        Task repoDeltaTask = new Task(() => Global.REPO.ProcessDelta(commandArguments));
+                        repoDeltaTask.Start();
+                    } catch (Exception exception) {
+                        LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process delta\n{exception}");
+                    }
+                    break;
+                case "unlock":
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                    break;
+                default: return;
+            }
+        }
+
+        private static void ProgressUpdate(float value, string message) {
+            if (Core.CancellationTokenSource.IsCancellationRequested) return;
+            ParentWorker.ReportProgress((int) (value * 100), message);
         }
 
         private static void ServerMessageLogCallback(object sender, string message) {

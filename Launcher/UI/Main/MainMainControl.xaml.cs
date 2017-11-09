@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Network;
@@ -136,7 +137,7 @@ namespace UKSF_Launcher.UI.Main {
         /// <param name="args">Server arguments</param>
         private void MainMainControlState_Update(object sender, RoutedEventArgs args) {
             Dispatcher.Invoke(() => {
-                SafeWindow.BoolRoutedEventArgs stateArgs = (SafeWindow.BoolRoutedEventArgs)args;
+                SafeWindow.BoolRoutedEventArgs stateArgs = (SafeWindow.BoolRoutedEventArgs) args;
                 MainMainControlRefreshCancelButton.Content = stateArgs.State ? "Cancel" : "Refresh";
             });
         }
@@ -171,15 +172,18 @@ namespace UKSF_Launcher.UI.Main {
             }
         }
 
-        private void MainMainControlRefreshCancelButton_Click(object sender, RoutedEventArgs args) {
+        private async void MainMainControlRefreshCancelButton_Click(object sender, RoutedEventArgs args) {
+            MainMainControlRefreshCancelButton.IsEnabled = false;
             if (MainMainControlRefreshCancelButton.Content.Equals("Cancel")) {
                 Core.CancellationTokenSource.Cancel();
+                await Task.Delay(250);
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MAIN_MAIN_CONTROL_PROGRESS_EVENT) {Value = 1, Message = "stop"});
             } else {
-                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) {
-                    State = true
-                });
+                MainMainControlRefreshCancelButton.Content = "Cancel";
                 ServerHandler.SendServerMessage("reporequest uksf");
             }
+            await Task.Delay(250);
+            MainMainControlRefreshCancelButton.IsEnabled = true;
         }
     }
 }
