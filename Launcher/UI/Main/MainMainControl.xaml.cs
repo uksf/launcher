@@ -53,6 +53,7 @@ namespace UKSF_Launcher.UI.Main {
             InitializeComponent();
 
             MainMainControlProgressBar.Visibility = Visibility.Collapsed;
+            MainMainControlSecondaryProgressBar.Visibility = Visibility.Collapsed;
             MainMainControlProgressText.Visibility = Visibility.Collapsed;
             MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
             // TODO: Sims-esque loading messages
@@ -73,11 +74,14 @@ namespace UKSF_Launcher.UI.Main {
             if (!progressArgs.Message.Contains("stop")) {
                 MainMainControlProgressBar.Visibility = Visibility.Visible;
                 MainMainControlProgressText.Visibility = Visibility.Visible;
+                MainMainControlSecondaryProgressBar.Visibility = Visibility.Visible;
                 MainMainControlProgressBar.Value = progressArgs.Value;
                 MainMainControlProgressText.Text = progressArgs.Message;
+                MainMainControlSecondaryProgressBar.Value = progressArgs.SecondaryValue;
             } else {
                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                 MainMainControlProgressBar.Visibility = Visibility.Collapsed;
+                MainMainControlSecondaryProgressBar.Visibility = Visibility.Collapsed;
                 MainMainControlProgressText.Visibility = Visibility.Collapsed;
             }
         }
@@ -121,11 +125,11 @@ namespace UKSF_Launcher.UI.Main {
                             MainMainControlDropdownServer.SelectedItem = serverComboBoxItem;
                         }
                     }
-                    MainMainControlDropdownServer_Selected(null, null);
                 } else {
                     MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
                     Global.SERVER = null;
                 }
+                MainMainControlDropdownServer_Selected(null, null);
             });
         }
 

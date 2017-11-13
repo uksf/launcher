@@ -51,9 +51,12 @@ namespace UKSF_Launcher.UI.Main {
         /// </summary>
         /// <param name="sender">Sender bject</param>
         /// <param name="args">Click arguments</param>
-        private void MainTitleBarControlButtonSettings_Click(object sender, RoutedEventArgs args) {
-            MainWindow.Instance.MainMainControl.Visibility = MainWindow.Instance.MainMainControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            MainWindow.Instance.MainSettingsControl.Visibility = MainWindow.Instance.MainSettingsControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        public void MainTitleBarControlButtonSettings_Click(object sender, RoutedEventArgs args) {
+            Dispatcher.Invoke(() => {
+                MainWindow.Instance.MainMainControl.Visibility = MainWindow.Instance.MainMainControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                MainWindow.Instance.MainSettingsControl.Visibility =
+                    MainWindow.Instance.MainSettingsControl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            });
         }
     }
 }

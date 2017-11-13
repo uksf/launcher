@@ -18,17 +18,23 @@ namespace UKSF_Launcher.Utility {
             string[] currentFlags = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).ProductVersion.Split(':');
             LogInfo($"Current version: {VERSION}");
 
-            string[] versionString = new WebClient().DownloadString("http://www.uk-sf.com/launcher/version").Split(':');
-            Version latestVersion = Version.Parse(versionString[0]);
-            bool force = HandleFlags(versionString, currentFlags);
-            LogInfo($"Latest version: {latestVersion} - Force update: {force}");
+            try {
+                WebClient webClient = new WebClient();
+                string[] versionString = webClient.DownloadString("http://www.uk-sf.com/launcher/version").Split(':');
 
-            if ((AUTOUPDATELAUNCHER || force) && VERSION < latestVersion) {
-                LogInfo($"Updating to {latestVersion}");
-                Update();
-            }
-            if (updated) {
-                File.Delete(Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+                Version latestVersion = Version.Parse(versionString[0]);
+                bool force = HandleFlags(versionString, currentFlags);
+                LogInfo($"Latest version: {latestVersion} - Force update: {force}");
+
+                if ((AUTOUPDATELAUNCHER || force) && VERSION < latestVersion) {
+                    LogInfo($"Updating to {latestVersion}");
+                    Update();
+                }
+                if (updated) {
+                    File.Delete(Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+                }
+            } catch (Exception) {
+                LogSeverity(Severity.ERROR, "Failed to get remote version information");
             }
         }
 

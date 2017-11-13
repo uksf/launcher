@@ -60,8 +60,9 @@ namespace Patching {
         public Addon RemoveHash(string addonFile) {
             Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
                                                             .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
+            addonFile = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "").Replace($"{Path.DirectorySeparatorChar}", "\\");
             using (StreamWriter streamWriter = new StreamWriter(File.Create(Path.Combine(_repoFolder, $"{Name}.urf")))) {
-                foreach (string file in from file in hashDictionary.Keys where !file.Equals(addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "")) orderby file select file) {
+                foreach (string file in from file in hashDictionary.Keys where !file.Equals(addonFile) orderby file select file) {
                     streamWriter.WriteLine($"{file};{hashDictionary[file]}:{new FileInfo(Path.Combine(FolderPath, file)).Length}:{new FileInfo(Path.Combine(FolderPath, file)).LastWriteTime.Ticks}");
                 }
             }

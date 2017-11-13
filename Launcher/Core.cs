@@ -55,7 +55,8 @@ namespace UKSF_Launcher {
                 repoBackgroundWorker.ProgressChanged += (sender, args) =>
                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {
                         Value = args.ProgressPercentage,
-                        Message = args.UserState.ToString()
+                        Message = ((Tuple<string, int>)args.UserState).Item1.ToString(),
+                        SecondaryValue = ((Tuple<string, int>)args.UserState).Item2
                     });
                 repoBackgroundWorker.RunWorkerAsync();
             } catch (Exception exception) {

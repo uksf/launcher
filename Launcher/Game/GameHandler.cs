@@ -43,13 +43,11 @@ namespace UKSF_Launcher.Game {
         ///     Starts the game.
         /// </summary>
         public static void StartGame() {
+            if (GAME_PROCESS != null) return;
             new Task(() => {
                 LogHashSpaceMessage(Severity.INFO, "Starting game...");
-                GAME_PROCESS = new Process();
                 try {
-                    GAME_PROCESS.StartInfo.UseShellExecute = false;
-                    GAME_PROCESS.StartInfo.FileName = GAME_LOCATION;
-                    GAME_PROCESS.StartInfo.Arguments = GetStartupParameters();
+                    GAME_PROCESS = new Process {StartInfo = {UseShellExecute = false, FileName = GAME_LOCATION, Arguments = GetStartupParameters()}};
                     LogInfo($"Startup Parameters {GAME_PROCESS.StartInfo.Arguments}");
                     ProfileHandler.UpdateProfileSquad(PROFILE);
                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 2});

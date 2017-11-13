@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.General;
@@ -12,6 +14,8 @@ namespace UKSF_Launcher.UI.Main.Settings {
     public partial class SettingsLauncherControl {
         public static readonly RoutedEvent SETTINGS_LAUNCHER_CONTROL_WARNING_EVENT =
             EventManager.RegisterRoutedEvent("SETTINGS_LAUNCHER_CONTROL_WARNING_EVENT", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(SettingsLauncherControl));
+
+        private Task _repoMoveTask;
 
         /// <inheritdoc />
         /// <summary>
@@ -60,7 +64,22 @@ namespace UKSF_Launcher.UI.Main.Settings {
                     (string) Core.SettingsHandler.WriteSetting("GAME_LOCATION", SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text);
             }
             if (MOD_LOCATION != SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text) {
-                MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text);
+                if (GAME_PROCESS == null) {
+                    if (_repoMoveTask == null) {
+                        MOD_LOCATION = (string)Core.SettingsHandler.WriteSetting("MOD_LOCATION", SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text);
+                        _repoMoveTask = new Task(() => {
+                            MainWindow.Instance.MainTitleBarControl.MainTitleBarControlButtonSettings_Click(this, new RoutedEventArgs());
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 1 });
+                            Core.CancellationTokenSource = new CancellationTokenSource();
+                            REPO.MoveRepo(MOD_LOCATION, Core.CancellationTokenSource.Token);
+                            ServerHandler.SendServerMessage("reporequest uksf");
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                            _repoMoveTask = null;
+                        });
+                        _repoMoveTask.Start();
+                    }
+                }
             }
             UpdateGameExeWarning();
             UpdateDownloadWarning();

@@ -12,20 +12,20 @@ namespace Patching {
     public class RepoClient : ProgressReporter {
         private const string USERNAME = "launcher";
         private const string PASSWORD = "sneakysnek";
-        private static Action<float, string> _progressUpdate;
+        private static Action<float, Tuple<string, float>> _progressUpdate;
         private static long _bytesRate;
         private static int _completedDeltas;
         private static DateTime _lastReport = DateTime.Now;
         private readonly string _repoFilePath;
         private readonly string _repoLocalPath;
-
-        private readonly string _repoPath;
         public readonly string RepoName;
         private ConcurrentBag<RepoAction> _actions;
         private ConcurrentDictionary<string, bool> _deltas;
 
         private CancellationTokenSource _downloadCancellationTokenSource;
         private Dictionary<string, string[]> _repoFileDictionary;
+
+        private string _repoPath;
 
         public RepoClient(string path, string localPath, string name, Action<string> progressAction) : base(progressAction) {
             _repoPath = path;
@@ -48,7 +48,7 @@ namespace Patching {
             }
         }
 
-        public bool CheckLocalRepo(string remoteRepoData, Action<float, string> progressUpdate, CancellationTokenSource tokenSource) {
+        public bool CheckLocalRepo(string remoteRepoData, Action<float, Tuple<string, float>> progressUpdate, CancellationTokenSource tokenSource) {
             _downloadCancellationTokenSource = tokenSource;
             try {
                 CleanRepo();
@@ -73,7 +73,7 @@ namespace Patching {
                 List<Addon> changedAddons = new List<Addon>();
                 foreach (KeyValuePair<string, string[]> remoteAddonPair in remoteRepoDictionary) {
                     string addonName = Path.GetFileName(remoteAddonPair.Key);
-                    _progressUpdate.Invoke((float) progressIndex / remoteRepoDictionary.Count, $"Checking '{addonName}'");
+                    _progressUpdate.Invoke((float) progressIndex / remoteRepoDictionary.Count, new Tuple<string, float>($"Checking '{addonName}'", 0));
                     string localAddon = _repoFileDictionary.Keys.FirstOrDefault(key => key != null && Path.GetFileName(key).Equals(addonName));
                     localAddon = string.IsNullOrEmpty(localAddon) ? Path.Combine(_repoPath, addonName) : localAddon;
                     if (!Path.GetDirectoryName(localAddon).Equals(_repoPath)) {
@@ -95,26 +95,25 @@ namespace Patching {
                 progressIndex = 0;
                 foreach (KeyValuePair<string, string[]> localDataPair in _repoFileDictionary) {
                     string addonName = Path.GetFileName(localDataPair.Key);
-                    if (changedAddons.All(addon => !addon.Name.Equals(addonName))) {
-                        if (remoteRepoDictionary.Keys.All(key => key != null && !Path.GetFileName(key).Equals(addonName))) {
-                            _progressUpdate.Invoke((float) progressIndex++ / remoteRepoDictionary.Count, $"Deleting '{addonName}'");
-                            Directory.Delete(localDataPair.Key, true);
-                            Directory.Delete(Path.Combine(_repoLocalPath, addonName), true);
-                            File.Delete(Path.Combine(_repoLocalPath, $"{addonName}.urf"));
-                        }
+                    if (changedAddons.Any(addon => addon.Name.Equals(addonName)) ||
+                        !remoteRepoDictionary.Keys.All(key => key != null && !Path.GetFileName(key).Equals(addonName))) {
+                        continue;
                     }
-                    progressIndex++;
+                    _progressUpdate.Invoke((float) progressIndex++ / remoteRepoDictionary.Count, new Tuple<string, float>($"Deleting '{addonName}'", 0));
+                    Directory.Delete(localDataPair.Key, true);
+                    Directory.Delete(Path.Combine(_repoLocalPath, addonName), true);
+                    File.Delete(Path.Combine(_repoLocalPath, $"{addonName}.urf"));
                 }
                 ProgressAction.Invoke($"{changedAddons.Count} changes");
                 if (changedAddons.Count == 0) {
                     WriteRepoFile();
-                    _progressUpdate.Invoke(1, "stop");
+                    _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
                     return false;
                 }
                 progressIndex = 0;
                 _actions = new ConcurrentBag<RepoAction>();
                 Parallel.ForEach(changedAddons, new ParallelOptions {CancellationToken = _downloadCancellationTokenSource.Token}, changedAddon => {
-                    _progressUpdate.Invoke((float) progressIndex++ / changedAddons.Count, "Finding changes");
+                    _progressUpdate.Invoke((float) progressIndex / changedAddons.Count, new Tuple<string, float>($"Finding changes '{changedAddon.Name}'", 0));
                     WebClient webClient = new WebClient {Credentials = new NetworkCredential(USERNAME, PASSWORD)};
                     Dictionary<string, string[]> remoteAddonDictionary = new Dictionary<string, string[]>();
                     try {
@@ -136,11 +135,19 @@ namespace Patching {
                     } else {
                         Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{changedAddon.Name}.urf"))
                                                                                 .Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+                        int currentFile = 0;
                         foreach (KeyValuePair<string, string[]> remoteAddonFile in remoteAddonDictionary) {
+                            _progressUpdate.Invoke((float) progressIndex++ / changedAddons.Count,
+                                                   new Tuple<string, float>($"Finding changes '{changedAddon.Name}'", (float) currentFile++ / remoteAddonDictionary.Count));
                             if (localAddonDictionary.Keys.Any(key => key.Equals(remoteAddonFile.Key))) {
-                                if (localAddonDictionary[remoteAddonFile.Key][0] != remoteAddonFile.Value[0] ||
-                                    localAddonDictionary[remoteAddonFile.Key][1] != remoteAddonFile.Value[1]) {
+                                if (localAddonDictionary[remoteAddonFile.Key][0] == remoteAddonFile.Value[0] &&
+                                    localAddonDictionary[remoteAddonFile.Key][1] == remoteAddonFile.Value[1]) {
+                                    continue;
+                                }
+                                if (Convert.ToInt64(localAddonDictionary[remoteAddonFile.Key][1]) > 1048576) {
                                     _actions.Add(new RepoAction.ModifiedAction(changedAddon, remoteAddonFile.Key));
+                                } else {
+                                    _actions.Add(new RepoAction.AddedAction(changedAddon, remoteAddonFile.Key));
                                 }
                             } else {
                                 _actions.Add(new RepoAction.AddedAction(changedAddon, remoteAddonFile.Key));
@@ -150,36 +157,38 @@ namespace Patching {
                             _actions.Add(new RepoAction.DeletedAction(changedAddon, localAddonFile.Key));
                         }
                     }
+                    progressIndex++;
                 });
                 ProgressAction.Invoke($"{_actions.Count} actions");
                 if (_actions.Count == 0) {
                     WriteRepoFile();
-                    _progressUpdate.Invoke(1, "stop");
+                    _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
                     return false;
                 }
                 _completedDeltas = 0;
                 HashSet<Addon> invalidatedAddons = new HashSet<Addon>();
                 _deltas = new ConcurrentDictionary<string, bool>();
+                // TODO: Add total size of files to replace number of files
                 Parallel.ForEach(_actions.Where(action => action is RepoAction.ModifiedAction),
-                                 new ParallelOptions {MaxDegreeOfParallelism = 20, CancellationToken = _downloadCancellationTokenSource.Token}, UploadFile);
-                Parallel.ForEach(_actions, new ParallelOptions {MaxDegreeOfParallelism = 20, CancellationToken = _downloadCancellationTokenSource.Token}, action => {
+                                 new ParallelOptions {MaxDegreeOfParallelism = 5, CancellationToken = _downloadCancellationTokenSource.Token}, UploadFile);
+                Parallel.ForEach(_actions.Where(action => action is RepoAction.AddedAction),
+                                 new ParallelOptions {MaxDegreeOfParallelism = 5, CancellationToken = _downloadCancellationTokenSource.Token}, action => {
+                                     string filePath = Path.Combine(action.Addon.FolderPath, action.AddonFile);
+                                     if (!Directory.Exists(Path.GetDirectoryName(filePath))) {
+                                         Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                                     }
+                                     if (!DownloadWholeFile($"{action.Addon.Name}/{action.AddonFile}", filePath)) return;
+                                     lock (_actions) {
+                                         invalidatedAddons.Add(action.Addon.GenerateHash(filePath));
+                                     }
+                                     _completedDeltas++;
+                                 });
+                foreach (RepoAction action in _actions.Where(action => action is RepoAction.DeletedAction)) {
                     string filePath = Path.Combine(action.Addon.FolderPath, action.AddonFile);
-                    switch (action) {
-                        case RepoAction.AddedAction _:
-                            if (!Directory.Exists(Path.GetDirectoryName(filePath))) {
-                                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                            }
-                            DownloadWholeFile($"{action.Addon.Name}/{action.AddonFile}", filePath);
-                            invalidatedAddons.Add(action.Addon.GenerateHash(filePath));
-                            _completedDeltas++;
-                            break;
-                        case RepoAction.DeletedAction _:
-                            File.Delete(Path.Combine(action.Addon.FolderPath, action.AddonFile));
-                            invalidatedAddons.Add(action.Addon.RemoveHash(filePath));
-                            _completedDeltas++;
-                            break;
-                    }
-                });
+                    invalidatedAddons.Add(action.Addon.RemoveHash(Path.Combine(action.Addon.FolderPath, action.AddonFile)));
+                    File.Delete(filePath);
+                    _completedDeltas++;
+                }
                 if (_deltas.Keys.Count > 0) {
                     while (_deltas.Values.Any(state => !state) && !_downloadCancellationTokenSource.IsCancellationRequested) {
                         Task.Delay(100).Wait();
@@ -190,17 +199,17 @@ namespace Patching {
                 }
                 Parallel.ForEach(invalidatedAddons, addon => addon.GenerateFullHash());
                 WriteRepoFile();
-                _progressUpdate.Invoke(1, "stop");
+                _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
                 return true;
             } catch (OperationCanceledException) {
-                _progressUpdate.Invoke(1, "stop");
+                _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
                 ProgressAction.Invoke("Repo check cancelled");
                 return true;
             } catch (Exception exception) {
                 _downloadCancellationTokenSource.Cancel();
-                _progressUpdate.Invoke(1, "stop");
+                _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
                 ProgressAction.Invoke($"An error occured during local repo check\n{exception}");
-                throw;
+                return false;
             } finally {
                 CleanRepo();
             }
@@ -212,11 +221,11 @@ namespace Patching {
             if (!_repoFileDictionary.Keys.Any(key => key != null && Path.GetFileName(key).Equals(addon.Name)) || !File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
                 if (!File.Exists(Path.Combine(_repoLocalPath, $"{addon.Name}.urf"))) {
                     ProgressAction.Invoke($"Could not find addon.urf '{addon.Name}'");
-                    _progressUpdate.Invoke((float) progressIndex / progressCount, $"Generating cache '{addon.Name}'");
+                    _progressUpdate.Invoke((float) progressIndex / progressCount, new Tuple<string, float>($"Generating cache '{addon.Name}'", 0));
                     addon.GenerateAllHashes(_downloadCancellationTokenSource.Token);
                     addon.GenerateFullHash();
                 } else {
-                    _progressUpdate.Invoke((float) progressIndex / progressCount, $"Updating cache '{addon.Name}'");
+                    _progressUpdate.Invoke((float) progressIndex / progressCount, new Tuple<string, float>($"Updating cache '{addon.Name}'", 0));
                     ProgressAction.Invoke($"Could not find addon in repo.urf for '{addon.Name}'");
                     addon.GenerateFullHash();
                 }
@@ -224,8 +233,10 @@ namespace Patching {
             }
             Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{addon.Name}.urf")).Select(line => line.Split(';'))
                                                                     .ToDictionary(values => values[0], values => values[1].Split(':'));
-
+            int currentFile = 0;
             foreach (KeyValuePair<string, string[]> addonFilePair in localAddonDictionary) {
+                _progressUpdate.Invoke((float) progressIndex / progressCount,
+                                       new Tuple<string, float>($"Checking cache '{addon.Name}'", (float) currentFile++ / localAddonDictionary.Count));
                 FileInfo addonFile = new FileInfo(Path.Combine(addon.FolderPath, addonFilePair.Key));
                 if (addonFile.Exists) {
                     if (Convert.ToInt32(addonFilePair.Value[1]) != addonFile.Length || Convert.ToInt64(addonFilePair.Value[2]) != addonFile.LastWriteTime.Ticks) {
@@ -235,15 +246,18 @@ namespace Patching {
                     addon.RemoveHash(addonFile.FullName);
                 }
             }
+            currentFile = 0;
             foreach (string addonFile in addonFiles.Where(addonFile => !localAddonDictionary.ContainsKey(addonFile.Replace($"{addon.FolderPath}{Path.DirectorySeparatorChar}", "")))
             ) {
+                _progressUpdate.Invoke((float) progressIndex / progressCount,
+                                       new Tuple<string, float>($"Checking files '{addon.Name}'", (float) currentFile++ / addonFiles.Length));
                 addon.GenerateHash(addonFile);
             }
             addon.GenerateFullHash();
             ticks = addonFiles.Length == 0 ? 0 : addonFiles.ToList().Max(file => new FileInfo(file).LastWriteTime).Ticks;
             if (_repoFileDictionary[addon.FolderPath][0] == addon.FullHash && Convert.ToInt32(_repoFileDictionary[addon.FolderPath][1]) == addonFiles.Length &&
-                Convert.ToInt64(_repoFileDictionary[addon.FolderPath][2]) == ticks && localAddonDictionary.Count == addonFiles.Length &&
-                Convert.ToInt32(_repoFileDictionary[addon.FolderPath][1]) == localAddonDictionary.Count) {
+                localAddonDictionary.Count == addonFiles.Length && Convert.ToInt32(_repoFileDictionary[addon.FolderPath][1]) == localAddonDictionary.Count &&
+                Convert.ToInt64(_repoFileDictionary[addon.FolderPath][2]) == ticks) {
                 return;
             }
             ProgressAction.Invoke($"Addon hash does not match repo.urf for '{addon.Name}'");
@@ -256,23 +270,33 @@ namespace Patching {
             _repoFileDictionary = File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
         }
 
-        private void DownloadWholeFile(string sourcePath, string filePath) {
+        private bool DownloadWholeFile(string sourcePath, string filePath) {
             try {
                 FtpWebRequest ftpWebRequest = (FtpWebRequest) WebRequest.Create($"ftp://uk-sf.com/{RepoName}/{sourcePath}");
                 ftpWebRequest.KeepAlive = true;
                 ftpWebRequest.UsePassive = true;
                 ftpWebRequest.UseBinary = true;
-                ftpWebRequest.Method = WebRequestMethods.Ftp.DownloadFile;
                 ftpWebRequest.Credentials = new NetworkCredential(USERNAME, PASSWORD);
+                ftpWebRequest.Method = WebRequestMethods.Ftp.GetFileSize;
+                long bytesTotal = ftpWebRequest.GetResponse().ContentLength;
+                ftpWebRequest = (FtpWebRequest) WebRequest.Create($"ftp://uk-sf.com/{RepoName}/{sourcePath}");
+                ftpWebRequest.KeepAlive = true;
+                ftpWebRequest.UsePassive = true;
+                ftpWebRequest.UseBinary = true;
+                ftpWebRequest.Credentials = new NetworkCredential(USERNAME, PASSWORD);
+                ftpWebRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                ftpWebRequest.Timeout = 60000;
                 byte[] buffer = new byte[4096];
                 using (FtpWebResponse response = (FtpWebResponse) ftpWebRequest.GetResponse()) {
                     using (FileStream fileStream = File.OpenWrite(filePath)) {
                         using (Stream responseStream = response.GetResponseStream()) {
                             int count = -1;
+                            long bytesDone = 0;
                             while ((uint) count > 0U) {
-                                if (_downloadCancellationTokenSource.Token.IsCancellationRequested) throw new OperationCanceledException();
+                                if (_downloadCancellationTokenSource.Token.IsCancellationRequested) return false;
                                 if (responseStream != null) count = responseStream.Read(buffer, 0, buffer.Length);
-                                ReportProgress(count);
+                                bytesDone += count;
+                                ReportProgress(count, bytesDone, bytesTotal);
                                 fileStream.Write(buffer, 0, count);
                             }
                         }
@@ -280,10 +304,12 @@ namespace Patching {
                 }
                 ProgressAction.Invoke($"Downloaded '{filePath}'");
             } catch (OperationCanceledException) {
-                throw;
+                return false;
             } catch (Exception exception) {
                 ProgressAction.Invoke($"An error occured downloading '{sourcePath}'\n{exception}");
+                return false;
             }
+            return true;
         }
 
         private void UploadFile(RepoAction action) {
@@ -305,11 +331,13 @@ namespace Patching {
             }
         }
 
-        private void ReportProgress(long change) {
+        private void ReportProgress(long change, long done, long total) {
             _bytesRate += change;
             if (DateTime.Now < _lastReport) return;
             _lastReport = DateTime.Now.AddMilliseconds(100);
-            _progressUpdate.Invoke((float) _completedDeltas / _actions.Count, $"Downloading files\n{_completedDeltas} of {_actions.Count} ({_bytesRate * 80 / 1024 / 1000} Mbps)");
+            _progressUpdate.Invoke((float) _completedDeltas / _actions.Count,
+                                   new Tuple<string, float>($"Downloading files\n{_completedDeltas} of {_actions.Count} ({_bytesRate * 80 / 1024 / 1000} Mbps)",
+                                                            (float) done / total));
             _bytesRate = 0L;
         }
 
@@ -320,7 +348,7 @@ namespace Patching {
             string remoteDeltaPath = parts[1];
             try {
                 string deltaPath = Path.Combine(_repoLocalPath, Path.GetFileName(remoteDeltaPath));
-                DownloadWholeFile($".repo/{remoteDeltaPath}", deltaPath);
+                if (!DownloadWholeFile($".repo/{remoteDeltaPath}", deltaPath)) return;
                 DeltaApplier deltaApplier = new DeltaApplier {SkipHashCheck = true};
                 using (FileStream basisStream = new FileStream(Path.Combine(_repoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (FileStream deltaStream = new FileStream(deltaPath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
@@ -342,27 +370,57 @@ namespace Patching {
             }
         }
 
-        private void CleanRepo() {
-            foreach (string file in Directory.GetFiles(_repoLocalPath, "*", SearchOption.AllDirectories).Where(file => !file.Contains(".urf"))) {
-                while (File.Exists(file)) {
-                    try {
-                        File.Delete(file);
-                    } catch (Exception) {
-                        Thread.Sleep(50);
+        public IEnumerable<string> GetRepoMods() => File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList();
+
+        public void MoveRepo(string newLocation, CancellationToken cancellationToken) {
+            try {
+                _repoFileDictionary.Clear();
+                Dictionary<string, string[]> addonFolders =
+                    File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+                int currentIndex = 0;
+                foreach (KeyValuePair<string, string[]> addonPair in addonFolders) {
+                    if (!Directory.Exists(addonPair.Key)) return;
+                    _progressUpdate.Invoke((float) currentIndex / addonFolders.Count, new Tuple<string, float>($"Moving '{Path.GetFileName(addonPair.Key)}'", 0));
+                    IEnumerable<IGrouping<string, string>> files = Directory.EnumerateFiles(addonPair.Key, "*", SearchOption.AllDirectories).GroupBy(Path.GetDirectoryName);
+                    foreach (IGrouping<string, string> folder in files) {
+                        string targetFolder = folder.Key.Replace(_repoPath, newLocation);
+                        Directory.CreateDirectory(targetFolder);
+                        int fileIndex = 0;
+                        int index = currentIndex;
+                        Parallel.ForEach(folder, new ParallelOptions {CancellationToken = cancellationToken}, file => {
+                            _progressUpdate.Invoke((float) index / addonFolders.Count,
+                                                   new Tuple<string, float>($"Moving '{Path.GetFileName(addonPair.Key)}'", (float) fileIndex++ / folder.Count()));
+                            File.Move(file, file.Replace(_repoPath, newLocation));
+                            File.Delete(file);
+                        });
                     }
+                    _repoFileDictionary.Add(addonPair.Key.Replace(_repoPath, newLocation), addonPair.Value);
+                    Directory.Delete(addonPair.Key, true);
+                    currentIndex++;
                 }
-            }
-            foreach (string file in Directory.GetFiles(_repoPath, "*", SearchOption.AllDirectories).Where(file => file.Contains(".urf"))) {
-                while (File.Exists(file)) {
-                    try {
-                        File.Delete(file);
-                    } catch (Exception) {
-                        Thread.Sleep(50);
-                    }
-                }
-            }
+                CleanRepo();
+                _repoPath = newLocation;
+                WriteRepoFile();
+                _progressUpdate.Invoke(1, new Tuple<string, float>("stop", 1));
+            } catch (OperationCanceledException) { }
         }
 
-        public List<string> GetRepoMods() => File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList();
+        private void CleanRepo() {
+            List<string> files = Directory.EnumerateFiles(_repoLocalPath, "*", SearchOption.AllDirectories).Where(file => !file.Contains(".urf")).ToList();
+            files.AddRange(Directory.EnumerateFiles(_repoPath, "*", SearchOption.AllDirectories).Where(file => file.Contains(".urf")).ToList());
+            foreach (string file in files) {
+                while (File.Exists(file)) {
+                    try {
+                        File.Delete(file);
+                    } catch (Exception) {
+                        Thread.Sleep(100);
+                    }
+                }
+            }
+            foreach (string directory in Directory.GetDirectories(_repoPath, "*", SearchOption.AllDirectories)
+                                                  .Where(directory => Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Length == 0)) {
+                Directory.Delete(directory, true);
+            }
+        }
     }
 }

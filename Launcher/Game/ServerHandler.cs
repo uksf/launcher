@@ -16,12 +16,12 @@ namespace UKSF_Launcher.Game {
         public static readonly Server NO_SERVER = new Server("No Server", "", 0, "", false);
 
         private static ServerSocket _serverSocket;
-        public static BackgroundWorker ParentWorker;
+        private static BackgroundWorker _parentWorker;
 
         private static Task _repoCheckTask;
 
         public static void StartServerHandler(object sender) {
-            ParentWorker = (BackgroundWorker) sender;
+            _parentWorker = (BackgroundWorker) sender;
             _serverSocket = new ServerSocket();
             _serverSocket.ServerLogEvent += ServerMessageLogCallback;
             _serverSocket.ServerCommandEvent += ServerMessageCallback;
@@ -92,7 +92,7 @@ namespace UKSF_Launcher.Game {
                         });
                         _repoCheckTask.Start();
                     } catch (Exception exception) {
-                        ParentWorker.ReportProgress(1, "");
+                        _parentWorker.ReportProgress(1, new Tuple<string, int>("", 1));
                         LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process remote repo\n{exception}");
                     }
                     break;
@@ -111,9 +111,9 @@ namespace UKSF_Launcher.Game {
             }
         }
 
-        private static void ProgressUpdate(float value, string message) {
+        private static void ProgressUpdate(float value, Tuple<string, float> objectState) {
             if (Core.CancellationTokenSource.IsCancellationRequested) return;
-            ParentWorker.ReportProgress((int) (value * 100), message);
+            _parentWorker.ReportProgress((int) (value * 100), new Tuple<string, int>(objectState.Item1, (int)(objectState.Item2 * 100)));
         }
 
         private static void ServerMessageLogCallback(object sender, string message) {

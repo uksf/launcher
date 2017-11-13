@@ -34,6 +34,7 @@ namespace UKSF_Launcher.UI.General {
             public ProgressRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
             public int Value { get; set; }
             public string Message { get; set; }
+            public int SecondaryValue { get; set; }
         }
 
         public class WarningRoutedEventArgs : RoutedEventArgs {
