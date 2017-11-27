@@ -40,7 +40,7 @@ namespace Patching {
             }
         }
 
-        public Addon GenerateHash(string addonFile) {
+        public void GenerateHash(string addonFile) {
             Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
                                                             .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
             string key = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "");
@@ -54,10 +54,9 @@ namespace Patching {
                     streamWriter.WriteLine($"{file};{hashDictionary[file]}:{new FileInfo(Path.Combine(FolderPath, file)).Length}:{new FileInfo(Path.Combine(FolderPath, file)).LastWriteTime.Ticks}");
                 }
             }
-            return this;
         }
 
-        public Addon RemoveHash(string addonFile) {
+        public void RemoveHash(string addonFile) {
             Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
                                                             .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
             addonFile = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "").Replace($"{Path.DirectorySeparatorChar}", "\\");
@@ -66,7 +65,6 @@ namespace Patching {
                     streamWriter.WriteLine($"{file};{hashDictionary[file]}:{new FileInfo(Path.Combine(FolderPath, file)).Length}:{new FileInfo(Path.Combine(FolderPath, file)).LastWriteTime.Ticks}");
                 }
             }
-            return this;
         }
 
         public string GenerateSignature(string filePath) {
@@ -76,7 +74,7 @@ namespace Patching {
             }
             using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 using (FileStream signatureStream = new FileStream(signatureFileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.Read)) {
-                    SignatureBuilder signatureBuilder = new SignatureBuilder {HashAlgorithm = SupportedAlgorithms.Hashing.Create("MD5")};
+                    SignatureBuilder signatureBuilder = new SignatureBuilder {ChunkSize = 8 * 1024, HashAlgorithm = SupportedAlgorithms.Hashing.Create("MD5")};
                     signatureBuilder.Build(fileStream, new SignatureWriter(signatureStream));
                     return signatureFileInfo.FullName;
                 }

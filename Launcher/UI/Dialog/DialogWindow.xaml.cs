@@ -17,6 +17,7 @@ namespace UKSF_Launcher.UI.Dialog {
 
         private static DialogWindow _dialog;
         private static MessageBoxResult _result = MessageBoxResult.None;
+        private static bool _open;
 
         /// <inheritdoc />
         /// <summary>
@@ -87,6 +88,8 @@ namespace UKSF_Launcher.UI.Dialog {
         /// <param name="control">UIElement object to display</param>
         /// <returns>Result of dialog window</returns>
         private static MessageBoxResult Show(string title, string message, MessageBoxButton button, string link = "", UIElement control = null) {
+            if (_open) return MessageBoxResult.OK;
+            _open = true;
             _dialog = new DialogWindow();
             _dialog.DialogTitleBarControl.DialogTitleBarControlLabel.Content = title;
             if (!string.IsNullOrEmpty(link)) {
@@ -110,6 +113,7 @@ namespace UKSF_Launcher.UI.Dialog {
             }
             SetButton(button);
             _dialog.ShowDialog();
+            _open = false;
             return _result;
         }
 

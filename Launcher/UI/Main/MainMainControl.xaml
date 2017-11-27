@@ -22,10 +22,6 @@
                      Margin="1,175,0,0" SnapsToDevicePixels="True"
                      Background="{StaticResource Uksf.BackgroundDark}" Foreground="{StaticResource Uksf.Foreground}"
                      BorderBrush="{StaticResource Uksf.BackgroundLight}" Panel.ZIndex="2" />
-        <ProgressBar x:Name="MainMainControlSecondaryProgressBar" Value="10" Width="375" Height="4"
-                     Margin="1,175,0,0" SnapsToDevicePixels="True"
-                     Background="{StaticResource Uksf.Transparent}" Foreground="{StaticResource Uksf.DarkGrey}"
-                     BorderBrush="{StaticResource Uksf.Transparent}" Panel.ZIndex="2" />
         <Grid Margin="0,330,0,0" VerticalAlignment="Top">
             <TextBlock x:Name="MainMainControlProgressText" Text="" FontSize="14"
                        FontWeight="Normal" HorizontalAlignment="Center"

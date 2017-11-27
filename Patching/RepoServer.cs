@@ -145,7 +145,6 @@ namespace Patching {
         public string BuildDelta(string addonPath, string signaturePath) {
             DeltaBuilder delta = new DeltaBuilder();
             string deltaPath = Path.Combine(_repoPath, ".repo", Path.GetRandomFileName());
-            Directory.CreateDirectory(Path.GetDirectoryName(deltaPath));
             try {
                 using (FileStream updatedStream = new FileStream(Path.Combine(_repoPath, addonPath), FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (FileStream signatureStream = new FileStream(signaturePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {

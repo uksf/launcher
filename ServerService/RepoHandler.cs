@@ -44,11 +44,11 @@ namespace ServerService {
             return true;
         }
 
-        public static string BuildDelta(string name, string path, string signaturePath, Action<string> progress) {
+        public static string BuildDelta(string name, string path, string relativePath, string signaturePath, Action<string> progress) {
             string deltaPath = $"{path}::";
             try {
                 RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                deltaPath += repo.BuildDelta(path, Path.Combine(REPOSITORY_LOCATION, name, ".repo", signaturePath));
+                deltaPath += repo.BuildDelta(relativePath, Path.Combine(REPOSITORY_LOCATION, name, ".repo", signaturePath));
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");
             }

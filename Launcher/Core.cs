@@ -44,10 +44,12 @@ namespace UKSF_Launcher {
                 mainWindow.Show();
                 mainWindow.Activate();
                 mainWindow.Focus();
-                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) { State = false });
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
 
                 REPO = new RepoClient(MOD_LOCATION, APPDATA, "uksf", LogInfo);
-                REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(REPO.RepoName, requestTuple.Item1, requestTuple.Item2);
+                REPO.ErrorEvent += (sender, exception) => Error(exception);
+                REPO.ErrorNoShutdownEvent += (sender, exception) => ErrorNoShutdown(exception);
+                REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(REPO.RepoName, requestTuple.Item1, requestTuple.Item2, requestTuple.Item3);
                 REPO.DeleteEvent += (sender, path) => ServerHandler.SendDeltaDelete(path);
 
                 BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
@@ -55,8 +57,7 @@ namespace UKSF_Launcher {
                 repoBackgroundWorker.ProgressChanged += (sender, args) =>
                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {
                         Value = args.ProgressPercentage,
-                        Message = ((Tuple<string, int>)args.UserState).Item1.ToString(),
-                        SecondaryValue = ((Tuple<string, int>)args.UserState).Item2
+                        Message = args.UserState.ToString()
                     });
                 repoBackgroundWorker.RunWorkerAsync();
             } catch (Exception exception) {
@@ -114,23 +115,41 @@ namespace UKSF_Launcher {
         }
 
         /// <summary>
-        ///     Logs an error and displays a dialog with the error message.
+        ///     Logs an error and displays a dialog with the error message. Shuts program down.
         /// </summary>
         /// <param name="exception">Error exception to report</param>
         public static async void Error(Exception exception) {
-            CancellationTokenSource.Cancel();
-            await Task.Delay(250);
-            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {Value = 1, Message = "stop"});
+            await Application.Current.Dispatcher.InvokeAsync(async () => {
+                CancellationTokenSource.Cancel();
+                await Task.Delay(250);
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {
+                    Value = 1,
+                    Message = "stop"
+                });
 
-            string error = exception.Message + "\n" + exception.StackTrace;
-            LogSeverity(Severity.ERROR, error);
-            Clipboard.SetDataObject(error, true);
-            MessageBoxResult result =
-                DialogWindow.Show("Error", "Something went wrong.\nThe error below has been copied to your clipboard. Please create an issue with the error here: ::\n\n" + error,
+                string error = exception.Message + "\n" + exception.StackTrace;
+                LogSeverity(Severity.ERROR, error);
+                MessageBoxResult result =
+                    DialogWindow.Show("Error",
+                                      "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
+                                      DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
+                if (result == MessageBoxResult.OK) {
+                    ShutDown();
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Logs an error and displays a dialog with the error message.
+        /// </summary>
+        /// <param name="exception">Error exception to report</param>
+        private static void ErrorNoShutdown(Exception exception) {
+            Application.Current.Dispatcher.Invoke(() => {
+                string error = exception.Message + "\n" + exception.StackTrace;
+                LogSeverity(Severity.ERROR, error);
+                DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
                                   DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
-            if (result == MessageBoxResult.OK) {
-                ShutDown();
-            }
+            });
         }
     }
 }

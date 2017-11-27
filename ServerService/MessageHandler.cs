@@ -93,7 +93,7 @@ namespace ServerService {
                 return new Tuple<int, string>(2, "Failed");
             }
             string[] parts = parameters[0].Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
-            string response = RepoHandler.BuildDelta(parts[0], parts[1], parts[2], Progress);
+            string response = RepoHandler.BuildDelta(parts[0], parts[1], parts[2], parts[3], Progress);
             _client.SendCommand($"deltaresponse::{response}");
             return string.IsNullOrEmpty(response) ? new Tuple<int, string>(1, "Failed") : new Tuple<int, string>(0, "Success");
         }

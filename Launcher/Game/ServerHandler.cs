@@ -43,8 +43,8 @@ namespace UKSF_Launcher.Game {
             _serverSocket.SendMessage(message);
         }
 
-        public static void SendDeltaRequest(string name, string path, string remotePath) {
-            _serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltarequest {name}::{path}::{remotePath}::end"));
+        public static void SendDeltaRequest(string name, string path, string relativePath, string remotePath) {
+            _serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltarequest {name}::{path}::{relativePath}::{remotePath}::end"));
         }
 
         internal static void SendDeltaDelete(string path) {
@@ -81,8 +81,7 @@ namespace UKSF_Launcher.Game {
                         _repoCheckTask = new Task(() => {
                             Core.CancellationTokenSource = new CancellationTokenSource();
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                            while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate, Core.CancellationTokenSource) &&
-                                   !Core.CancellationTokenSource.IsCancellationRequested) {
+                            while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
@@ -98,7 +97,7 @@ namespace UKSF_Launcher.Game {
                     break;
                 case "deltaresponse":
                     try {
-                        Task repoDeltaTask = new Task(() => Global.REPO.ProcessDelta(commandArguments));
+                        Task repoDeltaTask = new Task(() => Global.REPO.QueueDelta(commandArguments));
                         repoDeltaTask.Start();
                     } catch (Exception exception) {
                         LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process delta\n{exception}");
@@ -111,9 +110,9 @@ namespace UKSF_Launcher.Game {
             }
         }
 
-        private static void ProgressUpdate(float value, Tuple<string, float> objectState) {
+        private static void ProgressUpdate(float value, string objectState) {
             if (Core.CancellationTokenSource.IsCancellationRequested) return;
-            _parentWorker.ReportProgress((int) (value * 100), new Tuple<string, int>(objectState.Item1, (int)(objectState.Item2 * 100)));
+            _parentWorker.ReportProgress((int) (value * 100), objectState);
         }
 
         private static void ServerMessageLogCallback(object sender, string message) {
