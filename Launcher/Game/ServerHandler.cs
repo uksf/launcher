@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,12 +15,10 @@ namespace UKSF_Launcher.Game {
         public static readonly Server NO_SERVER = new Server("No Server", "", 0, "", false);
 
         private static ServerSocket _serverSocket;
-        private static BackgroundWorker _parentWorker;
 
         private static Task _repoCheckTask;
 
-        public static void StartServerHandler(object sender) {
-            _parentWorker = (BackgroundWorker) sender;
+        public static void StartServerHandler() {
             _serverSocket = new ServerSocket();
             _serverSocket.ServerLogEvent += ServerMessageLogCallback;
             _serverSocket.ServerCommandEvent += ServerMessageCallback;
@@ -81,17 +78,16 @@ namespace UKSF_Launcher.Game {
                         _repoCheckTask = new Task(() => {
                             Core.CancellationTokenSource = new CancellationTokenSource();
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                            while (Global.REPO.CheckLocalRepo(commandArguments, ProgressUpdate, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
+                            while (Global.REPO.CheckLocalRepo(commandArguments, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
                             }
                             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 0 });
+                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
                             Core.CancellationTokenSource.Cancel();
                             _repoCheckTask = null;
                         });
                         _repoCheckTask.Start();
                     } catch (Exception exception) {
-                        _parentWorker.ReportProgress(1, new Tuple<string, int>("", 1));
                         LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process remote repo\n{exception}");
                     }
                     break;
@@ -108,11 +104,6 @@ namespace UKSF_Launcher.Game {
                     break;
                 default: return;
             }
-        }
-
-        private static void ProgressUpdate(float value, string objectState) {
-            if (Core.CancellationTokenSource.IsCancellationRequested) return;
-            _parentWorker.ReportProgress((int) (value * 100), objectState);
         }
 
         private static void ServerMessageLogCallback(object sender, string message) {

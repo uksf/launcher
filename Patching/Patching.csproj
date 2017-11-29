@@ -78,7 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addon.cs" />
-    <Compile Include="ProgressReporter.cs" />
+    <Compile Include="DownloadManager.cs" />
+    <Compile Include="LogReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepoAction.cs" />
     <Compile Include="RepoClient.cs" />
@@ -93,6 +94,10 @@
     <ProjectReference Include="..\FastRsync\FastRsync.csproj">
       <Project>{7b6474f5-8ee1-4d09-a48a-5a295e2df8e2}</Project>
       <Name>FastRsync</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Network\Network.csproj">
+      <Project>{549178be-2d41-4928-a4ca-7411f11f816a}</Project>
+      <Name>Network</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

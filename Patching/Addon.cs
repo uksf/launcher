@@ -62,7 +62,10 @@ namespace Patching {
             addonFile = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "").Replace($"{Path.DirectorySeparatorChar}", "\\");
             using (StreamWriter streamWriter = new StreamWriter(File.Create(Path.Combine(_repoFolder, $"{Name}.urf")))) {
                 foreach (string file in from file in hashDictionary.Keys where !file.Equals(addonFile) orderby file select file) {
-                    streamWriter.WriteLine($"{file};{hashDictionary[file]}:{new FileInfo(Path.Combine(FolderPath, file)).Length}:{new FileInfo(Path.Combine(FolderPath, file)).LastWriteTime.Ticks}");
+                    FileInfo fileInfo = new FileInfo(Path.Combine(FolderPath, file));
+                    if (fileInfo.Exists) {
+                        streamWriter.WriteLine($"{file};{hashDictionary[file]}:{fileInfo.Length}:{fileInfo.LastWriteTime.Ticks}");
+                    }
                 }
             }
         }

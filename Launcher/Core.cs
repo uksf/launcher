@@ -46,19 +46,19 @@ namespace UKSF_Launcher {
                 mainWindow.Focus();
                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
 
-                REPO = new RepoClient(MOD_LOCATION, APPDATA, "uksf", LogInfo);
-                REPO.ErrorEvent += (sender, exception) => Error(exception);
-                REPO.ErrorNoShutdownEvent += (sender, exception) => ErrorNoShutdown(exception);
-                REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(REPO.RepoName, requestTuple.Item1, requestTuple.Item2, requestTuple.Item3);
-                REPO.DeleteEvent += (sender, path) => ServerHandler.SendDeltaDelete(path);
-
                 BackgroundWorker repoBackgroundWorker = new BackgroundWorker {WorkerReportsProgress = true};
-                repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler(sender);
+                repoBackgroundWorker.DoWork += (sender, args) => ServerHandler.StartServerHandler();
                 repoBackgroundWorker.ProgressChanged += (sender, args) =>
                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PROGRESS_EVENT) {
                         Value = args.ProgressPercentage,
                         Message = args.UserState.ToString()
                     });
+
+                REPO = new RepoClient(MOD_LOCATION, APPDATA, "uksf", LogInfo, repoBackgroundWorker.ReportProgress);
+                REPO.ErrorEvent += (sender, exception) => Error(exception);
+                REPO.ErrorNoShutdownEvent += (sender, exception) => ErrorNoShutdown(exception);
+                REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(requestTuple.Item1, requestTuple.Item2, requestTuple.Item3, requestTuple.Item4);
+                REPO.DeleteEvent += (sender, path) => ServerHandler.SendDeltaDelete(path);
                 repoBackgroundWorker.RunWorkerAsync();
             } catch (Exception exception) {
                 Error(exception);
@@ -129,10 +129,8 @@ namespace UKSF_Launcher {
 
                 string error = exception.Message + "\n" + exception.StackTrace;
                 LogSeverity(Severity.ERROR, error);
-                MessageBoxResult result =
-                    DialogWindow.Show("Error",
-                                      "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
-                                      DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
+                MessageBoxResult result = DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
+                                                            DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
                 if (result == MessageBoxResult.OK) {
                     ShutDown();
                 }
@@ -147,8 +145,8 @@ namespace UKSF_Launcher {
             Application.Current.Dispatcher.Invoke(() => {
                 string error = exception.Message + "\n" + exception.StackTrace;
                 LogSeverity(Severity.ERROR, error);
-                DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
-                                  DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
+                DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error, DialogWindow.DialogBoxType.OK,
+                                  "https://github.com/uksf/launcher-issues/issues/new");
             });
         }
     }

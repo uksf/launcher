@@ -85,7 +85,7 @@ namespace Network {
         public void SendMessage(byte[] bytes) {
             lock (_sendLock) {
                 _serverSocket.Send(bytes);
-                ServerLogEvent?.Invoke(this, "Upload message sent to server");
+                ServerLogEvent?.Invoke(this, "Message bytes sent to server");
             }
         }
 

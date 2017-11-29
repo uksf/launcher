@@ -26,7 +26,7 @@ namespace UKSF_Launcher.Tests {
             Global.STARTUP_HUGEPAGES = true;
             Global.STARTUP_MALLOC = Global.MALLOC_SYSTEM_DEFAULT;
             Global.SERVER = new Server("Primary Server", "test.com", 2303, "l85", true);
-            Global.REPO = new RepoClient(Global.MOD_LOCATION, Global.APPDATA, "uksf", null);
+            Global.REPO = new RepoClient(Global.MOD_LOCATION, Global.APPDATA, "uksf", null, null);
             string startupString = GameHandler.GetStartupParameters();
 
             Assert.AreEqual(startupString,
