@@ -55,6 +55,7 @@ namespace UKSF_Launcher.UI.Main {
             MainMainControlProgressBar.Visibility = Visibility.Collapsed;
             MainMainControlProgressText.Visibility = Visibility.Collapsed;
             MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
+            MainMainControlState_Update(null, new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) { Value = -1 });
             // TODO: Sims-esque loading messages
             // TODO: Implement background workers for all non-ui code, using progresschanged event for updating ui
         }
@@ -124,6 +125,7 @@ namespace UKSF_Launcher.UI.Main {
                         }
                     }
                 } else {
+                    if (MainMainControlDropdownServer.Items.Count > 0) MainMainControlDropdownServer.SelectedItem = MainMainControlDropdownServer.Items.GetItemAt(0);
                     MainMainControlDropdownServer.Visibility = Visibility.Collapsed;
                     Global.SERVER = null;
                 }
@@ -141,14 +143,21 @@ namespace UKSF_Launcher.UI.Main {
             Dispatcher.Invoke(() => {
                 SafeWindow.IntRoutedEventArgs stateArgs = (SafeWindow.IntRoutedEventArgs) args;
                 switch (stateArgs.Value) {
+                    case -1:
+                        MainMainControlControllerButton.Content = "";
+                        MainMainControlControllerButton.IsEnabled = false;
+                        break;
                     case 1:
-                        MainMainControlRefreshCancelButton.Content = "Cancel";
+                        MainMainControlControllerButton.Content = "Cancel";
+                        MainMainControlControllerButton.IsEnabled = true;
                         break;
                     case 2:
-                        MainMainControlRefreshCancelButton.Content = "Kill Game";
+                        MainMainControlControllerButton.Content = "Kill Game";
+                        MainMainControlControllerButton.IsEnabled = true;
                         break;
                     default:
-                        MainMainControlRefreshCancelButton.Content = "Refresh";
+                        MainMainControlControllerButton.Content = "Refresh";
+                        MainMainControlControllerButton.IsEnabled = true;
                         break;
                 }
             });
@@ -185,22 +194,23 @@ namespace UKSF_Launcher.UI.Main {
         }
 
         private async void MainMainControlRefreshCancelButton_Click(object sender, RoutedEventArgs args) {
-            MainMainControlRefreshCancelButton.IsEnabled = false;
+            MainMainControlControllerButton.IsEnabled = false;
             if (Global.GAME_PROCESS == null) {
-                if (MainMainControlRefreshCancelButton.Content.Equals("Cancel")) {
+                if (MainMainControlControllerButton.Content.Equals("Cancel")) {
                     Core.CancellationTokenSource.Cancel();
                     await Task.Delay(250);
-                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MAIN_MAIN_CONTROL_PROGRESS_EVENT) { Value = 1, Message = "stop" });
-                } else if (MainMainControlRefreshCancelButton.Content.Equals("Refresh")) {
-                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 1 });
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.ProgressRoutedEventArgs(MAIN_MAIN_CONTROL_PROGRESS_EVENT) {Value = 1, Message = "stop"});
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
+                } else if (MainMainControlControllerButton.Content.Equals("Refresh")) {
+                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
                     ServerHandler.SendServerMessage("reporequest uksf");
                 }
             } else {
                 Global.GAME_PROCESS.Kill();
-                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 0 });
+                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
             }
             await Task.Delay(250);
-            MainMainControlRefreshCancelButton.IsEnabled = true;
+            MainMainControlControllerButton.IsEnabled = true;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using UKSF_Launcher.Game;
+using UKSF_Launcher.UI.Dialog;
 using UKSF_Launcher.UI.General;
 using UKSF_Launcher.Utility;
 using static UKSF_Launcher.Global;
@@ -66,18 +67,30 @@ namespace UKSF_Launcher.UI.Main.Settings {
             if (MOD_LOCATION != SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text) {
                 if (GAME_PROCESS == null) {
                     if (_repoMoveTask == null) {
-                        MOD_LOCATION = (string)Core.SettingsHandler.WriteSetting("MOD_LOCATION", SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text);
-                        _repoMoveTask = new Task(() => {
-                            MainWindow.Instance.MainTitleBarControl.MainTitleBarControlButtonSettings_Click(this, new RoutedEventArgs());
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) { Value = 1 });
-                            Core.CancellationTokenSource = new CancellationTokenSource();
-                            REPO.MoveRepo(MOD_LOCATION, Core.CancellationTokenSource.Token);
-                            ServerHandler.SendServerMessage("reporequest uksf");
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
-                            _repoMoveTask = null;
-                        });
-                        _repoMoveTask.Start();
+                        MessageBoxResult result =
+                            DialogWindow.Show("Move repo?",
+                                              $"Are you sure you want to move the repo mods from\n\n'{MOD_LOCATION}'\nto\n'{SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text}'",
+                                              DialogWindow.DialogBoxType.YES_NO);
+                        if (result == MessageBoxResult.Yes) {
+                            Task.Run(() => {
+                                _repoMoveTask = Task.Run(() => {
+                                    MainWindow.Instance.MainTitleBarControl.MainTitleBarControlButtonSettings_Click(this, new RoutedEventArgs());
+                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
+                                        State = false
+                                    });
+                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
+                                    Core.CancellationTokenSource = new CancellationTokenSource();
+                                    string finalPath = REPO.MoveRepo(SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text,
+                                                                     Core.CancellationTokenSource.Token);
+                                    ServerHandler.SendServerMessage("reporequest uksf");
+                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                                    MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", finalPath);
+                                });
+                                _repoMoveTask.Wait();
+                                _repoMoveTask = null;
+                            });
+                        }
+                        SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text = MOD_LOCATION;
                     }
                 }
             }

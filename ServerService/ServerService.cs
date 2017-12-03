@@ -131,7 +131,7 @@ namespace ServerService {
                     break;
                 default:
                     // ReSharper disable once ObjectCreationAsStatement
-                    new MessageHandler(client, message);
+                    Task.Run(() => new MessageHandler(client, message));
                     break;
             }
         }

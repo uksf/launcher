@@ -27,9 +27,9 @@ namespace UKSF_Launcher.UI.General {
                     if (LocationTextboxControlTextBoxLocation.Text != "") {
                         folderBrowser.SelectedPath = LocationTextboxControlTextBoxLocation.Text;
                     }
-                    if (folderBrowser.ShowDialog() == DialogResult.OK) {
-                        LocationTextboxControlTextBoxLocation.Text = folderBrowser.SelectedPath;
-                    }
+                    if (folderBrowser.ShowDialog() != DialogResult.OK) return;
+                    LocationTextboxControlTextBoxLocation.Text = folderBrowser.SelectedPath;
+                    RaiseEvent(new RoutedEventArgs(LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT));
                 }
             } else {
                 using (OpenFileDialog fileBrowser = new OpenFileDialog()) {
@@ -37,12 +37,11 @@ namespace UKSF_Launcher.UI.General {
                         fileBrowser.InitialDirectory = LocationTextboxControlTextBoxLocation.Text;
                     }
                     fileBrowser.Filter = Filter;
-                    if (fileBrowser.ShowDialog() == DialogResult.OK) {
-                        LocationTextboxControlTextBoxLocation.Text = fileBrowser.FileName;
-                    }
+                    if (fileBrowser.ShowDialog() != DialogResult.OK) return;
+                    LocationTextboxControlTextBoxLocation.Text = fileBrowser.FileName;
+                    RaiseEvent(new RoutedEventArgs(LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT));
                 }
             }
-            RaiseEvent(new RoutedEventArgs(LOCATION_TEXTBOX_CONTROL_UPDATE_EVENT));
         }
     }
 }

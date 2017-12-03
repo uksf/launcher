@@ -30,6 +30,12 @@ namespace UKSF_Launcher.Utility {
             LogInfo("Log Created");
         }
 
+        public static string GetLogFilePath() {
+            lock (_logFile) {
+                return _logFile;
+            }
+        }
+
         /// <summary>
         ///     Logs a message to the log file.
         /// </summary>

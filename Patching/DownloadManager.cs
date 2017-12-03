@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,40 +12,62 @@ namespace Patching {
         private const string USERNAME = "launcher";
         private const string PASSWORD = "sneakysnek";
         private const int MAX_CONCURRENT_DOWNLOADS = 5;
-        private static long _bytesDone, _bytesTotal, _bytesRate;
         private static DateTime _lastReport = DateTime.Now;
+        private long _bytesDone, _bytesTotal, _bytesRate;
 
-        private readonly Queue<DownloadTask> _downloadQueue;
+        private ConcurrentQueue<DownloadTask> _downloadQueue;
         private Task _downloadTask;
 
-        public DownloadManager() => _downloadQueue = new Queue<DownloadTask>();
+        public DownloadManager() => _downloadQueue = new ConcurrentQueue<DownloadTask>();
 
         public static event EventHandler<string> LogEvent;
         public static event EventHandler<Tuple<float, string>> ProgressEvent;
 
         public void AddDownloadTask(string localPath, string remotePath, CancellationToken downloadCancellationToken, Action callbackAction) {
-            _downloadQueue.Enqueue(new DownloadTask(localPath, remotePath, downloadCancellationToken, callbackAction));
+            DownloadTask task = new DownloadTask(localPath, remotePath, downloadCancellationToken, callbackAction);
+            _downloadQueue.Enqueue(task);
+            task.DownloadProgressEvent += (sender, change) => ProgressAction(change);
             _bytesTotal += GetRemoteFileSize(remotePath);
         }
 
-        public void ProcessDownloadQueue() {
+        public void ProcessDownloadQueue(CancellationToken downloadCancellationToken) {
             if (_downloadTask != null) return;
-            _downloadTask = Task.Run(() => {
-                while (_downloadQueue.Count > 0) {
-                    if (_downloadQueue.Count(downloadTask => downloadTask.Running()) < MAX_CONCURRENT_DOWNLOADS) {
-                        _downloadQueue.Dequeue().StartDownloadTask();
-                    }
+            // ReSharper disable once MethodSupportsCancellation
+            Task.Run(() => {
+                try {
+                    _downloadTask = Task.Run(() => {
+                        while (_downloadQueue.Count > 0 && !downloadCancellationToken.IsCancellationRequested) {
+                            if (_downloadQueue.Count(downloadTask => downloadTask.Running()) >= MAX_CONCURRENT_DOWNLOADS) continue;
+                            if (_downloadQueue.TryDequeue(out DownloadTask task)) task.StartDownloadTask();
+                        }
+                    }, downloadCancellationToken);
+                    _downloadTask.Wait(downloadCancellationToken);
+                } catch {
+                    // ignored
+                } finally {
+                    _downloadTask = null;
                 }
             });
         }
 
         public bool IsDownloadQueueEmpty() => _downloadQueue.Count == 0;
 
+        public void ResetDownloadQueue() {
+            foreach (DownloadTask downloadTask in _downloadQueue) {
+                downloadTask.StopDownloadTask();
+            }
+            _downloadQueue = new ConcurrentQueue<DownloadTask>();
+            _bytesDone = 0;
+            _bytesTotal = 0;
+            _bytesRate = 0;
+        }
+
         private static void LogAction(string message) {
             LogEvent?.Invoke(null, message);
         }
 
-        private static void ProgressAction(long change) {
+        private void ProgressAction(long change) {
+            _bytesDone += change;
             _bytesRate += change;
             if (DateTime.Now < _lastReport) return;
             _lastReport = DateTime.Now.AddMilliseconds(100);
@@ -64,21 +86,23 @@ namespace Patching {
             return ftpWebRequest.GetResponse().ContentLength;
         }
 
-        public void UploadFile(string localPath, string remotePath, CancellationToken downloadCancellationToken, Action callBack) {
-            try {
-                LogAction($"File '{ByteSize.FromBytes(new FileInfo(localPath).Length)}'");
-                using (WebClient webClient = new WebClient()) {
-                    downloadCancellationToken.Register(webClient.CancelAsync);
-                    webClient.Credentials = new NetworkCredential(USERNAME, PASSWORD);
-                    webClient.UploadFile(new Uri(remotePath), "STOR", localPath);
+        public static void UploadFile(string localPath, string remotePath, CancellationToken downloadCancellationToken, Action callBack) {
+            Task.Run(() => {
+                try {
+                    LogAction($"File '{ByteSize.FromBytes(new FileInfo(localPath).Length)}'");
+                    using (WebClient webClient = new WebClient()) {
+                        downloadCancellationToken.Register(webClient.CancelAsync);
+                        webClient.Credentials = new NetworkCredential(USERNAME, PASSWORD);
+                        webClient.UploadFile(new Uri(remotePath), "STOR", localPath);
+                    }
+                    LogAction($"Uploaded '{localPath}'");
+                    callBack.Invoke();
+                } catch (Exception exception) {
+                    LogAction($"An error occured uploading '{localPath}'\n{exception}");
+                } finally {
+                    File.Delete(localPath);
                 }
-                LogAction($"Uploaded '{localPath}'");
-                callBack.Invoke();
-            } catch (Exception exception) {
-                LogAction($"An error occured uploading '{localPath}'\n{exception}");
-            } finally {
-                File.Delete(localPath);
-            }
+            }, downloadCancellationToken);
         }
 
         private class DownloadTask {
@@ -98,14 +122,23 @@ namespace Patching {
                 }
             }
 
+            public event EventHandler<long> DownloadProgressEvent;
+
             public void StartDownloadTask() {
                 _downloadTask = Task.Run(() => {
-                    while (true) {
+                    while (!_downloadCancellationToken.IsCancellationRequested) {
                         if (!Download()) continue;
+                        if (_downloadCancellationToken.IsCancellationRequested) break;
                         _callbackAction.Invoke();
                         break;
                     }
                 }, _downloadCancellationToken);
+            }
+
+            public void StopDownloadTask() {
+                if (_downloadTask == null) return;
+                _downloadTask.Dispose();
+                _downloadTask = null;
             }
 
             private bool Download() {
@@ -122,10 +155,9 @@ namespace Patching {
                         using (FileStream fileStream = File.OpenWrite(_localPath)) {
                             using (Stream responseStream = response.GetResponseStream()) {
                                 int count = -1;
-                                while ((uint) count > 0U) {
+                                while ((uint) count > 0U && !_downloadCancellationToken.IsCancellationRequested) {
                                     if (responseStream != null) count = responseStream.Read(buffer, 0, buffer.Length);
-                                    _bytesDone += count;
-                                    ProgressAction(count);
+                                    DownloadProgressEvent.Invoke(this, count);
                                     fileStream.Write(buffer, 0, count);
                                 }
                             }

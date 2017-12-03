@@ -19,7 +19,8 @@ namespace Patching {
         private readonly string _repoLocalPath;
         private readonly string _repoName;
         private ConcurrentBag<RepoAction> _actions;
-        private ConcurrentDictionary<string, string> _deltas;
+
+        private ManualResetEventSlim _deltaWaitHandle, _downloadWaitHandle;
 
         private CancellationTokenSource _downloadCancellationTokenSource;
         private ConcurrentDictionary<string, bool> _processedSignatures;
@@ -27,8 +28,6 @@ namespace Patching {
         private Dictionary<string, string[]> _repoFileDictionary;
 
         private string _repoPath;
-
-        private ManualResetEvent _waitHandle, _downloadWaitHandle;
 
         public RepoClient(string path, string localPath, string name, Action<string> logAction, Action<int, object> progressAction) : base(logAction) {
             _repoPath = path;
@@ -42,7 +41,7 @@ namespace Patching {
 
             _downloadManager = new DownloadManager();
             DownloadManager.LogEvent += (sender, message) => LogAction(message);
-            DownloadManager.ProgressEvent += (sender, progress) => { };
+            DownloadManager.ProgressEvent += (sender, progress) => ProgressAction(progress.Item1, progress.Item2);
         }
 
         public event EventHandler<Exception> ErrorEvent, ErrorNoShutdownEvent;
@@ -58,6 +57,7 @@ namespace Patching {
         }
 
         private void WriteRepoFile() {
+            if (File.Exists(_repoFilePath)) File.Delete(_repoFilePath);
             using (StreamWriter streamWriter = new StreamWriter(File.Create(_repoFilePath))) {
                 foreach (KeyValuePair<string, string[]> addonPair in from pair in _repoFileDictionary orderby pair.Key select pair) {
                     streamWriter.WriteLine($"{addonPair.Key};{addonPair.Value[0]}:{addonPair.Value[1]}:{addonPair.Value[2]}");
@@ -68,7 +68,8 @@ namespace Patching {
 
         public bool CheckLocalRepo(string remoteRepoData, CancellationTokenSource tokenSource) {
             _downloadCancellationTokenSource = tokenSource;
-            _waitHandle = new ManualResetEvent(false);
+            _deltaWaitHandle = new ManualResetEventSlim(false);
+            _downloadWaitHandle = new ManualResetEventSlim(false);
             try {
                 if (!Directory.Exists(_repoLocalPath)) {
                     LogAction($"Creating repo location for {_repoName}");
@@ -87,7 +88,7 @@ namespace Patching {
                                                                                   .Select(repoLine => repoLine.Split(';'))
                                                                                   .ToDictionary(values => values[0], values => values[1].Split(':'));
                 List<Addon> changedAddons = GetChangedAddons(remoteRepoDictionary);
-                LogAction($"{changedAddons.Count} changes");
+                LogAction($"{changedAddons.Count} changed addons");
                 if (changedAddons.Count == 0) {
                     WriteRepoFile();
                     ProgressAction(1, "stop");
@@ -108,36 +109,30 @@ namespace Patching {
                 _progressIndex = 0;
                 ProcessDeletedActions();
 
-                // Process and upload and signatures for modified addons
-                _progressIndex = 0;
-                _processedSignatures = new ConcurrentDictionary<string, bool>();
-                _deltas = new ConcurrentDictionary<string, string>();
-                ProcessModifiedActions();
-
                 // Get dictionary of added files to download with file sizes
-                _downloadWaitHandle = new ManualResetEvent(false);
-                foreach (RepoAction action in _actions.Where(action => action is RepoAction.AddedAction)) {
-                    _downloadManager.AddDownloadTask(Path.Combine(action.Addon.FolderPath, action.AddonFile), $"{_repoName}/{action.Addon.Name}/{action.AddonFile}",
-                                                     _downloadCancellationTokenSource.Token, () => {
-                                                         if (_actions.Last(lastAction => lastAction is RepoAction.AddedAction).Equals(action)) _downloadWaitHandle.Set();
-                                                     });
+                _progressIndex = 0;
+                List<RepoAction.AddedAction> addedActions = _actions.OfType<RepoAction.AddedAction>().ToList();
+                if (addedActions.Count > 0) {
+                    foreach (RepoAction action in _actions.Where(action => action is RepoAction.AddedAction)) {
+                        _downloadManager.AddDownloadTask(Path.Combine(action.Addon.FolderPath, action.AddonFile), $"{_repoName}/{action.Addon.Name}/{action.AddonFile}",
+                                                         _downloadCancellationTokenSource.Token, () => {
+                                                             addedActions.Remove((RepoAction.AddedAction) action);
+                                                             if (addedActions.Count == 0) _downloadWaitHandle.Set();
+                                                         });
+                    }
+                    _downloadManager.ProcessDownloadQueue(_downloadCancellationTokenSource.Token);
+                } else {
+                    _downloadWaitHandle.Set();
                 }
-                _downloadManager.ProcessDownloadQueue();
+
+                // Process and upload and signatures for modified addons
+                _processedSignatures = new ConcurrentDictionary<string, bool>();
+                ProcessModifiedActions();
+                if (_processedSignatures.Count == 0) _deltaWaitHandle.Set();
 
                 // Wait for deltas to finish processing
-                _waitHandle.WaitOne();
-                _waitHandle = new ManualResetEvent(false);
-                // Get dictionary of modified files to download with file sizes
-                foreach (KeyValuePair<string, string> delta in _deltas) {
-                    _downloadManager.AddDownloadTask(delta.Key, $"{_repoName}/{delta.Value}", _downloadCancellationTokenSource.Token, () => {
-                        ProcessDelta(delta.Key, $"{_repoName}/{delta.Value}");
-                        DeleteEvent?.Invoke(this, Path.Combine(_repoName, ".repo", delta.Value));
-                        if (_deltas.Last().Equals(delta)) _waitHandle.Set();
-                    });
-                }
-                if (!_downloadManager.IsDownloadQueueEmpty()) _downloadManager.ProcessDownloadQueue();
-                _downloadWaitHandle.WaitOne();
-                _waitHandle.WaitOne();
+                _downloadWaitHandle.Wait(_downloadCancellationTokenSource.Token);
+                _deltaWaitHandle.Wait(_downloadCancellationTokenSource.Token);
 
                 // Validate invalidated addons and write repo file
                 HashSet<Addon> invalidatedAddons = new HashSet<Addon>();
@@ -162,6 +157,7 @@ namespace Patching {
                 return true;
             } finally {
                 ProgressAction(1, "stop");
+                _downloadManager.ResetDownloadQueue();
                 CleanRepo();
             }
         }
@@ -310,25 +306,20 @@ namespace Patching {
         }
 
         private void ProcessModifiedActions() {
-            ConcurrentDictionary<string, string> signatures = new ConcurrentDictionary<string, string>();
-            int modifiedActions = _actions.Count(action => action is RepoAction.ModifiedAction);
             Parallel.ForEach(_actions.Where(action => action is RepoAction.ModifiedAction),
                              new ParallelOptions {MaxDegreeOfParallelism = 20, CancellationToken = _downloadCancellationTokenSource.Token}, action => {
-                                 ProgressAction((float) _progressIndex++ / modifiedActions, "Calculating signatures");
-                                 signatures.TryAdd(Path.Combine(action.Addon.FolderPath, action.AddonFile),
-                                                   action.Addon.GenerateSignature(Path.Combine(action.Addon.FolderPath, action.AddonFile)));
+                                 string addonFile = Path.Combine(action.Addon.FolderPath, action.AddonFile);
+                                 string remoteFile = Path.GetRandomFileName();
+                                 DownloadManager.UploadFile(action.Addon.GenerateSignature(addonFile), $"ftp://uk-sf.com/{_repoName}/.repo/{remoteFile}",
+                                                            _downloadCancellationTokenSource.Token, () => {
+                                                                _processedSignatures.TryAdd(Path.Combine(action.Addon.FolderPath, action.AddonFile), false);
+                                                                UploadEvent?.Invoke(this,
+                                                                                    new Tuple<string, string, string, string>(_repoName, addonFile,
+                                                                                                                              addonFile
+                                                                                                                                  .Replace($"{_repoPath}{Path.DirectorySeparatorChar}",
+                                                                                                                                           ""), remoteFile));
+                                                            });
                              });
-            _progressIndex = 1;
-            Parallel.ForEach(signatures, new ParallelOptions {MaxDegreeOfParallelism = 5, CancellationToken = _downloadCancellationTokenSource.Token}, signature => {
-                string remotePath = $"ftp://uk-sf.com/{_repoName}/.repo/{Path.GetRandomFileName()}";
-                _downloadManager.UploadFile(signature.Value, remotePath, _downloadCancellationTokenSource.Token, () => {
-                    _processedSignatures.TryAdd(signature.Key, false);
-                    UploadEvent?.Invoke(this,
-                                        new Tuple<string, string, string, string>(_repoName, signature.Key, signature.Key.Replace($"{_repoPath}{Path.DirectorySeparatorChar}", ""),
-                                                                                  remotePath));
-                });
-                ProgressAction((float) _progressIndex++ / signatures.Count, "Uploading signatures");
-            });
         }
 
         private void ProcessDeletedActions() {
@@ -345,13 +336,15 @@ namespace Patching {
                 string[] parts = response.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries);
                 string addonPath = parts[0];
                 string remoteDeltaPath = parts[1];
-                _processedSignatures.TryUpdate(addonPath, true, false);
-                _deltas.TryAdd(addonPath, $".repo/{remoteDeltaPath}");
-                if (_processedSignatures.Values.All(state => state)) {
-                    _waitHandle.Set();
-                }
+                _downloadManager.AddDownloadTask($"{_repoLocalPath}/{remoteDeltaPath}", $"{_repoName}/.repo/{remoteDeltaPath}", _downloadCancellationTokenSource.Token, () => {
+                    ProcessDelta(addonPath, $"{_repoLocalPath}/{remoteDeltaPath}");
+                    DeleteEvent?.Invoke(this, Path.Combine(_repoName, ".repo", remoteDeltaPath));
+                    _processedSignatures.TryRemove(addonPath, out bool unused);
+                    if (_processedSignatures.IsEmpty) _deltaWaitHandle.Set();
+                });
+                if (!_downloadManager.IsDownloadQueueEmpty()) _downloadManager.ProcessDownloadQueue(_downloadCancellationTokenSource.Token);
             } catch (Exception exception) {
-                LogAction($"An error occured processing delta '{response}'\n{exception}");
+                LogAction($"An error occured queuing delta '{response}'\n{exception}");
                 ErrorNoShutdownEvent?.Invoke(this, exception);
             }
         }
@@ -379,17 +372,18 @@ namespace Patching {
 
         public IEnumerable<string> GetRepoMods() => File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList();
 
-        public void MoveRepo(string newLocation, CancellationToken cancellationToken) {
+        public string MoveRepo(string newLocation, CancellationToken cancellationToken) {
             try {
                 _repoFileDictionary.Clear();
                 Dictionary<string, string[]> addonFolders =
                     File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
                 int currentIndex = 0;
-                foreach (KeyValuePair<string, string[]> addonPair in addonFolders) {
-                    if (!Directory.Exists(addonPair.Key)) return;
+                foreach (KeyValuePair<string, string[]> addonPair in addonFolders.Where(addonPair => Directory.Exists(addonPair.Key))) {
+                    if (cancellationToken.IsCancellationRequested) return _repoPath;
                     ProgressAction((float) currentIndex / addonFolders.Count, $"Moving '{Path.GetFileName(addonPair.Key)}'");
                     IEnumerable<IGrouping<string, string>> files = Directory.EnumerateFiles(addonPair.Key, "*", SearchOption.AllDirectories).GroupBy(Path.GetDirectoryName);
                     foreach (IGrouping<string, string> folder in files) {
+                        if (cancellationToken.IsCancellationRequested) return _repoPath;
                         string targetFolder = folder.Key.Replace(_repoPath, newLocation);
                         Directory.CreateDirectory(targetFolder);
                         int fileIndex = 0;
@@ -404,11 +398,13 @@ namespace Patching {
                     Directory.Delete(addonPair.Key, true);
                     currentIndex++;
                 }
-                CleanRepo();
                 _repoPath = newLocation;
                 WriteRepoFile();
+            } catch (OperationCanceledException) { } finally {
+                CleanRepo();
                 ProgressAction(1, "stop");
-            } catch (OperationCanceledException) { }
+            }
+            return _repoPath;
         }
 
         private void CleanRepo() {
@@ -426,7 +422,8 @@ namespace Patching {
             }
             // ReSharper disable once LoopCanBePartlyConvertedToQuery
             foreach (string directory in Directory.GetDirectories(_repoPath, "*", SearchOption.AllDirectories)
-                                                  .Where(directory => Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Length == 0)) {
+                                                  .Where(directory => Directory.Exists(directory) &&
+                                                                      Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Length == 0)) {
                 if (Directory.Exists(directory)) {
                     Directory.Delete(directory, true);
                 }

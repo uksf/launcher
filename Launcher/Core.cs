@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -129,6 +130,7 @@ namespace UKSF_Launcher {
 
                 string error = exception.Message + "\n" + exception.StackTrace;
                 LogSeverity(Severity.ERROR, error);
+                SendReport(error);
                 MessageBoxResult result = DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error,
                                                             DialogWindow.DialogBoxType.OK, "https://github.com/uksf/launcher-issues/issues/new");
                 if (result == MessageBoxResult.OK) {
@@ -145,9 +147,19 @@ namespace UKSF_Launcher {
             Application.Current.Dispatcher.Invoke(() => {
                 string error = exception.Message + "\n" + exception.StackTrace;
                 LogSeverity(Severity.ERROR, error);
+                SendReport(error);
                 DialogWindow.Show("Error", "Something went wrong.\nPlease create an issue with the below error here: ::\n\n" + error, DialogWindow.DialogBoxType.OK,
                                   "https://github.com/uksf/launcher-issues/issues/new");
             });
+        }
+
+        private static void SendReport(string message) {
+            MailMessage mail = new MailMessage("launcher-error@uk-sf.com", "contact.tim.here@gmail.com");
+            SmtpClient client = new SmtpClient {Port = 25, DeliveryMethod = SmtpDeliveryMethod.Network, UseDefaultCredentials = false, Host = "smtp.google.com"};
+            mail.Subject = $"Launcher Error - {DateTime.Now}";
+            mail.Body = $"{PROFILE} - {DateTime.Now} - {VERSION}\n {message}";
+            mail.Attachments.Add(new Attachment(GetLogFilePath()));
+            client.Send(mail);
         }
     }
 }

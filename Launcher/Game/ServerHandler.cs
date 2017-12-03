@@ -28,7 +28,7 @@ namespace UKSF_Launcher.Game {
 
         private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
             MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
-            new Task(async () => await SendDelayedServerMessage("reporequest uksf", 500)).Start();
+            new Task(async () => await SendDelayedServerMessage("reporequest uksf", 100)).Start();
         }
 
         private static async Task SendDelayedServerMessage(string message, int delay) {
@@ -75,18 +75,22 @@ namespace UKSF_Launcher.Game {
                 case "repodata":
                     if (_repoCheckTask != null) return;
                     try {
-                        _repoCheckTask = new Task(() => {
-                            Core.CancellationTokenSource = new CancellationTokenSource();
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                            while (Global.REPO.CheckLocalRepo(commandArguments, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
+                        Task.Run(() => {
+                            _repoCheckTask = Task.Run(() => {
+                                Core.CancellationTokenSource = new CancellationTokenSource();
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                            }
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
-                            MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
-                            Core.CancellationTokenSource.Cancel();
+                                while (Global.REPO.CheckLocalRepo(commandArguments, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
+                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
+                                        State = false
+                                    });
+                                }
+                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
+                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
+                                Core.CancellationTokenSource.Cancel();
+                            });
+                            _repoCheckTask.Wait();
                             _repoCheckTask = null;
                         });
-                        _repoCheckTask.Start();
                     } catch (Exception exception) {
                         LogHandler.LogSeverity(Global.Severity.ERROR, $"Failed to process remote repo\n{exception}");
                     }

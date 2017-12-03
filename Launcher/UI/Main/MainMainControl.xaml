@@ -34,7 +34,7 @@
                    VerticalAlignment="Bottom" TextAlignment="Center" Margin="0,0,0,15"
                    Foreground="{StaticResource Uksf.Foreground}" Panel.ZIndex="2"
                    Style="{StaticResource Uksf.TextBlock}" />
-        <Button x:Name="MainMainControlRefreshCancelButton" 
+        <Button x:Name="MainMainControlControllerButton" 
                 Content="Refresh" Margin="0,0,0,5" Padding="0"
                 Click="MainMainControlRefreshCancelButton_Click"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom" 
