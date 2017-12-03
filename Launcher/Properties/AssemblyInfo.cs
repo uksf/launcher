@@ -14,7 +14,7 @@ using System.Windows;
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.305")]
+[assembly: AssemblyVersion("1.0.0.320")]
 [assembly: AssemblyInformationalVersion(":::")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
