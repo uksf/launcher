@@ -370,7 +370,7 @@ namespace Patching {
             }
         }
 
-        public IEnumerable<string> GetRepoMods() => File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList();
+        public IEnumerable<string> GetRepoMods() => File.Exists(_repoFilePath) ? File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList() : new List<string>();
 
         public string MoveRepo(string newLocation, CancellationToken cancellationToken) {
             try {
