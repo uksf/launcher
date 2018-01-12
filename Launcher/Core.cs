@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Patching;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using UKSF_Launcher.Game;
 using UKSF_Launcher.UI.Dialog;
 using UKSF_Launcher.UI.FTS;
@@ -61,6 +63,8 @@ namespace UKSF_Launcher {
                 REPO.UploadEvent += (sender, requestTuple) => ServerHandler.SendDeltaRequest(requestTuple.Item1, requestTuple.Item2, requestTuple.Item3, requestTuple.Item4);
                 REPO.DeleteEvent += (sender, path) => ServerHandler.SendDeltaDelete(path);
                 repoBackgroundWorker.RunWorkerAsync();
+
+                SendReport("test");
             } catch (Exception exception) {
                 Error(exception);
             }
@@ -153,13 +157,14 @@ namespace UKSF_Launcher {
             });
         }
 
-        private static void SendReport(string message) {
-            MailMessage mail = new MailMessage("launcher-error@uk-sf.com", "contact.tim.here@gmail.com");
-            SmtpClient client = new SmtpClient {Port = 25, DeliveryMethod = SmtpDeliveryMethod.Network, UseDefaultCredentials = false, Host = "smtp.google.com"};
-            mail.Subject = $"Launcher Error - {DateTime.Now}";
-            mail.Body = $"{PROFILE} - {DateTime.Now} - {VERSION}\n {message}";
-            mail.Attachments.Add(new Attachment(GetLogFilePath()));
-            client.Send(mail);
+        private static async void SendReport(string message) {
+            SendGridClient client = new SendGridClient("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");
+            EmailAddress from = new EmailAddress("noreply@uk-sf.com", "NOREPLY");
+            EmailAddress to = new EmailAddress("contact.tim.here@gmail.com");
+            SendGridMessage email = MailHelper.CreateSingleEmail(from, to, $"Launcher Error - {DateTime.Now}", $"{PROFILE} - {DateTime.Now} - {VERSION}\n\n {message}",
+                                                                 $"{PROFILE} - {DateTime.Now} - {VERSION}\n\n {message}");
+            email.Attachments = new List<Attachment> {new Attachment {Filename = GetLogFilePath()}};
+            await client.SendEmailAsync(email);
         }
     }
 }

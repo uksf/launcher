@@ -6,6 +6,10 @@ using System.Threading;
 
 namespace Updater {
     internal static class Program {
+
+        private const string URL = "arma.uk-sf.com";
+
+
         private static void Main() {
             Process[] processes = Process.GetProcessesByName("Launcher");
             while (processes.Length > 0) {
@@ -42,10 +46,10 @@ namespace Updater {
 
             using (WebClient webClient = new WebClient()) {
                 webClient.Credentials = new NetworkCredential("launcherdeploy", "sikrit");
-                webClient.DownloadFile("ftp://uk-sf.com/release/Launcher.exe", launcher);
-                webClient.DownloadFile("ftp://uk-sf.com/release/Patching.dll", patching);
-                webClient.DownloadFile("ftp://uk-sf.com/release/Network.dll", network);
-                webClient.DownloadFile("ftp://uk-sf.com/release/FastRsync.dll", fastrsync);
+                webClient.DownloadFile($"ftp://{URL}/release/Launcher.exe", launcher);
+                webClient.DownloadFile($"ftp://{URL}/release/Patching.dll", patching);
+                webClient.DownloadFile($"ftp://{URL}/release/Network.dll", network);
+                webClient.DownloadFile($"ftp://{URL}/release/FastRsync.dll", fastrsync);
             }
 
             Process launcherProcess = new Process {

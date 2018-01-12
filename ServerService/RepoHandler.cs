@@ -10,7 +10,7 @@ namespace ServerService {
         public static bool Create(string name, Action<string> progress) {
             try {
                 RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                progress.Invoke($"Creating '{repo.RepoName}' repository");
+                progress.Invoke($"Creating '{name}' repository");
                 repo.CreateRepo();
                 progress.Invoke("Creation complete");
             } catch (Exception exception) {
@@ -23,7 +23,7 @@ namespace ServerService {
         public static bool Update(string name, Action<string> progress) {
             try {
                 RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                progress.Invoke($"Updating '{repo.RepoName}' repository");
+                progress.Invoke($"Updating '{name}' repository");
                 repo.UpdateRepo();
                 progress.Invoke("Update complete");
             } catch (Exception exception) {

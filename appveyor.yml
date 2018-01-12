@@ -48,14 +48,16 @@ artifacts:
     name: Deploy
   - path: release\ServerService.exe
     name: ServerService
+  - path: release\ServerConsole.exe
+    name: ServerConsole
 deploy:
 - provider: FTP
-  host: ftp.uk-sf.com
+  host: ftp.arma.uk-sf.com
   protocol: ftp
   username: launcherdeploy
   password:
     secure: YibxKCtSgR09TYdeKxMzrA==
-  artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,Deploy,ServerService
+  artifact: Setup,Launcher,Patching,Network,FastRsync,Updater,Deploy,ServerService,ServerConsole
   on:
     branch: release
 after_deploy:

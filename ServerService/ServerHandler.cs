@@ -7,10 +7,10 @@ using Network;
 namespace ServerService {
     internal static class ServerHandler {
         public static readonly List<Server> SERVERS = new List<Server> {
-            new Server("Primary Server", "uk-sf.com", 2303, "l85", false),
-            new Server("Secondary Server", "uk-sf.com", 2333, "l85", false),
-            new Server("Tertiary Server", "uk-sf.com", 2343, "l85", false),
-            new Server("Test Server", "uk-sf.com", 2353, "hi", false)
+            new Server("Primary Server", "arma.uk-sf.com", 2303, "l85", false),
+            new Server("Secondary Server", "arma.uk-sf.com", 2333, "l85", false),
+            new Server("Tertiary Server", "arma.uk-sf.com", 2343, "l85", false),
+            new Server("Test Server", "arma.uk-sf.com", 2353, "hi", false)
         };
 
         public static bool ServerRunning;

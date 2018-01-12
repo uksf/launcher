@@ -10,13 +10,13 @@
                    HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="165" Width="480"
                    Foreground="{StaticResource Uksf.Grey}" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button x:Name="DialogMainControlButtonOk" Content="OK" Click="DialogMainControlButton_Click"
-                    Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
-            <Button x:Name="DialogMainControlButtonCancel" Content="Cancel" Click="DialogMainControlButton_Click"
-                    Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
             <Button x:Name="DialogMainControlButtonYes" Content="Yes" Click="DialogMainControlButton_Click"
                     Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
             <Button x:Name="DialogMainControlButtonNo" Content="No" Click="DialogMainControlButton_Click"
+                    Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
+            <Button x:Name="DialogMainControlButtonOk" Content="OK" Click="DialogMainControlButton_Click"
+                    Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
+            <Button x:Name="DialogMainControlButtonCancel" Content="Cancel" Click="DialogMainControlButton_Click"
                     Margin="0,0,10,10" Style="{StaticResource Uksf.DialogButton}" />
         </StackPanel>
     </Grid>

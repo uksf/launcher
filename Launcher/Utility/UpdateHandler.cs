@@ -20,7 +20,7 @@ namespace UKSF_Launcher.Utility {
 
             try {
                 WebClient webClient = new WebClient();
-                string[] versionString = webClient.DownloadString("http://www.uk-sf.com/launcher/version").Split(':');
+                string[] versionString = webClient.DownloadString("http://arma.uk-sf.com/launcher/version").Split(':');
 
                 Version latestVersion = Version.Parse(versionString[0]);
                 bool force = HandleFlags(versionString, currentFlags);
@@ -63,7 +63,7 @@ namespace UKSF_Launcher.Utility {
         private static void Update() {
             using (WebClient webClient = new WebClient()) {
                 webClient.Credentials = new NetworkCredential("launcherdeploy", "sikrit");
-                webClient.DownloadFile("ftp://uk-sf.com/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
+                webClient.DownloadFile("ftp://arma.uk-sf.com/Updater.exe", Path.Combine(Environment.CurrentDirectory, "Updater.exe"));
             }
             Process updater = new Process();
             try {

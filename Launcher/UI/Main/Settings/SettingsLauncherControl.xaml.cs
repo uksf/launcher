@@ -67,30 +67,40 @@ namespace UKSF_Launcher.UI.Main.Settings {
             if (MOD_LOCATION != SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text) {
                 if (GAME_PROCESS == null) {
                     if (_repoMoveTask == null) {
-                        MessageBoxResult result =
-                            DialogWindow.Show("Move repo?",
-                                              $"Are you sure you want to move the repo mods from\n\n'{MOD_LOCATION}'\nto\n'{SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text}'",
-                                              DialogWindow.DialogBoxType.YES_NO);
-                        if (result == MessageBoxResult.Yes) {
-                            Task.Run(() => {
-                                _repoMoveTask = Task.Run(() => {
-                                    MainWindow.Instance.MainTitleBarControl.MainTitleBarControlButtonSettings_Click(this, new RoutedEventArgs());
-                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
-                                        State = false
-                                    });
-                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
-                                    Core.CancellationTokenSource = new CancellationTokenSource();
-                                    string finalPath = REPO.MoveRepo(SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text,
-                                                                     Core.CancellationTokenSource.Token);
-                                    ServerHandler.SendServerMessage("reporequest uksf");
-                                    MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
-                                    MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", finalPath);
+                        string newLocation = SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text;
+                        if (!GameHandler.CheckDriveSpace(SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
+                            DialogWindow.Show("Drive Space", $"Not enough drive space at '{newLocation}'.\n\nPlease allow {REQUIREDSPACE} of space.",
+                                              DialogWindow.DialogBoxType.OK);
+                        } else {
+                            MessageBoxResult result =
+                                DialogWindow.Show("Move repo?",
+                                                  $"Are you sure you want to move the repo mods from\n\n'{MOD_LOCATION}'\n to\n'{newLocation}'\n\n\nSelect 'No' to change the repo location without moving mod files",
+                                                  DialogWindow.DialogBoxType.YES_NO_CANCEL);
+                            if (result != MessageBoxResult.Cancel) {
+                                bool moveRepo = result != MessageBoxResult.No;
+                                Core.CancellationTokenSource = new CancellationTokenSource();
+                                Task.Run(() => {
+                                    _repoMoveTask = Task.Run(() => {
+                                        MainWindow.Instance.MainTitleBarControl.MainTitleBarControlButtonSettings_Click(this, new RoutedEventArgs());
+                                        MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
+                                            State = false
+                                        });
+                                        MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {
+                                            Value = 1
+                                        });
+                                        string finalPath = REPO.MoveRepo(newLocation, moveRepo, Core.CancellationTokenSource.Token);
+                                        ServerHandler.SendServerMessage("reporequest uksf");
+                                        MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
+                                            State = true
+                                        });
+                                        MOD_LOCATION = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", finalPath);
+                                        Dispatcher.Invoke(() => SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text = MOD_LOCATION);
+                                    }, Core.CancellationTokenSource.Token);
+                                    _repoMoveTask.Wait();
+                                    _repoMoveTask = null;
                                 });
-                                _repoMoveTask.Wait();
-                                _repoMoveTask = null;
-                            });
+                            }
                         }
-                        SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text = MOD_LOCATION;
                     }
                 }
             }

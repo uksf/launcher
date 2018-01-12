@@ -50,6 +50,7 @@ namespace Deploy {
                 serviceController.Refresh();
             }
             File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerService.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerService.exe"), true);
+            File.Copy(Path.Combine(Environment.CurrentDirectory, "ServerConsole.exe"), Path.Combine(Environment.CurrentDirectory, "..", "service", "ServerConsole.exe"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "Patching.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Patching.dll"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "Network.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "Network.dll"), true);
             File.Copy(Path.Combine(Environment.CurrentDirectory, "FastRsync.dll"), Path.Combine(Environment.CurrentDirectory, "..", "service", "FastRsync.dll"), true);

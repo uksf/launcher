@@ -13,7 +13,8 @@ namespace UKSF_Launcher.UI.Dialog {
         public enum DialogBoxType {
             OK,
             OK_CANCEL,
-            YES_NO
+            YES_NO,
+            YES_NO_CANCEL
         }
 
         private static DialogWindow _dialog;
@@ -46,6 +47,7 @@ namespace UKSF_Launcher.UI.Dialog {
                 case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK);
                 case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel);
                 case DialogBoxType.YES_NO: return Show(title, message, MessageBoxButton.YesNo);
+                case DialogBoxType.YES_NO_CANCEL: return Show(title, message, MessageBoxButton.YesNoCancel);
                 default: return Show(title, message, MessageBoxButton.OKCancel);
             }
         }
@@ -63,6 +65,7 @@ namespace UKSF_Launcher.UI.Dialog {
                 case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK, link);
                 case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel, link);
                 case DialogBoxType.YES_NO: return Show(title, message, MessageBoxButton.YesNo, link);
+                case DialogBoxType.YES_NO_CANCEL: return Show(title, message, MessageBoxButton.YesNoCancel, link);
                 default: return Show(title, message, MessageBoxButton.OKCancel, link);
             }
         }
@@ -80,6 +83,7 @@ namespace UKSF_Launcher.UI.Dialog {
                 case DialogBoxType.OK: return Show(title, message, MessageBoxButton.OK, "", control);
                 case DialogBoxType.OK_CANCEL: return Show(title, message, MessageBoxButton.OKCancel, "", control);
                 case DialogBoxType.YES_NO: return Show(title, message, MessageBoxButton.YesNo, "", control);
+                case DialogBoxType.YES_NO_CANCEL: return Show(title, message, MessageBoxButton.YesNoCancel, "", control);
                 default: return Show(title, message, MessageBoxButton.OKCancel, "", control);
             }
         }
@@ -147,7 +151,12 @@ namespace UKSF_Launcher.UI.Dialog {
                     _dialog.DialogMainControl.DialogMainControlButtonYes.Visibility = Visibility.Visible;
                     _dialog.DialogMainControl.DialogMainControlButtonNo.Visibility = Visibility.Visible;
                     break;
-                case MessageBoxButton.YesNoCancel: break;
+                case MessageBoxButton.YesNoCancel:
+                    _dialog.DialogMainControl.DialogMainControlButtonOk.Visibility = Visibility.Collapsed;
+                    _dialog.DialogMainControl.DialogMainControlButtonCancel.Visibility = Visibility.Visible;
+                    _dialog.DialogMainControl.DialogMainControlButtonYes.Visibility = Visibility.Visible;
+                    _dialog.DialogMainControl.DialogMainControlButtonNo.Visibility = Visibility.Visible;
+                    break;
             }
         }
 

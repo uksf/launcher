@@ -53,7 +53,7 @@ namespace Network {
 
         private bool Connect() {
             try {
-                IAsyncResult result = _serverSocket.BeginConnect(Dns.GetHostAddresses("uk-sf.com")[0], 48900, EndConnectCallback, _serverSocket);
+                IAsyncResult result = _serverSocket.BeginConnect(Dns.GetHostAddresses("arma.uk-sf.com")[0], 48900, EndConnectCallback, _serverSocket);
                 result.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds(250));
                 return true;
             } catch (Exception) {

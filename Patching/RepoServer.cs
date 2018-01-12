@@ -16,11 +16,11 @@ namespace Patching {
         private readonly string _repoFilePath;
 
         private readonly string _repoPath;
-        public readonly string RepoName;
+        private readonly string _repoName;
 
         public RepoServer(string path, string name, Action<string> logAction) : base(logAction) {
             _repoPath = path;
-            RepoName = name;
+            _repoName = name;
             _repoFilePath = Path.Combine(_repoPath, ".repo", ".repo.urf");
             Directory.CreateDirectory(Path.GetDirectoryName(_repoFilePath));
             _repoFileDictionary = new Dictionary<string, string>();
@@ -72,7 +72,7 @@ namespace Patching {
 
         public void UpdateRepo() {
             if (!Directory.Exists(_repoPath)) {
-                throw new Exception($"Repo '{RepoName}' does not exist");
+                throw new Exception($"Repo '{_repoName}' does not exist");
             }
             DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(_repoPath, ".repo"));
             if (!repoDirectory.Exists) {
@@ -132,7 +132,7 @@ namespace Patching {
 
         public void GetRepoData() {
             if (!Directory.Exists(_repoPath)) {
-                throw new Exception($"Repo '{RepoName}' does not exist");
+                throw new Exception($"Repo '{_repoName}' does not exist");
             }
             DirectoryInfo repoDirectory = new DirectoryInfo(Path.Combine(_repoPath, ".repo"));
             if (!repoDirectory.Exists) {

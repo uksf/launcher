@@ -101,7 +101,7 @@ namespace UKSF_Launcher.Game {
                 } else if (lines[index].Contains("unitId=")) {
                     lines[index] = @"	unitId=-1;";
                 } else if (lines[index].Contains("squad=")) {
-                    lines[index] = @"	squad=""http://uk-sf.com/squadtag/A3/squad.xml"";";
+                    lines[index] = @"	squad=""http://arma.uk-sf.com/squadtag/A3/squad.xml"";";
                 }
             }
             File.WriteAllLines(profile.FilePath, lines);

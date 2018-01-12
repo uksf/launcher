@@ -78,15 +78,15 @@ namespace UKSF_Launcher.Game {
                         Task.Run(() => {
                             _repoCheckTask = Task.Run(() => {
                                 Core.CancellationTokenSource = new CancellationTokenSource();
+                                MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 1});
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = false});
-                                while (Global.REPO.CheckLocalRepo(commandArguments, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
+                                while (!Global.REPO.CheckLocalRepo(commandArguments, Core.CancellationTokenSource) && !Core.CancellationTokenSource.IsCancellationRequested) {
                                     MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {
                                         State = false
                                     });
                                 }
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.BoolRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_PLAY_EVENT) {State = true});
                                 MainWindow.Instance.MainMainControl.RaiseEvent(new SafeWindow.IntRoutedEventArgs(MainMainControl.MAIN_MAIN_CONTROL_STATE_EVENT) {Value = 0});
-                                Core.CancellationTokenSource.Cancel();
                             });
                             _repoCheckTask.Wait();
                             _repoCheckTask = null;
