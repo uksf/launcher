@@ -2,7 +2,7 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define BUILDPATH = "../release"?>
-  <?define VERSION="!(bind.FileVersion.UKSF Launcher.exe)"?>
+  <?define VERSION="!(bind.FileVersion.UKSFLauncher.exe)"?>
 
   <Product Id="*" Name="UKSF Launcher" Language="1033" Version="$(var.VERSION)" Manufacturer="UKSF" UpgradeCode="7B14E8C8-502D-4457-DD69-9D23A4AAD947">
     <Package Id="*" Description="UKSF Launcher" Manufacturer="UKSF" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -37,7 +37,7 @@
     </Directory>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="ProductFiles" Guid="13221C4A-910E-4121-A9A7-DDFC5253E370" Win64="yes">
-        <File Id="UKSF Launcher.exe" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF Launcher.exe" />
+        <File Id="UKSFLauncher.exe" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF Launcher.exe" />
         <File Id="UKSF.Launcher.Patching.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.Patching.dll" />
         <File Id="UKSF.Launcher.Network.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.Network.dll" />
         <File Id="UKSF.Launcher.FastRsync.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.FastRsync.dll" />
@@ -48,7 +48,7 @@
     </ComponentGroup>
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="00DCCF15-5D73-4F6E-9DB9-F5CDA7C1545F">
-        <Shortcut Id="ApplicationStartMenuShortcut" Name="UKSF Launcher" Description="UKSF Launcher" Target="[#UKSF Launcher.exe]" WorkingDirectory="INSTALLFOLDER"/>
+        <Shortcut Id="ApplicationStartMenuShortcut" Name="UKSF Launcher" Description="UKSF Launcher" Target="[#UKSFLauncher.exe]" WorkingDirectory="INSTALLFOLDER"/>
         <Shortcut Id="UninstallProduct" Name="Uninstall UKSF Launcher" Description="Uninstalls UKSF Launcher" Target="[System64Folder]msiexec.exe" Arguments="/x [ProductCode]"/>
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Microsoft\UKSF Launcher" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
