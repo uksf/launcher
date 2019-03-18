@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.797")]
-[assembly: AssemblyFileVersion("1.0.0.797")]
+[assembly: AssemblyVersion("1.0.0.798")]
+[assembly: AssemblyFileVersion("1.0.0.798")]
 
 [assembly: ComVisible(false)]
 
