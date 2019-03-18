@@ -2,7 +2,7 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define BUILDPATH = "../release"?>
-  <?define VERSION="!(bind.FileVersion.Launcher.exe)"?>
+  <?define VERSION="!(bind.FileVersion.UKSF Launcher.exe)"?>
 
   <Product Id="*" Name="UKSF Launcher" Language="1033" Version="$(var.VERSION)" Manufacturer="UKSF" UpgradeCode="7B14E8C8-502D-4457-DD69-9D23A4AAD947">
     <Package Id="*" Description="UKSF Launcher" Manufacturer="UKSF" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -17,7 +17,7 @@
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <UIRef Id="WixUI_InstallDir" />
 
-    <Icon Id="icon.exe" SourceFile="..\Launcher\light.ico" />
+    <Icon Id="icon.exe" SourceFile="..\UKSF.Launcher\light.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon.exe" />
 
     <WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\logo.png" />
@@ -37,10 +37,10 @@
     </Directory>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="ProductFiles" Guid="13221C4A-910E-4121-A9A7-DDFC5253E370" Win64="yes">
-        <File Id="Launcher.exe" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF Launcher.exe" />
-        <File Id="Patching.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\Patching.dll" />
-        <File Id="Network.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\Network.dll" />
-        <File Id="FastRsync.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\FastRsync.dll" />
+        <File Id="UKSF Launcher.exe" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF Launcher.exe" />
+        <File Id="UKSF.Launcher.Patching.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.Patching.dll" />
+        <File Id="UKSF.Launcher.Network.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.Network.dll" />
+        <File Id="UKSF.Launcher.FastRsync.dll" ProcessorArchitecture="x64" Source="$(var.BUILDPATH)\UKSF.Launcher.FastRsync.dll" />
         <File Id="System.Data.HashFunction.Core.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.Core.dll" />
         <File Id="System.Data.HashFunction.Interfaces.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.Interfaces.dll" />
         <File Id="System.Data.HashFunction.xxHash.dll" Source="$(var.BUILDPATH)\System.Data.HashFunction.xxHash.dll" />
