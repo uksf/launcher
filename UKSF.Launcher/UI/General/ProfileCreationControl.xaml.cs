@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using UKSF.Launcher.Game;
 
 namespace UKSF.Launcher.UI.General {

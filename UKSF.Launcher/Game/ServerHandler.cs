@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,15 +14,15 @@ namespace UKSF.Launcher.Game {
     public static class ServerHandler {
         private static Task repoCheckTask;
 
-        private static ServerSocket serverSocket;
+        //private static ServerSocket serverSocket;
         public static readonly Server NO_SERVER = new Server("No Server", "", 0, "", false);
 
         public static void StartServerHandler() {
-            serverSocket = new ServerSocket();
-            serverSocket.ServerLogEvent += ServerMessageLogCallback;
-            serverSocket.ServerCommandEvent += ServerMessageCallback;
-            serverSocket.ServerConnectedEvent += ServerSocketOnServerConnectedEvent;
-            serverSocket.AutoResetEvent.WaitOne();
+//            serverSocket = new ServerSocket();
+//            serverSocket.ServerLogEvent += ServerMessageLogCallback;
+//            serverSocket.ServerCommandEvent += ServerMessageCallback;
+//            serverSocket.ServerConnectedEvent += ServerSocketOnServerConnectedEvent;
+//            serverSocket.AutoResetEvent.WaitOne();
         }
 
         private static void ServerSocketOnServerConnectedEvent(object sender, string unused) {
@@ -36,15 +36,15 @@ namespace UKSF.Launcher.Game {
         }
 
         public static void SendServerMessage(string message) {
-            serverSocket.SendMessage(message);
+//            serverSocket.SendMessage(message);
         }
 
         public static void SendDeltaRequest(string name, string path, string relativePath, string remotePath) {
-            serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltarequest {name}::{path}::{relativePath}::{remotePath}::end"));
+//            serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltarequest {name}::{path}::{relativePath}::{remotePath}::end"));
         }
 
         internal static void SendDeltaDelete(string path) {
-            serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltadelete {path}::end"));
+//            serverSocket.SendMessage(Encoding.ASCII.GetBytes($"deltadelete {path}::end"));
         }
 
         private static void ServerMessageCallback(object sender, string message) {
@@ -116,8 +116,8 @@ namespace UKSF.Launcher.Game {
         }
 
         public static void Stop() {
-            serverSocket?.StopCheck();
-            serverSocket = null;
+//            serverSocket?.StopCheck();
+//            serverSocket = null;
         }
     }
 }

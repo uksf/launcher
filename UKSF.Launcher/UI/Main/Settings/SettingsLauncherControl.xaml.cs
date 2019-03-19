@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -74,7 +74,7 @@ namespace UKSF.Launcher.UI.Main.Settings {
                                                                  MainWindow.Instance.HomeControl
                                                                            .RaiseEvent(new SafeWindow.BoolRoutedEventArgs(HomeControl.HOME_CONTROL_PLAY_EVENT) {State = true});
                                                                  Global.Settings.ModLocation = (string) Core.SettingsHandler.WriteSetting("MOD_LOCATION", finalPath);
-                                                                 Dispatcher.Invoke(() => SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text =
+                                                                 Dispatcher.Invoke<string>(() => SettingsLauncherControlDownloadTextboxControl.LocationTextboxControlTextBoxLocation.Text =
                                                                                              Global.Settings.ModLocation);
                                                              },
                                                              Core.CancellationTokenSource.Token);
@@ -97,22 +97,22 @@ namespace UKSF.Launcher.UI.Main.Settings {
             if (string.IsNullOrEmpty(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
                 warning = "Please select an Arma 3 exe";
                 block = true;
-            } else if (Path.GetExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text) != ".exe") {
+            } else if (Path.GetExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text) != ".exe") {
                 warning = "File is not an exe";
                 block = true;
-            } else if (!Path.GetFileNameWithoutExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("arma3")) {
+            } else if (!Path.GetFileNameWithoutExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("arma3")) {
                 warning = "File is not an Arma 3 exe";
                 block = true;
-            } else if (Path.GetFileNameWithoutExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("battleye")) {
+            } else if (Path.GetFileNameWithoutExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("battleye")) {
                 warning = "Exe cannot be battleye";
                 block = true;
-            } else if (Path.GetFileNameWithoutExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("launcher")) {
+            } else if (Path.GetFileNameWithoutExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("launcher")) {
                 warning = "Exe cannot be launcher";
                 block = true;
-            } else if (Path.GetFileNameWithoutExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("server")) {
+            } else if (Path.GetFileNameWithoutExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text).ToLower().Contains("server")) {
                 warning = "Exe cannot be server";
                 block = true;
-            } else if (Global.Constants.IS64_BIT && !Path.GetFileNameWithoutExtension(SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text)
+            } else if (Global.Constants.IS64_BIT && !Path.GetFileNameWithoutExtension((string) SettingsLauncherControlGameExeTextboxControl.LocationTextboxControlTextBoxLocation.Text)
                                                          .ToLower()
                                                          .Contains("x64")) {
                 warning = "We recommend using the 'arma3_x64' exe";

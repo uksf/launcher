@@ -6,8 +6,8 @@ using System.Threading;
 using System.Windows;
 using UKSF.Launcher.Utility;
 
-namespace UKSF.Launcher.UI {
-    public partial class App {
+namespace UKSF.Launcher {
+    public partial class App : Application {
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr window);

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace UKSF.Launcher.UI.General {

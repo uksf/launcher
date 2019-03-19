@@ -1,4 +1,4 @@
-﻿<Application x:Class="UKSF.Launcher.UI.App"
+﻿<Application x:Class="UKSF.Launcher.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Startup="App_Startup"
@@ -239,6 +239,19 @@
             </Style>
 
             <Style x:Key="Uksf.Textbox" TargetType="{x:Type TextBox}">
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Uksf.Focus}" />
+                <Setter Property="Foreground" Value="{StaticResource Uksf.Black}" />
+                <Setter Property="Background" Value="{StaticResource Uksf.White}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Uksf.BackgroundLight}" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="FontFamily" Value="Arial" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="Uksf.PasswordBox" TargetType="{x:Type PasswordBox}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource Uksf.Focus}" />
                 <Setter Property="Foreground" Value="{StaticResource Uksf.Black}" />
                 <Setter Property="Background" Value="{StaticResource Uksf.White}" />

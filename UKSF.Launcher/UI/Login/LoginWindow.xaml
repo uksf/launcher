@@ -1,0 +1,82 @@
+<general:SafeWindow x:Class="UKSF.Launcher.UI.Login.LoginWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:general="clr-namespace:UKSF.Launcher.UI.General"
+                    mc:Ignorable="d"
+                    WindowStyle="None"
+                    WindowStartupLocation="CenterScreen"
+                    ResizeMode="NoResize"
+                    AllowsTransparency="True"
+                    Height="275"
+                    Width="500"
+                    Background="{StaticResource Uksf.Background}"
+                    BorderBrush="{StaticResource Uksf.BackgroundLight}"
+                    BorderThickness="1">
+    <Grid>
+        <Grid Height="36" VerticalAlignment="Top"
+              Background="{StaticResource Uksf.BackgroundDark}" MouseDown="LoginTitleBarControl_MouseDown"
+              Margin="0,0,0,214">
+            <Button Width="36" Click="LoginTitleBarControlButtonClose_Click"
+                    HorizontalAlignment="Right" Panel.ZIndex="1" Style="{StaticResource Uksf.Button}">
+                <Image Width="25" Height="25" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       RenderOptions.EdgeMode="Aliased">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source"
+                                    Value="pack://application:,,,/UKSF Launcher;component/Resources/Icons/Close.png" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source"
+                                            Value="pack://application:,,,/UKSF Launcher;component/Resources/Icons/CloseH.png" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+            <Label FontSize="20" FontFamily="Arial"
+                   Foreground="{StaticResource Uksf.Foreground}" Content="Login" VerticalContentAlignment="Center"
+                   HorizontalContentAlignment="Left" Width="498" Margin="10,0,0,0" Padding="0,0,0,0" Panel.ZIndex="0" />
+        </Grid>
+        <Grid Background="{StaticResource Uksf.Background}" Margin="0,36,0,0">
+            <Grid Margin="10,0,10,0" VerticalAlignment="Top" Height="190">
+                <TextBlock
+                    Text="Login using the same account as on our website
+                           
+                           If you have forgotten your password, reset it via our website
+                           
+                           These details will be saved securely on your machine"
+                    FontSize="14" TextWrapping="Wrap"
+                    Foreground="{StaticResource Uksf.Grey}" VerticalAlignment="Top" Margin="0,10,0,0" />
+                <StackPanel RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False"
+                            Margin="0,10" VerticalAlignment="Bottom">
+                    <Label Content="Email" Height="25" Foreground="{StaticResource Uksf.Grey}"
+                           HorizontalAlignment="Left" FontSize="14" Padding="0" HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center" />
+                    <TextBox x:Name="LoginMainControlTextBoxEmail" HorizontalAlignment="Stretch" Height="25"
+                             Style="{StaticResource Uksf.Textbox}" TextChanged="LoginMainControlTextBoxEmail_TextChanged" />
+                    <Label Content="Password" Height="25" Foreground="{StaticResource Uksf.Grey}" FontSize="14"
+                           HorizontalAlignment="Left" Padding="0" VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center" />
+                    <PasswordBox x:Name="LoginMainControlTextBoxPassword" HorizontalAlignment="Stretch" Height="25"
+                                 Style="{StaticResource Uksf.PasswordBox}" PasswordChanged="LoginMainControlTextBoxPassword_PasswordChanged" />
+                </StackPanel>
+            </Grid>
+            <Grid VerticalAlignment="Bottom" Margin="10,0,10,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Height="35">
+                    <TextBlock x:Name="LoginMainControlWarningText" Text="" FontWeight="Bold" FontSize="14"
+                               Padding="2"
+                               Foreground="{StaticResource Uksf.Foreground}" Style="{StaticResource Uksf.TextBlock}"
+                               VerticalAlignment="Center" HorizontalAlignment="Left" Width="315" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="LoginMainControlLoginButton" Content="Login" Click="LoginMainControlButtonLogin_Click"
+                            Margin="0,0,10,0" Style="{StaticResource Uksf.DialogButton}" IsEnabled="False" />
+                    <Button Content="Cancel" Click="LoginMainControlButtonCancel_Click" Style="{StaticResource Uksf.DialogButton}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</general:SafeWindow>

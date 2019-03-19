@@ -1,4 +1,4 @@
-﻿namespace UKSF.Launcher.Patching {
+namespace UKSF.Launcher.Patching {
     internal class RepoAction {
         public readonly Addon Addon;
         public readonly string AddonFile;

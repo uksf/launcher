@@ -35,15 +35,6 @@ namespace UKSF.Launcher {
             // Required drive space for mods
             public const long REQUIREDSPACE = 32212254720; // ~30GB // TODO: Get modpack size from api
 
-            // Clean settings flag
-            public const string UPDATE_FLAG_CLEAN = "C";
-
-            // Force update flag
-            public const string UPDATE_FLAG_FORCE = "F";
-
-            // Reset all settings and force update flag
-            public const string UPDATE_FLAG_RESET = "R";
-
             // Appdata directory path
             public static readonly string APPDATA = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UKSF Launcher");
 
@@ -67,11 +58,13 @@ namespace UKSF.Launcher {
         public class Settings {
             // Automatically update the launcher
             public static bool Autoupdatelauncher = true;
-            // -------------- Launcher -------------- \\
+
             // First time setup complete
             public static bool Firsttimesetupdone = false;
 
-            // ---------------- Game ---------------- \\
+            // Login email
+            public static string LoginEmail = "";
+
             // Game exe path
             public static string GameLocation = "";
 
@@ -93,7 +86,6 @@ namespace UKSF.Launcher {
             // Memory Allocator
             public static string StartupMalloc = "";
 
-            // ---------------- Startup parameters ---------------- \\
             // No splash screen
             public static bool StartupNosplash = true;
 

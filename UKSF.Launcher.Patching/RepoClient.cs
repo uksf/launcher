@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -83,10 +83,10 @@ namespace UKSF.Launcher.Patching {
 
                 // Check local addon caches against mods files, and both against remote addons
                 _progressIndex = 0;
-                _repoFileDictionary = File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+                _repoFileDictionary = File.ReadAllLines(_repoFilePath).Select(line => line.Split(new[] {';'})).ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
                 Dictionary<string, string[]> remoteRepoDictionary = remoteRepoData.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries)
-                                                                                  .Select(repoLine => repoLine.Split(';'))
-                                                                                  .ToDictionary(values => values[0], values => values[1].Split(':'));
+                                                                                  .Select(repoLine => repoLine.Split(new[] {';'}))
+                                                                                  .ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
                 List<Addon> changedAddons = GetChangedAddons(remoteRepoDictionary);
                 LogAction($"{changedAddons.Count} changed addons");
                 if (changedAddons.Count == 0) {
@@ -213,8 +213,8 @@ namespace UKSF.Launcher.Patching {
                 }
                 UpdateAddonCache(addon, addonFiles.Length, ticks);
             }
-            Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{addon.Name}.urf")).Select(line => line.Split(';'))
-                                                                    .ToDictionary(values => values[0], values => values[1].Split(':'));
+            Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{addon.Name}.urf")).Select(line => line.Split(new[] {';'}))
+                                                                    .ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
             int currentFile = 1;
             foreach (KeyValuePair<string, string[]> addonFilePair in localAddonDictionary) {
                 ProgressAction((float) _progressIndex / progressCount, $"Checking cache '{addon.Name}'\nFile {currentFile++} of {localAddonDictionary.Count}");
@@ -247,7 +247,7 @@ namespace UKSF.Launcher.Patching {
         private void UpdateAddonCache(Addon addon, int files, long ticks) {
             _repoFileDictionary[addon.FolderPath] = new[] {addon.FullHash, Convert.ToString(files), Convert.ToString(ticks)};
             WriteRepoFile();
-            _repoFileDictionary = File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+            _repoFileDictionary = File.ReadAllLines(_repoFilePath).Select(line => line.Split(new[] {';'})).ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
         }
 
         private ConcurrentBag<RepoAction> GetAddonActions(List<Addon> changedAddons) {
@@ -261,7 +261,7 @@ namespace UKSF.Launcher.Patching {
                         using (StreamReader reader = new StreamReader(stream)) {
                             string line;
                             while (!string.IsNullOrEmpty(line = reader.ReadLine())) {
-                                remoteAddonDictionary.Add(line.Split(';')[0], line.Split(';')[1].Split(':'));
+                                remoteAddonDictionary.Add(line.Split(new[] {';'})[0], line.Split(new[] {';'})[1].Split(new[] {':'}));
                             }
                         }
                     }
@@ -274,8 +274,8 @@ namespace UKSF.Launcher.Patching {
                         actions.Add(new RepoAction.AddedAction(changedAddon, remoteAddonFile.Key));
                     }
                 } else {
-                    Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{changedAddon.Name}.urf")).Select(line => line.Split(';'))
-                                                                            .ToDictionary(values => values[0], values => values[1].Split(':'));
+                    Dictionary<string, string[]> localAddonDictionary = File.ReadAllLines(Path.Combine(_repoLocalPath, $"{changedAddon.Name}.urf")).Select(line => line.Split(new[] {';'}))
+                                                                            .ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
                     int currentFile = 1;
                     foreach (KeyValuePair<string, string[]> remoteAddonFile in remoteAddonDictionary) {
                         ProgressAction((float) currentFile / remoteAddonDictionary.Count,
@@ -372,13 +372,13 @@ namespace UKSF.Launcher.Patching {
             }
         }
 
-        public IEnumerable<string> GetRepoMods() => File.Exists(_repoFilePath) ? File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')[0]).ToList() : new List<string>();
+        public IEnumerable<string> GetRepoMods() => File.Exists(_repoFilePath) ? File.ReadAllLines(_repoFilePath).Select(line => line.Split(new[] {';'})[0]).ToList() : new List<string>();
 
         public string MoveRepo(string newLocation, bool move, CancellationToken cancellationToken) {
             try {
                 _repoFileDictionary.Clear();
                 Dictionary<string, string[]> addonFolders =
-                    File.ReadAllLines(_repoFilePath).Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+                    File.ReadAllLines(_repoFilePath).Select(line => line.Split(new[] {';'})).ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
                 int currentIndex = 0;
                 foreach (KeyValuePair<string, string[]> addonPair in addonFolders.Where(addonPair => Directory.Exists(addonPair.Key))) {
                     if (cancellationToken.IsCancellationRequested) return _repoPath;

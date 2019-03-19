@@ -21,7 +21,7 @@ namespace UKSF.Launcher.ServerService {
             if (result == null) {
                 _client.SendMessage($"\nCommand '{message}' not found.\n{HELP}");
             } else {
-                ServerService.EventLog.WriteEntry($"Handle message result: {result.Item2}");
+                //ServerService.EventLog.WriteEntry($"Handle message result: {result.Item2}");
                 switch (result.Item1) {
                     case 0:
                     case 1: // Success/Fail

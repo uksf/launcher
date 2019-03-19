@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Windows;
 using UKSF.Launcher.Network;
 using UKSF.Launcher.UI.Main;

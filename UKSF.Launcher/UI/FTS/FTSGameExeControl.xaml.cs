@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using UKSF.Launcher.Game;
 using UKSF.Launcher.UI.General;

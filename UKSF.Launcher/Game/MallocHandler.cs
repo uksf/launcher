@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UKSF.Launcher.Utility;
@@ -10,7 +10,7 @@ namespace UKSF.Launcher.Game {
             List<string> files = new List<string>();
             if (Directory.Exists(directory)) {
                 files = Directory.EnumerateFiles(directory, "*.dll", SearchOption.TopDirectoryOnly)
-                                 .Where(file => !Path.GetFileNameWithoutExtension(file).Contains("x64"))
+                                 .Where(file => !Path.GetFileNameWithoutExtension((string) file).Contains("x64"))
                                  .ToList();
             }
 

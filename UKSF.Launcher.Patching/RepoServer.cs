@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -79,8 +79,8 @@ namespace UKSF.Launcher.Patching {
                 throw new Exception("Repo folder does not exist");
             }
             List<Addon> changedAddons = new List<Addon>();
-            Dictionary<string, string[]> currentRepoDictionary = File.ReadAllLines(Path.Combine(_repoPath, ".repo", ".repo.urf")).Select(line => line.Split(';'))
-                                                                     .ToDictionary(values => values[0], values => values[1].Split(':'));
+            Dictionary<string, string[]> currentRepoDictionary = File.ReadAllLines(Path.Combine(_repoPath, ".repo", ".repo.urf")).Select(line => line.Split(new[] {';'}))
+                                                                     .ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
             List<DirectoryInfo> addonFolders = GetAddonFolders();
             foreach (KeyValuePair<string, string[]> addonPair in currentRepoDictionary) {
                 if (addonFolders.Count(addonFolder => addonFolder.FullName.Equals(addonPair.Key)) == 0) {
@@ -94,7 +94,7 @@ namespace UKSF.Launcher.Patching {
                         changedAddons.Add(new Addon(addonPair.Key, repoDirectory));
                     } else {
                         Dictionary<string, string[]> addonDictionary = File.ReadAllLines(Path.Combine(_repoPath, ".repo", $"{Path.GetFileName(addonPair.Key)}.urf"))
-                                                                           .Select(line => line.Split(';')).ToDictionary(values => values[0], values => values[1].Split(':'));
+                                                                           .Select(line => line.Split(new[] {';'})).ToDictionary(values => values[0], values => values[1].Split(new[] {':'}));
                         if ((from dataPair in addonDictionary
                              let addonFile =
                                  addonFiles.FirstOrDefault(file => file.Replace($"{Path.Combine(_repoPath, Path.GetFileName(addonPair.Key))}{Path.DirectorySeparatorChar}", "")

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -96,7 +96,7 @@ namespace UKSF.Launcher.UI.Main {
         private void HomeControlServer_Update(object sender, RoutedEventArgs args) {
             Dispatcher.Invoke(() => {
                 SafeWindow.ServerRoutedEventArgs serverArgs = (SafeWindow.ServerRoutedEventArgs) args;
-                List<Server> servers = serverArgs.Servers.Where(server => server.Active).ToList();
+                List<Server> servers = Enumerable.Where(serverArgs.Servers, server => server.Active).ToList();
                 if (servers.Count > 0) {
                     HomeControlDropdownServer.Visibility = Visibility.Visible;
                     HomeControlDropdownServer.Items.Clear();

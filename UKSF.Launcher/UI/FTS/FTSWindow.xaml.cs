@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using UKSF.Launcher.Utility;
 
 namespace UKSF.Launcher.UI.FTS {

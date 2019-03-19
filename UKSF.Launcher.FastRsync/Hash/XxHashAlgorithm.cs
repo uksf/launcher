@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.HashFunction.xxHash;
 using System.IO;
 using System.Threading.Tasks;

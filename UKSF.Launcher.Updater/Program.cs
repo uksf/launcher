@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace UKSF.Launcher.Updater {
 
                     await Task.Delay(500);
 
-                    foreach (string filePath in new[] {"Launcher.exe", "Patching.dll", "Network.dll", "FastRsync.dll"}.Select(file => Path.Combine(Environment.CurrentDirectory, file)).Where(File.Exists)) {
+                    foreach (string filePath in new[] {"UKSF Launcher.exe", "UKSF.Old.Launcher.Patching.dll", "UKSF.Old.Launcher.Network.dll", "UKSF.Old.Launcher.FastRsync.dll"}.Select(file => Path.Combine(Environment.CurrentDirectory, file)).Where(File.Exists)) {
                         File.SetAttributes(filePath, FileAttributes.Normal);
                         File.Delete(filePath);
                     }

@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using ByteSizeLib;
+using ByteSize;
 
 namespace UKSF.Launcher.Patching {
     internal class DownloadManager {
         private const string USERNAME = "launcher";
         private const string PASSWORD = "sneakysnek";
-        private static DateTime _lastReport = DateTime.Now;
+        private static DateTime lastReport = DateTime.Now;
         private long _bytesDone, _bytesTotal, _bytesRate;
 
         private ConcurrentQueue<DownloadTask> _downloadQueue;
@@ -74,18 +74,18 @@ namespace UKSF.Launcher.Patching {
         private void ProgressAction(long change) {
             _bytesDone += change;
             _bytesRate += change;
-            if (DateTime.Now < _lastReport) return;
-            _lastReport = DateTime.Now.AddMilliseconds(100);
+            if (DateTime.Now < lastReport) return;
+            lastReport = DateTime.Now.AddMilliseconds(100);
             ProgressEvent?.Invoke(this,
                                   new Tuple<float, string>((float) _bytesDone / _bytesTotal,
-                                                           $"Downloading \n{ByteSize.FromBytes(_bytesDone)} / {ByteSize.FromBytes(_bytesTotal)} ({(int) (_bytesRate * 0.000078125)} Mbps)"));
+                                                           $"Downloading \n{DecimalByteSize.FromBytes(_bytesDone)} / {DecimalByteSize.FromBytes(_bytesTotal)} ({(int) (_bytesRate * 0.000078125)} Mbps)"));
             _bytesRate = 0L;
             // Mbps = rate * 80 / 1024 / 1000
         }
 
         public static void UploadFile(string localPath, string remotePath, CancellationToken downloadCancellationToken) {
             try {
-                LogAction($"File '{ByteSize.FromBytes(new FileInfo(localPath).Length)}'");
+                LogAction($"File '{DecimalByteSize.FromBytes(new FileInfo(localPath).Length)}'");
                 using (WebClient webClient = new WebClient()) {
                     downloadCancellationToken.Register(webClient.CancelAsync);
                     webClient.Credentials = new NetworkCredential(USERNAME, PASSWORD);

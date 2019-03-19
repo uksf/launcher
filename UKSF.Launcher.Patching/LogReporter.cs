@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace UKSF.Launcher.Patching {
     public class LogReporter {

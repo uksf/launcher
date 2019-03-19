@@ -25,7 +25,7 @@ namespace UKSF.Launcher.Patching {
 
         public void GenerateFullHash() {
             Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
-                                                            .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
+                                                            .ToDictionary(values => values[0], values => values[1].Split(new[] {':'})[0]);
             FullHash = Utility.ShaFromDictionary(hashDictionary);
         }
 
@@ -41,8 +41,8 @@ namespace UKSF.Launcher.Patching {
         }
 
         public void GenerateHash(string addonFile) {
-            Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
-                                                            .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
+            Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(new[] {';'}))
+                                                            .ToDictionary(values => values[0], values => values[1].Split(new[] {':'})[0]);
             string key = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "");
             if (hashDictionary.ContainsKey(key)) {
                 hashDictionary[key] = Utility.ShaFromFile(addonFile);
@@ -57,8 +57,8 @@ namespace UKSF.Launcher.Patching {
         }
 
         public void RemoveHash(string addonFile) {
-            Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(';'))
-                                                            .ToDictionary(values => values[0], values => values[1].Split(':')[0]);
+            Dictionary<string, string> hashDictionary = File.ReadAllLines(Path.Combine(_repoFolder, $"{Name}.urf")).Select(line => line.Split(new[] {';'}))
+                                                            .ToDictionary(values => values[0], values => values[1].Split(new[] {':'})[0]);
             addonFile = addonFile.Replace($"{FolderPath}{Path.DirectorySeparatorChar}", "").Replace($"{Path.DirectorySeparatorChar}", "\\");
             using (StreamWriter streamWriter = new StreamWriter(File.Create(Path.Combine(_repoFolder, $"{Name}.urf")))) {
                 foreach (string file in from file in hashDictionary.Keys where !file.Equals(addonFile) orderby file select file) {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -47,9 +47,9 @@ namespace UKSF.Launcher.Tests {
             LogHandler.LogSeverity(Global.Severity.WARNING, "SEVERITYWARNINGTEST");
             LogHandler.LogSeverity(Global.Severity.ERROR, "SEVERITYERRORTEST");
 
-            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYINFOTEST") && line.Contains(Global.Severity.INFO.ToString())));
-            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYWARNINGTEST") && line.Contains(Global.Severity.WARNING.ToString())));
-            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYERRORTEST") && line.Contains(Global.Severity.ERROR.ToString())));
+            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYINFOTEST") && line.Contains((string) Global.Severity.INFO.ToString())));
+            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYWARNINGTEST") && line.Contains((string) Global.Severity.WARNING.ToString())));
+            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SEVERITYERRORTEST") && line.Contains((string) Global.Severity.ERROR.ToString())));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace UKSF.Launcher.Tests {
                                               .First());
             LogHandler.LogHashSpace();
 
-            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains(Global.Constants.HASHSPACE.Replace(Environment.NewLine, ""))));
+            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains((string) Global.Constants.HASHSPACE.Replace(Environment.NewLine, ""))));
         }
 
         [Test]
@@ -78,8 +78,7 @@ namespace UKSF.Launcher.Tests {
             LogHandler.LogHashSpaceMessage(Global.Severity.INFO, "HASHMESSAGETEST");
 
             string[] lines = File.ReadAllLines(logFile);
-            Assert.That(lines.ElementAt(Array.IndexOf(lines, lines.First(line => line.Contains("HASHMESSAGETEST"))) - 1)
-                             .Contains(Global.Constants.HASHSPACE.Replace(Environment.NewLine, "")));
+            Assert.That(lines.ElementAt(Array.IndexOf(lines, lines.First(line => line.Contains("HASHMESSAGETEST"))) - 1).Contains((string) Global.Constants.HASHSPACE.Replace(Environment.NewLine, "")));
         }
 
         [Test]
@@ -93,7 +92,7 @@ namespace UKSF.Launcher.Tests {
                                               .First());
             LogHandler.LogInfo("SINGLEINFOTEST");
 
-            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SINGLEINFOTEST") && line.Contains(Global.Severity.INFO.ToString())));
+            Assert.That(File.ReadAllLines(logFile).Any(line => line.Contains("SINGLEINFOTEST") && line.Contains((string) Global.Severity.INFO.ToString())));
         }
 
         [Test]

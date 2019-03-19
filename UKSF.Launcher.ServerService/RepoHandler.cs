@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using UKSF.Launcher.Patching;
 
 namespace UKSF.Launcher.ServerService {
     internal static class RepoHandler {
@@ -9,9 +8,9 @@ namespace UKSF.Launcher.ServerService {
 
         public static bool Create(string name, Action<string> progress) {
             try {
-                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                progress.Invoke($"Creating '{name}' repository");
-                repo.CreateRepo();
+//                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+//                progress.Invoke($"Creating '{name}' repository");
+//                repo.CreateRepo();
                 progress.Invoke("Creation complete");
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");
@@ -22,9 +21,9 @@ namespace UKSF.Launcher.ServerService {
 
         public static bool Update(string name, Action<string> progress) {
             try {
-                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                progress.Invoke($"Updating '{name}' repository");
-                repo.UpdateRepo();
+//                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+//                progress.Invoke($"Updating '{name}' repository");
+//                repo.UpdateRepo();
                 progress.Invoke("Update complete");
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");
@@ -35,8 +34,8 @@ namespace UKSF.Launcher.ServerService {
 
         public static bool GetRepoData(string name, Action<string> progress) {
             try {
-                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                repo.GetRepoData();
+//                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+//                repo.GetRepoData();
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");
                 return false;
@@ -47,8 +46,8 @@ namespace UKSF.Launcher.ServerService {
         public static string BuildDelta(string name, string path, string relativePath, string signaturePath, Action<string> progress) {
             string deltaPath = $"{path}::";
             try {
-                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
-                deltaPath += repo.BuildDelta(relativePath, Path.Combine(REPOSITORY_LOCATION, name, ".repo", signaturePath));
+//                RepoServer repo = new RepoServer(Path.Combine(REPOSITORY_LOCATION, name), name, progress);
+//                deltaPath += repo.BuildDelta(relativePath, Path.Combine(REPOSITORY_LOCATION, name, ".repo", signaturePath));
             } catch (Exception exception) {
                 progress.Invoke($"Error: {exception}");
             }

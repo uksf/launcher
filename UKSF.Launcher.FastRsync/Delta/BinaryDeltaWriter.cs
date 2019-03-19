@@ -12,7 +12,7 @@ namespace UKSF.Launcher.FastRsync.Delta {
         public void WriteMetadata(IHashAlgorithm hashAlgorithm, byte[] expectedNewFileHash) {
             _writer.Write(BinaryFormat.DELTA_HEADER);
             _writer.Write(BinaryFormat.VERSION);
-            _writer.Write(hashAlgorithm.Name);
+            _writer.Write((string) hashAlgorithm.Name);
             _writer.Write(expectedNewFileHash.Length);
             _writer.Write(expectedNewFileHash);
             _writer.Write(BinaryFormat.END_OF_METADATA);

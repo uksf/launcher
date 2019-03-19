@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using UKSF.Launcher.FastRsync.Hash;
 
 namespace UKSF.Launcher.FastRsync.Delta {

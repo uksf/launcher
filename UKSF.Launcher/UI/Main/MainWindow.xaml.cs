@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace UKSF.Launcher.UI.Main {
     public partial class MainWindow {
@@ -14,6 +14,16 @@ namespace UKSF.Launcher.UI.Main {
 
             SettingsControl.SettingsControlLauncherSettingsControl.Initialise();
             SettingsControl.SettingsControlGameSettingsControl.Initialise();
+        }
+
+        public static void CreateMainWindow() {
+            if (Instance == null) {
+                Instance = new MainWindow();
+            }
+            
+            Instance.Show();
+            Instance.Activate();
+            Instance.Focus();
         }
 
         private void MainTitleBar_MouseDown(object sender, RoutedEventArgs args) => DragMove();

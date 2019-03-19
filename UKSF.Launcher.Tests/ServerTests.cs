@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using UKSF.Launcher.Network;
 
 namespace UKSF.Launcher.Tests {

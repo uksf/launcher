@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.IO;
 using UKSF.Launcher.FastRsync.Core;
 using UKSF.Launcher.FastRsync.Hash;

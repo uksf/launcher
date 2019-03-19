@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace UKSF.Launcher.Game {
             List<string> files = new List<string>();
             if (Directory.Exists(directory)) {
                 files = Directory.EnumerateFiles(directory, PROFILE_EXTENSION, SearchOption.AllDirectories)
-                                 .Where(file => (Path.GetFileName(file) ?? throw new InvalidOperationException()).Count(count => count == '.') == 1)
+                                 .Where(file => (Path.GetFileName((string) file) ?? throw new InvalidOperationException()).Count(count => count == '.') == 1)
                                  .ToList();
             }
 
@@ -36,7 +36,7 @@ namespace UKSF.Launcher.Game {
             Profile selectedProfile = null;
             foreach (string prefix in PROFILE_PREFIXES) {
                 selectedProfile = (from profile in profiles
-                                   let parts = profile.DisplayName.Split('.')
+                                   let parts = profile.DisplayName.Split(new[] {'.'})
                                    where parts.Length == 3
                                    where parts.ElementAt(0).ToLower().Contains(prefix.ToLower())
                                    select profile).FirstOrDefault();
@@ -55,7 +55,7 @@ namespace UKSF.Launcher.Game {
             foreach (string file in files) {
                 string fileName = Path.GetFileName(file);
                 if (fileName != null) {
-                    File.Copy(file, Path.Combine(newDirectory, newProfile.Name, fileName.Replace(fileName.Split('.')[0], newProfile.Name)));
+                    File.Copy(file, Path.Combine(newDirectory, newProfile.Name, fileName.Replace(fileName.Split(new[] {'.'})[0], newProfile.Name)));
                 }
             }
         }

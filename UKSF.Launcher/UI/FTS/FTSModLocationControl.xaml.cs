@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using UKSF.Launcher.Game;
 using UKSF.Launcher.UI.General;
@@ -27,7 +27,7 @@ namespace UKSF.Launcher.UI.FTS {
             Visibility = Visibility.Visible;
             RaiseEvent(new SafeWindow.StringRoutedEventArgs(FtsMainControl.FTS_MAIN_CONTROL_TITLE_EVENT) {Text = TITLE});
             if (string.IsNullOrEmpty(FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text)) {
-                string path = Path.GetDirectoryName(GameHandler.GetGameInstallation());
+                string path = Path.GetDirectoryName((string) GameHandler.GetGameInstallation());
                 if (!string.IsNullOrEmpty(path)) {
                     FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text = path;
                     LogHandler.LogInfo("Using Arma 3 location: " + FtsModLocationControlLocationTextboxControl.LocationTextboxControlTextBoxLocation.Text);

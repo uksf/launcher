@@ -1,21 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.ServiceProcess;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace UKSF.Launcher.ServerService {
-    public class ServerService : ServiceBase {
+    public class ServerService {
         private const int PORT = 48900;
         private const int MAX_RECEIVE_ATTEMPT = 10;
-        public new static EventLog EventLog;
+//        public new static EventLog EventLog;
         private static Socket _socket;
 
         private static int _receiveAttempt;
@@ -28,29 +26,29 @@ namespace UKSF.Launcher.ServerService {
         public ServerService() {
             InitializeComponent();
 
-            EventLog = new EventLog();
-            if (!EventLog.SourceExists("Server Service Source")) {
-                EventLog.CreateEventSource("Server Service Source", "Server Service Log");
-            }
-            EventLog.Source = "Server Service Source";
-            EventLog.Log = "Server Service Log";
+//            EventLog = new EventLog();
+//            if (!EventLog.SourceExists("Server Service Source")) {
+//                EventLog.CreateEventSource("Server Service Source", "Server Service Log");
+//            }
+//            EventLog.Source = "Server Service Source";
+//            EventLog.Log = "Server Service Log";
         }
 
         private void InitializeComponent() {
             _components = new Container();
-            ServiceName = "ServerService";
+//            ServiceName = "ServerService";
         }
 
-        protected override void Dispose(bool disposing) {
+        protected void Dispose(bool disposing) {
             OnStop();
             if (disposing) {
                 _components?.Dispose();
             }
-            base.Dispose(disposing);
+//            base.Dispose(disposing);
         }
 
-        protected override void OnStart(string[] args) {
-            EventLog.WriteEntry("Started");
+        protected void OnStart(string[] args) {
+//            EventLog.WriteEntry("Started");
             // ReSharper disable once InconsistentlySynchronizedField
             _clients = new List<Client>();
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -67,9 +65,9 @@ namespace UKSF.Launcher.ServerService {
                 Client client = new Client(_socket.EndAccept(asyncResult)) {Buffer = new byte[8192]};
                 client.Socket.BeginReceive(client.Buffer, 0, client.Buffer.Length, SocketFlags.None, ReceiveCallback, client);
                 _socket.BeginAccept(AcceptCallback, _socket);
-                EventLog.WriteEntry($"Client connected {client.Guid}");
+//                EventLog.WriteEntry($"Client connected {client.Guid}");
             } catch (Exception exception) {
-                EventLog.WriteEntry(exception.ToString());
+//                EventLog.WriteEntry(exception.ToString());
             }
         }
 
@@ -104,12 +102,12 @@ namespace UKSF.Launcher.ServerService {
                     _receiveAttempt = 0;
                 }
             } catch (Exception) {
-                EventLog.WriteEntry("Client receive failed");
+//                EventLog.WriteEntry("Client receive failed");
             }
         }
 
         private static void HandleMessage(Client client, string message) {
-            EventLog.WriteEntry($"Message '{message}' received from {client.Guid}");
+            //EventLog.WriteEntry($"Message '{message}' received from {client.Guid}");
             message = message.Replace("::end", "");
             switch (message) {
                 case "connect":
@@ -120,7 +118,7 @@ namespace UKSF.Launcher.ServerService {
                     }
                     break;
                 case "disconnect":
-                    EventLog.WriteEntry($"Client disconnected {client.Guid}");
+                    //EventLog.WriteEntry($"Client disconnected {client.Guid}");
                     client.Socket?.Close();
                     lock (_clients) {
                         _clients.Remove(client);
@@ -136,8 +134,8 @@ namespace UKSF.Launcher.ServerService {
             }
         }
 
-        protected override void OnStop() {
-            EventLog.WriteEntry("Stopped");
+        protected void OnStop() {
+            //EventLog.WriteEntry("Stopped");
             _socket?.Dispose();
             _socket?.Close();
             _socket = null;
@@ -159,8 +157,8 @@ namespace UKSF.Launcher.ServerService {
                 if (_clients.Count <= 0) return;
                 ServerHandler.CheckServers();
                 foreach (Client client in _clients) {
-                    client.SendCommand(ServerHandler.SERVERS.Where(server => server.Active)
-                                                    .Aggregate("servers", (current, server) => string.Join("::", current, $"{server.Serialize()}")));
+//                    client.SendCommand(ServerHandler.SERVERS.Where(server => server.Active)
+//                                                    .Aggregate("servers", (current, server) => string.Join("::", current, $"{server.Serialize()}")));
                 }
             }
         }
@@ -175,7 +173,7 @@ namespace UKSF.Launcher.ServerService {
                         client.Socket?.Close();
                     }
                     foreach (Client client in delete) {
-                        EventLog.WriteEntry($"Client disconnected {client.Guid}");
+                        //EventLog.WriteEntry($"Client disconnected {client.Guid}");
                         _clients.Remove(client);
                     }
                     if (_clients.Count == 0) {
@@ -213,10 +211,10 @@ namespace UKSF.Launcher.ServerService {
 
             public void SendCommand(string message) {
                 try {
-                    EventLog.WriteEntry($"Command '{message}' sent to {Guid}");
+//                    EventLog.WriteEntry($"Command '{message}' sent to {Guid}");
                     Socket.Send(Encoding.ASCII.GetBytes($"command::{message}::end"));
                 } catch (Exception exception) {
-                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
+//                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
                 }
             }
 
@@ -224,7 +222,7 @@ namespace UKSF.Launcher.ServerService {
                 try {
                     Socket.Send(Encoding.ASCII.GetBytes($"message::{message}::end"));
                 } catch (Exception exception) {
-                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
+//                    EventLog.WriteEntry($"Failed to send '{message}' to {Guid}\n{exception}");
                 }
             }
         }
