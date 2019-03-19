@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <UseWPF>true</UseWPF>
         <RootNamespace>UKSF.Launcher</RootNamespace>
-        <Version>1.0.0.798</Version>
+        <Version>1.0.0.800</Version>
         <Authors>UKSF</Authors>
         <Copyright>UKSF 2019</Copyright>
         <AssemblyName>UKSF Launcher</AssemblyName>
