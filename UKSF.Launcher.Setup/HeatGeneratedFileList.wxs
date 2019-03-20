@@ -152,26 +152,8 @@
             <Component Id="cmp2257790539B8870843640B5857727F5B" Guid="*">
                 <File Id="filA82C6852012979D774CE6FA0C9E849DD" KeyPath="yes" Source="$(var.HarvestPath)\hostpolicy.dll" />
             </Component>
-            <Component Id="cmp001F15CC43027FA127C1737B8C089FDF" Guid="*">
-                <File Id="filB3912ABDD5D31E1B4D4516F46D3C02BC" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Authentication.Abstractions.dll" />
-            </Component>
-            <Component Id="cmp2F0A313AE6306F9CE5E760AF214DC789" Guid="*">
-                <File Id="fil274A60BD8B17A2DA6C1EB35AEA850F12" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Authorization.dll" />
-            </Component>
-            <Component Id="cmp521A61C1834D10D45464D67212347AEA" Guid="*">
-                <File Id="fil43F2E8D3767129784BCAAB51CDD2CAEB" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Authorization.Policy.dll" />
-            </Component>
             <Component Id="cmp9936F7D00150BAD506646EAACFC257CE" Guid="*">
                 <File Id="fil972FD3CEF8CB8F155464106ED4BD3517" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Connections.Abstractions.dll" />
-            </Component>
-            <Component Id="cmpDC75E3A1688E24065150A7A5008ADD5C" Guid="*">
-                <File Id="fil327545046E24E1A2986C2FF1891047B9" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Hosting.Abstractions.dll" />
-            </Component>
-            <Component Id="cmp814280B7D7CD9EBEEB44E2B6B4ED6311" Guid="*">
-                <File Id="fil2F5629184CE64723B4052E8C0B094B19" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Hosting.Server.Abstractions.dll" />
-            </Component>
-            <Component Id="cmpB785B661067DB1CA34160E239CB75395" Guid="*">
-                <File Id="filB8FC2B616B6AB94D52B70B5BCCA8544A" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Abstractions.dll" />
             </Component>
             <Component Id="cmp08C3B3DBF1C427767053F4120ABC92B7" Guid="*">
                 <File Id="fil3C92D4ECD026170F29D6B86EE8866971" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Connections.Client.dll" />
@@ -179,23 +161,8 @@
             <Component Id="cmp90AE7DA915886E172E32BBB0D32031EF" Guid="*">
                 <File Id="fil0B876C2B5282BE43FD80F72A6AD5680E" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Connections.Common.dll" />
             </Component>
-            <Component Id="cmpEEB394FF5A6F43DEE728A59E7059ECD0" Guid="*">
-                <File Id="filB61BF26CCEDB48458958F64B63D47AAF" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Connections.dll" />
-            </Component>
-            <Component Id="cmp5AA201CA9529E78168BA0DB83D052443" Guid="*">
-                <File Id="filB1617F0F36FC063B8EF312503F17B36B" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.dll" />
-            </Component>
-            <Component Id="cmpF40B4D1D6FE0D97477BEEC7082C6D1F3" Guid="*">
-                <File Id="fil11A1D0699FE9D103DEDFA4A3C3DC1D1B" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Extensions.dll" />
-            </Component>
             <Component Id="cmp03A336BE1F43229AE0BC3ED221CB70B1" Guid="*">
                 <File Id="fil04F5F94C828D6EB6372C221FC95F059A" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Http.Features.dll" />
-            </Component>
-            <Component Id="cmpB21203811DA63815A5C4D006611F8C94" Guid="*">
-                <File Id="filF984FFF23978E7BFEB4369CA31590E26" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Routing.Abstractions.dll" />
-            </Component>
-            <Component Id="cmp46EC3CF1DF57B4B81591170A37ECAD13" Guid="*">
-                <File Id="filB7598ED988FA0DFA05DA9C88B3B7C021" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.Routing.dll" />
             </Component>
             <Component Id="cmpE1E09B6DDC64C85D83FAB62D029B7F4F" Guid="*">
                 <File Id="fil58F0FB9DF15BEF1709CA32BE97845336" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.Client.Core.dll" />
@@ -206,23 +173,8 @@
             <Component Id="cmp862450267E0B3EA8D88D5D50AEAF71EF" Guid="*">
                 <File Id="fil5A73898D2F6FB04B405A7233A1460FDA" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.Common.dll" />
             </Component>
-            <Component Id="cmp5961C0C0F306F611D6875C300ED70419" Guid="*">
-                <File Id="filB26F6A656FB7EB14F90876BDDF59BCCE" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.Core.dll" />
-            </Component>
-            <Component Id="cmp8882E31816746321733AFEDCD228F05D" Guid="*">
-                <File Id="fil868776245DFB2635005330C61E0C687D" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.dll" />
-            </Component>
-            <Component Id="cmp04D52716B710464041ECCFE3AD03CBAB" Guid="*">
-                <File Id="fil99252331CF74E2AE0B53E440797C3395" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.Protocols.Json.dll" />
-            </Component>
             <Component Id="cmpFB93B275E21226210BAA9A805582F86D" Guid="*">
                 <File Id="fil9AE0FB138BDE360660B9BD78419E30A4" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson.dll" />
-            </Component>
-            <Component Id="cmp5532C52F7DC9B9BD994F1439986FC077" Guid="*">
-                <File Id="fil8090C8EAEB3CCED803DD7EB6AAB07302" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.WebSockets.dll" />
-            </Component>
-            <Component Id="cmp1CF42E9A734FD29AFCDB87758302FC1E" Guid="*">
-                <File Id="fil98BF0CEE0E03C81EBDF3987E4F2B9F8F" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.AspNetCore.WebUtilities.dll" />
             </Component>
             <Component Id="cmpC9CE6FD0F9E9DFB943DBB4F09D32F05A" Guid="*">
                 <File Id="fil4AA0A6933C86860B14DECBAECD718A4D" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.CSharp.dll" />
@@ -245,29 +197,17 @@
             <Component Id="cmp493E9BC44885B6BC5C57BDB1302C40D9" Guid="*">
                 <File Id="filA40291A4FBD4719B6995DEB783A39A65" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.DependencyInjection.dll" />
             </Component>
-            <Component Id="cmp0209E8308C907CAD5474151F7C6836F5" Guid="*">
-                <File Id="fil1036FDFADEB4E1F1FB133485A70A0DD4" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.FileProviders.Abstractions.dll" />
-            </Component>
-            <Component Id="cmpB96239F931804879A085E057C6E72657" Guid="*">
-                <File Id="filFE47041DFF0F714E6C7D801D2D2C140A" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.Hosting.Abstractions.dll" />
-            </Component>
             <Component Id="cmp8C674FD6A69988A60A77A4CEE0F53781" Guid="*">
                 <File Id="fil72342637E9F74EE945317D4603CEBA2F" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.Logging.Abstractions.dll" />
             </Component>
             <Component Id="cmp835034F744990576E31C2DBC7C9293BF" Guid="*">
                 <File Id="fil71DD299EE7649E964200A4127797D1C0" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.Logging.dll" />
             </Component>
-            <Component Id="cmp33F6A38332D557045329F60C77B93E9F" Guid="*">
-                <File Id="fil3B8F8A8FF12321276B16B774E878E793" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.ObjectPool.dll" />
-            </Component>
             <Component Id="cmp3279C150AE8DF554FD7EEE2085672A2B" Guid="*">
                 <File Id="filA8D1F5D61FD7BC25099F707CBF5B1F24" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.Options.dll" />
             </Component>
             <Component Id="cmp946145B53A7DCDFA822B0EFD2314FAB6" Guid="*">
                 <File Id="fil773F29942324AAB2A7E1977E1AC63609" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Extensions.Primitives.dll" />
-            </Component>
-            <Component Id="cmp3F0D5A3DBF3BB5DEF4929A0ED0AD2EBA" Guid="*">
-                <File Id="filE17F1B3C88F6E971DB1D8FC6CC115C63" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.Net.Http.Headers.dll" />
             </Component>
             <Component Id="cmp8EC381C8860EA0402AE3BBCE36881CD6" Guid="*">
                 <File Id="filF2302FC5DBE10906C7F8B47074159FBC" KeyPath="yes" Source="$(var.HarvestPath)\Microsoft.VisualBasic.Core.dll" />
@@ -620,9 +560,6 @@
             <Component Id="cmpA3D72A47568CFB72A8579DA365A9694A" Guid="*">
                 <File Id="fil21106B04138595285E4063BA0375F731" KeyPath="yes" Source="$(var.HarvestPath)\System.Net.WebSockets.dll" />
             </Component>
-            <Component Id="cmpCE65BBEA05BEDF50B943EF83C8822CEE" Guid="*">
-                <File Id="fil30435C2ED822C217A475C90487601283" KeyPath="yes" Source="$(var.HarvestPath)\System.Net.WebSockets.WebSocketProtocol.dll" />
-            </Component>
             <Component Id="cmp1012A53E20F9FB30F60F434224BB9BE9" Guid="*">
                 <File Id="fil2619BE5E53030D1D5F0C69715CB84463" KeyPath="yes" Source="$(var.HarvestPath)\System.Numerics.dll" />
             </Component>
@@ -802,9 +739,6 @@
             </Component>
             <Component Id="cmp3874A45D344B330AFBCC3A8F554FA9E4" Guid="*">
                 <File Id="filCE8884160ED3E0EC381AFA6BE7E9D787" KeyPath="yes" Source="$(var.HarvestPath)\System.Text.Encoding.Extensions.dll" />
-            </Component>
-            <Component Id="cmpB8A7E5BEDFB4B8D0CC7AF759CF02E85C" Guid="*">
-                <File Id="filA40308264694C0D9CFCDD77B25AB3F6A" KeyPath="yes" Source="$(var.HarvestPath)\System.Text.Encodings.Web.dll" />
             </Component>
             <Component Id="cmpA5817A2BB296EF3C39CAFA8A07CD6B59" Guid="*">
                 <File Id="fil1FBF587862F484BB82A1D65565F935B6" KeyPath="yes" Source="$(var.HarvestPath)\System.Text.Json.dll" />
@@ -1025,30 +959,14 @@
             <ComponentRef Id="cmpC8D84524EA3808AF29E9A098AF886DF5" />
             <ComponentRef Id="cmpD51C7DCAA0760E3A269231CFA7A989BF" />
             <ComponentRef Id="cmp2257790539B8870843640B5857727F5B" />
-            <ComponentRef Id="cmp001F15CC43027FA127C1737B8C089FDF" />
-            <ComponentRef Id="cmp2F0A313AE6306F9CE5E760AF214DC789" />
-            <ComponentRef Id="cmp521A61C1834D10D45464D67212347AEA" />
             <ComponentRef Id="cmp9936F7D00150BAD506646EAACFC257CE" />
-            <ComponentRef Id="cmpDC75E3A1688E24065150A7A5008ADD5C" />
-            <ComponentRef Id="cmp814280B7D7CD9EBEEB44E2B6B4ED6311" />
-            <ComponentRef Id="cmpB785B661067DB1CA34160E239CB75395" />
             <ComponentRef Id="cmp08C3B3DBF1C427767053F4120ABC92B7" />
             <ComponentRef Id="cmp90AE7DA915886E172E32BBB0D32031EF" />
-            <ComponentRef Id="cmpEEB394FF5A6F43DEE728A59E7059ECD0" />
-            <ComponentRef Id="cmp5AA201CA9529E78168BA0DB83D052443" />
-            <ComponentRef Id="cmpF40B4D1D6FE0D97477BEEC7082C6D1F3" />
             <ComponentRef Id="cmp03A336BE1F43229AE0BC3ED221CB70B1" />
-            <ComponentRef Id="cmpB21203811DA63815A5C4D006611F8C94" />
-            <ComponentRef Id="cmp46EC3CF1DF57B4B81591170A37ECAD13" />
             <ComponentRef Id="cmpE1E09B6DDC64C85D83FAB62D029B7F4F" />
             <ComponentRef Id="cmp32FCF5E0265FA9A524F3CAF451100391" />
             <ComponentRef Id="cmp862450267E0B3EA8D88D5D50AEAF71EF" />
-            <ComponentRef Id="cmp5961C0C0F306F611D6875C300ED70419" />
-            <ComponentRef Id="cmp8882E31816746321733AFEDCD228F05D" />
-            <ComponentRef Id="cmp04D52716B710464041ECCFE3AD03CBAB" />
             <ComponentRef Id="cmpFB93B275E21226210BAA9A805582F86D" />
-            <ComponentRef Id="cmp5532C52F7DC9B9BD994F1439986FC077" />
-            <ComponentRef Id="cmp1CF42E9A734FD29AFCDB87758302FC1E" />
             <ComponentRef Id="cmpC9CE6FD0F9E9DFB943DBB4F09D32F05A" />
             <ComponentRef Id="cmp4B6065E0A17CF05299642017B84D7228" />
             <ComponentRef Id="cmpDC19BA21EFF423B27F8787A2AB8F2B3C" />
@@ -1056,14 +974,10 @@
             <ComponentRef Id="cmpC2B3CC4C105FBF588A9EBBD45742C349" />
             <ComponentRef Id="cmp198468A4AE980CD6955CB6EB86083726" />
             <ComponentRef Id="cmp493E9BC44885B6BC5C57BDB1302C40D9" />
-            <ComponentRef Id="cmp0209E8308C907CAD5474151F7C6836F5" />
-            <ComponentRef Id="cmpB96239F931804879A085E057C6E72657" />
             <ComponentRef Id="cmp8C674FD6A69988A60A77A4CEE0F53781" />
             <ComponentRef Id="cmp835034F744990576E31C2DBC7C9293BF" />
-            <ComponentRef Id="cmp33F6A38332D557045329F60C77B93E9F" />
             <ComponentRef Id="cmp3279C150AE8DF554FD7EEE2085672A2B" />
             <ComponentRef Id="cmp946145B53A7DCDFA822B0EFD2314FAB6" />
-            <ComponentRef Id="cmp3F0D5A3DBF3BB5DEF4929A0ED0AD2EBA" />
             <ComponentRef Id="cmp8EC381C8860EA0402AE3BBCE36881CD6" />
             <ComponentRef Id="cmp31C9A362EFEB77E9A39782026B90E97C" />
             <ComponentRef Id="cmpC089979D7EDD0520871FCF59E4512F6A" />
@@ -1181,7 +1095,6 @@
             <ComponentRef Id="cmp2F42759F8BD7F5B6CDFE79371A61B5DD" />
             <ComponentRef Id="cmp68954BEF36096052C3124B7F9EF02351" />
             <ComponentRef Id="cmpA3D72A47568CFB72A8579DA365A9694A" />
-            <ComponentRef Id="cmpCE65BBEA05BEDF50B943EF83C8822CEE" />
             <ComponentRef Id="cmp1012A53E20F9FB30F60F434224BB9BE9" />
             <ComponentRef Id="cmp89AE5ECEB789ECF60BE6CC568D60B2F9" />
             <ComponentRef Id="cmpF02258D9C1CDC79ADE6BED7D7E27B7F8" />
@@ -1242,7 +1155,6 @@
             <ComponentRef Id="cmp150E466C3DC9FBED2C4CCA56AC064337" />
             <ComponentRef Id="cmp06F6E0D21752727B7ACAD0B512A6023D" />
             <ComponentRef Id="cmp3874A45D344B330AFBCC3A8F554FA9E4" />
-            <ComponentRef Id="cmpB8A7E5BEDFB4B8D0CC7AF759CF02E85C" />
             <ComponentRef Id="cmpA5817A2BB296EF3C39CAFA8A07CD6B59" />
             <ComponentRef Id="cmp0B61CF5FB51B4607DDD38343361694DD" />
             <ComponentRef Id="cmp8E8EA57B48D2BD63C9E8D3EC582861D3" />

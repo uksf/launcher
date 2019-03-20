@@ -10,6 +10,7 @@
         <Copyright>UKSF 2019</Copyright>
         <AssemblyName>UKSF Launcher</AssemblyName>
         <StartupObject>UKSF.Launcher.App</StartupObject>
+        <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

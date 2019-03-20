@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using UKSF.Launcher.Network;
 
@@ -35,21 +36,15 @@ namespace UKSF.Launcher.Utility {
         }
 
         private static async Task Update() {
-            string path = Path.Combine(Environment.CurrentDirectory, "UKSF.Old.Launcher.Updater.exe");
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
+            string path = Path.Combine(Environment.CurrentDirectory, "UKSF.Launcher.Updater.exe");
             using (Stream stream = await ApiWrapper.GetFile("launcher/download/updater")) {
                 using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None)) {
                     await stream.CopyToAsync(fileStream);
                 }
             }
-
-            Process updater = new Process();
+            
             try {
-                updater.StartInfo.UseShellExecute = false;
-                updater.StartInfo.FileName = path;
-                updater.StartInfo.CreateNoWindow = false;
+                Process updater = new Process {StartInfo = {Arguments = "", UseShellExecute = false, FileName = path, CreateNoWindow = false}};
                 updater.Start();
                 Core.ShutDown();
             } catch (Exception exception) {
