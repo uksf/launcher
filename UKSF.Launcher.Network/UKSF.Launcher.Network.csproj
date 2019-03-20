@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>UKSF.Launcher.Network</RootNamespace>
-        <Version>1.0.0.803</Version>
+        <Version>1.0.0.811</Version>
         <Authors>UKSF</Authors>
         <Copyright>UKSF 2019</Copyright>
         <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
