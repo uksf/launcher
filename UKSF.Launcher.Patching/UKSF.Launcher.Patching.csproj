@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -20,10 +20,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\UKSF.Launcher.FastRsync\UKSF.Launcher.FastRsync.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="ByteSize" Version="2.0.0-alpha1" />
     </ItemGroup>
 
 </Project>
