@@ -4,12 +4,11 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using ByteSize;
 
 namespace UKSF.Launcher.Patching {
     internal class DownloadManager {
-        private const string USERNAME = "launcher";
         private const string PASSWORD = "sneakysnek";
+        private const string USERNAME = "launcher";
         private static DateTime lastReport = DateTime.Now;
         private long _bytesDone, _bytesTotal, _bytesRate;
 
@@ -32,30 +31,33 @@ namespace UKSF.Launcher.Patching {
             while (fileSize == -1) {
                 fileSize = task.GetRemoteFileSize();
             }
+
             _bytesTotal += fileSize;
         }
 
         public void ProcessDownloadQueue(CancellationToken downloadCancellationToken) {
             if (_downloadTask != null) return;
             Task.Run(() => {
-                try {
-                    _downloadTask = Task.Run(() => {
-                        while (_downloadQueue.Count > 0 && !downloadCancellationToken.IsCancellationRequested) {
-                            if (!_downloadQueue.TryDequeue(out DownloadTask task)) continue;
-                            while (!downloadCancellationToken.IsCancellationRequested) {
-                                if (!task.Download()) continue;
-                                task.FinishDownload();
-                                break;
-                            }
-                        }
-                    }, downloadCancellationToken);
-                    _downloadTask.Wait(downloadCancellationToken);
-                } catch {
-                    // ignored
-                } finally {
-                    _downloadTask = null;
-                }
-            }, downloadCancellationToken);
+                         try {
+                             _downloadTask = Task.Run(() => {
+                                                          while (_downloadQueue.Count > 0 && !downloadCancellationToken.IsCancellationRequested) {
+                                                              if (!_downloadQueue.TryDequeue(out DownloadTask task)) continue;
+                                                              while (!downloadCancellationToken.IsCancellationRequested) {
+                                                                  if (!task.Download()) continue;
+                                                                  task.FinishDownload();
+                                                                  break;
+                                                              }
+                                                          }
+                                                      },
+                                                      downloadCancellationToken);
+                             _downloadTask.Wait(downloadCancellationToken);
+                         } catch {
+                             // ignored
+                         } finally {
+                             _downloadTask = null;
+                         }
+                     },
+                     downloadCancellationToken);
         }
 
         public bool IsDownloadQueueEmpty() => _downloadQueue.Count == 0;
@@ -78,19 +80,20 @@ namespace UKSF.Launcher.Patching {
             lastReport = DateTime.Now.AddMilliseconds(100);
             ProgressEvent?.Invoke(this,
                                   new Tuple<float, string>((float) _bytesDone / _bytesTotal,
-                                                           $"Downloading \n{DecimalByteSize.FromBytes(_bytesDone)} / {DecimalByteSize.FromBytes(_bytesTotal)} ({(int) (_bytesRate * 0.000078125)} Mbps)"));
+                                                           $"Downloading \n{Utility.ByteSize(_bytesDone)} / {Utility.ByteSize(_bytesTotal)} ({(int) (_bytesRate * 0.000078125)} Mbps)"));
             _bytesRate = 0L;
             // Mbps = rate * 80 / 1024 / 1000
         }
 
         public static void UploadFile(string localPath, string remotePath, CancellationToken downloadCancellationToken) {
             try {
-                LogAction($"File '{DecimalByteSize.FromBytes(new FileInfo(localPath).Length)}'");
+                LogAction($"File '{Utility.ByteSize(new FileInfo(localPath).Length)}'");
                 using (WebClient webClient = new WebClient()) {
                     downloadCancellationToken.Register(webClient.CancelAsync);
                     webClient.Credentials = new NetworkCredential(USERNAME, PASSWORD);
                     webClient.UploadFile(new Uri(remotePath), "STOR", localPath);
                 }
+
                 LogAction($"Uploaded '{localPath}'");
             } catch (Exception exception) {
                 LogAction($"An error occured uploading '{localPath}'\n{exception}");
@@ -101,9 +104,9 @@ namespace UKSF.Launcher.Patching {
 
         private class DownloadTask {
             private readonly Action _callbackAction;
+            private readonly CancellationToken _downloadCancellationToken;
             private readonly string _localPath;
             private readonly string _remotePath;
-            private readonly CancellationToken _downloadCancellationToken;
 
             public DownloadTask(string localPath, string remotePath, Action callbackAction, CancellationToken cancellationToken) {
                 _localPath = localPath;
@@ -144,6 +147,7 @@ namespace UKSF.Launcher.Patching {
                     if (!Directory.Exists(Path.GetDirectoryName(_localPath))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(_localPath));
                     }
+
                     using (FtpWebResponse ftpWebResponse = (FtpWebResponse) ftpWebRequest.GetResponse()) {
                         using (FileStream localFileStream = File.OpenWrite(_localPath)) {
                             using (Stream responseStream = ftpWebResponse.GetResponseStream()) {
@@ -157,6 +161,7 @@ namespace UKSF.Launcher.Patching {
                             }
                         }
                     }
+
                     LogAction($"Downloaded '{_localPath}'");
                     return true;
                 } catch (WebException webException) {
@@ -166,6 +171,7 @@ namespace UKSF.Launcher.Patching {
                 } catch (Exception exception) {
                     LogAction($"An error occured downloading '{_remotePath}'\n{exception}");
                 }
+
                 return false;
             }
 
