@@ -1,0 +1,15 @@
+:host {
+    height: 100%;
+}
+
+.background {
+    height: 100%;
+    background-image: url(assets/images/watermark_home.png);
+    background-position: center;
+    background-blend-mode: color-dodge;
+
+    span {
+        width: 100%;
+        height: 100%;
+    }
+}

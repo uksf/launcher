@@ -1,0 +1,33 @@
+{
+    "productName": "UKSF Launcher",
+    "appId": "UKSF Launcher",
+    "directories": {
+        "output": "release/"
+    },
+    "files": [
+        "**/*",
+        "!**/*.ts",
+        "!*.code-workspace",
+        "!LICENSE.md",
+        "!package.json",
+        "!package-lock.json",
+        "!src/",
+        "!hooks/",
+        "!angular.json",
+        "!tsconfig.json",
+        "!tslint.json"
+    ],
+    "win": {
+        "icon": "dist/icon.ico",
+        "target": "nsis",
+        "extraResources": [
+            "./*.dll"
+        ]
+    },
+    "nsis": {
+        "runAfterFinish": false,
+        "createDesktopShortcut": false,
+        "include": "build/installer.nsh",
+        "guid": "UKSF Launcher"
+    }
+}

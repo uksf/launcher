@@ -1,0 +1,19 @@
+@import "~@angular/material/theming";
+@mixin app-component-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $color: mat-color($foreground, base);
+
+    .wrapper {
+        color: $color;
+        background-color: mat-color($background, background);
+        .header {
+            color: $color;
+            background-color: mat-color($background, app-bar);
+        }
+        .main {
+            color: $color;
+            background-color: mat-color($background, background);
+        }
+    }
+}

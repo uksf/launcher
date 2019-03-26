@@ -1,0 +1,31 @@
+<div class="container">
+    <mat-card class="form-container">
+        <span>Login using the same details as your website account</span>
+        <form [formGroup]="form" class="form">
+            <div class="special-field-form-container">
+                <label for="name">If you see this, keep this field blank</label>
+                <input type="text" id="name" formControlName="name" tabindex="-1" autocomplete="off" />
+            </div>
+            <mat-form-field class="full-width">
+                <input matInput formControlName="email" required id="emailAddress" type="email" placeholder="Email Address">
+            </mat-form-field>
+            <br>
+            <mat-form-field class="full-width">
+                <input matInput formControlName="password" type="password" required placeholder="Password">
+            </mat-form-field>
+        </form>
+        <div *ngIf="loginError != ''">
+            <div class="invalid-message">
+                <span>{{loginError}}</span>
+            </div>
+        </div>
+        <br>
+        <form>
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="button" (click)="submit()" [disabled]="form.invalid">
+                    <span>Login</span>
+                </button>
+            </div>
+        </form>
+    </mat-card>
+</div>

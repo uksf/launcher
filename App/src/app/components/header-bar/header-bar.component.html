@@ -1,0 +1,17 @@
+<div class="header-wrapper">
+    <div class="title-wrapper">
+        <span>UKSF Launcher</span>
+    </div>
+    <app-flex-filler></app-flex-filler>
+    <div class="buttons-wrapper">
+        <div class="button-background settings" (click)="settings()" *ngIf="canToggleSettings()">
+            <div class="button settings"></div>
+        </div>
+        <div class="button-background" (click)="minimize()">
+            <div class="button minimize"></div>
+        </div>
+        <div class="button-background shut" (click)="shut()">
+            <div class="button shut"></div>
+        </div>
+    </div>
+</div>

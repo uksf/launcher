@@ -1,0 +1,50 @@
+@import "~@angular/material/theming";
+@mixin header-bar-component-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $primary: map-get($theme, primary);
+
+    app-header-bar {
+        .header-wrapper {
+            .title-wrapper {
+                span {
+                    color: mat-color($primary);
+                }
+            }
+
+            .buttons-wrapper {                
+                .button-background {
+                    .button {
+                        background-color: mat-color($foreground, base);
+
+                        &.settings {
+                            background-color: mat-color($primary);
+                        }
+                    }
+                }
+                .button-background:hover {
+                    background-color: mat-color($background, hover);
+                    .button {
+                        background-color: mat-color($background, default-contrast);
+
+                        &.settings {
+                            background-color: mat-color($primary, 900);
+                        }
+                    
+                        &.shut {
+                            background-color: mat-color($foreground, default-contrast);
+                        }
+                    }
+                    
+                    &.settings {
+                        background-color: transparent;
+                    }
+                    
+                    &.shut {
+                        background-color: #D71425;
+                    }
+                }
+            }
+        }
+    }
+}

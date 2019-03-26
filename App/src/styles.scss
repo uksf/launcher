@@ -1,0 +1,92 @@
+@import "~@angular/material/theming";
+// @import "~angular-tree-component/dist/angular-tree-component.css";
+
+// core
+@include mat-core();
+
+//themes
+@import "darkTheme.scss";
+@import "lightTheme.scss";
+
+//components
+@import "app/app.component.scss-theme.scss";
+@import "app/components/header-bar/header-bar.component.scss-theme.scss";
+@import "app/pages/login/login.component.scss-theme.scss";
+@import "app/pages/home/home.component.scss-theme.scss";
+@import "app/pages/settings/settings.component.scss-theme.scss";
+
+//add components themes
+@mixin custom-components-theme($theme) {
+    @include app-component-theme($theme);
+    @include header-bar-component-theme($theme);
+
+    @include login-component-theme($theme);
+    @include home-component-theme($theme);
+    @include settings-component-theme($theme);
+}
+
+.dark-theme {
+    @include angular-material-theme($dark-theme);
+    @include custom-components-theme($dark-theme);
+
+    $foreground: map-get($dark-theme, foreground);
+    $background: map-get($dark-theme, background);
+
+    .nav-bar {
+        display: block;
+        padding: 0 0 12px 0;
+        .mat-tab-link {
+            color: mat-color($foreground, base);
+            background-color: mat-color($background, background);
+            &:hover {
+                background-color: mat-color($background, hover);
+            }
+        }
+    }
+
+    b {
+        filter: blur(0px);
+    }
+
+    .mat-button {
+        background-color: mat-color($background, selected);
+    }
+
+    input {
+        color: mat-color($foreground, base) !important;
+        background-color: transparent !important;
+    }
+}
+
+.light-theme {
+    @include angular-material-theme($light-theme);
+    @include custom-components-theme($light-theme);
+
+    $foreground: map-get($light-theme, foreground);
+    $background: map-get($light-theme, background);
+
+    .nav-bar {
+        display: block;
+        padding: 0 0 12px 0;
+        .mat-tab-link {
+            color: mat-color($foreground, base);
+            background-color: mat-color($background, background);
+            &:hover {
+                background-color: mat-color($background, hover);
+            }
+        }
+    }
+
+    b {
+        filter: blur(0px);
+    }
+
+    .mat-button {
+        background-color: mat-color($background, selected);
+    }
+
+    input {
+        color: mat-color($foreground, base) !important;
+        background-color: transparent !important;
+    }
+}
