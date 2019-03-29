@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as log from 'electron-log';
 import * as settings from 'electron-settings';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Injectable()
 export class ThemeService {
@@ -8,7 +9,7 @@ export class ThemeService {
     theme = 'dark';
     otherTheme = 'light';
 
-    constructor() {
+    constructor(private overlayContainer: OverlayContainer) {
         if (settings.has('theme')) {
             const storedTheme = settings.get('theme').toString();
             this.updateTheme(storedTheme);
@@ -29,6 +30,8 @@ export class ThemeService {
         log.info(`Loading '${this.theme}' theme`);
         this.updateOtherTheme();
         this.updateThemeSubscribers();
+        this.overlayContainer.getContainerElement().classList.remove(this.otherTheme + '-theme');
+        this.overlayContainer.getContainerElement().classList.add(this.theme + '-theme');
     }
 
     updateThemeSubscribers() {

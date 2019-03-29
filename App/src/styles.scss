@@ -49,6 +49,11 @@
         }
     }
 
+    .mat-dialog-container {
+        padding: 10px;
+        overflow: hidden;
+    }
+
     b {
         filter: blur(0px);
     }
@@ -85,6 +90,11 @@
                 background-color: mat-color($background, hover);
             }
         }
+    }
+
+    .mat-dialog-container {
+        padding: 10px;
+        overflow: hidden;
     }
 
     b {

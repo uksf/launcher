@@ -3,6 +3,8 @@ import * as log from 'electron-log';
 import * as settings from 'electron-settings';
 import { Router } from '@angular/router';
 import { ElectronService } from '../../services/electron.service';
+import { MatDialog } from '@angular/material';
+import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
     selector: 'app-setup',
@@ -13,7 +15,7 @@ export class SetupComponent {
     step = 0;
     blocked = true;
 
-    constructor(private router: Router, private electronService: ElectronService) {
+    constructor(private router: Router, private electronService: ElectronService, private matDialog: MatDialog) {
         if (settings.get('setupDone')) {
             this.router.navigate(['home']);
             return;
@@ -38,7 +40,11 @@ export class SetupComponent {
     }
 
     cancel() {
-        this.electronService.remote.app.quit();
+        this.matDialog.open(ConfirmationModalComponent, {
+            data: { message: `Are you sure you want to cancel the setup?\nIf yes, your progress will be saved` }
+        }).componentInstance.confirmEvent.subscribe(() => {
+            this.electronService.remote.app.quit();
+        });
     }
 
     next() {

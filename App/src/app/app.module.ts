@@ -69,6 +69,7 @@ import { SetupExeComponent } from './components/setup/exe/setup-exe.component';
 import { RegistryHelper } from './services/library/registry-helper.service';
 import { ArmaExeService } from './services/armaexe.service';
 import { FilesService } from './services/files.service';
+import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
 
 export function preInit(authorizationService: AuthorizationService) {
     log.info(`Reading settings from '${settings.file()}'`);
@@ -106,7 +107,8 @@ export function tokenGetter() {
         SettingsComponent,
         LoginComponent,
         SetupComponent,
-        SetupExeComponent
+        SetupExeComponent,
+        ConfirmationModalComponent
     ],
     imports: [
         JwtModule.forRoot({
@@ -183,6 +185,9 @@ export function tokenGetter() {
         LibraryService,
         CredentialHelper,
         RegistryHelper
+    ],
+    entryComponents: [
+        ConfirmationModalComponent
     ],
     bootstrap: [AppComponent]
 })

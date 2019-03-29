@@ -1,0 +1,29 @@
+.mat-dialog-content {
+    margin: 0;
+    padding: 0;
+
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: fit-content;
+        min-width: 300px;
+        min-height: 125px;
+        margin: 5px;
+        font-size: 18px;
+
+        span {
+            white-space: pre-wrap;
+        }
+
+        .flex-container-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+
+            button {
+                margin-left: 5px;
+            }
+        }
+    }
+}
