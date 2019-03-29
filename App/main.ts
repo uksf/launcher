@@ -1,33 +1,12 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import * as settings from 'electron-settings';
 import * as log from 'electron-log';
 
 let win: BrowserWindow;
 let serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
-
-const defaults = {
-    theme: 'dark',
-    setupDone: false,
-    autoUpdate: true,
-    gameLocation: undefined,
-    modsLocation: undefined,
-    profile: undefined,
-    startup: {
-        noSplash: true,
-        scriptErrors: false,
-        hugePages: false,
-        malloc: 'System Default',
-        filePatching: false
-    },
-    login: {
-        email: undefined,
-        password: undefined
-    }
-};
 
 function createWindow() {
     win = new BrowserWindow({
@@ -44,25 +23,6 @@ function createWindow() {
         show: false,
         icon: path.join(__dirname, 'src/icon.ico')
     });
-
-    log.info(`Reading settings from '${settings.file()}'`);
-    if (Object.keys(settings.getAll()).length === 0) {
-        log.info(`No settings found, setting defaults`);
-        settings.setAll(defaults);
-    }
-
-    const settingsAll = settings.getAll();
-    Object.keys(settings.getAll()).forEach((key) => {
-        settings.watch(key, newValue => {
-            log.info(`Setting '${key}' updated to '${JSON.stringify(newValue)}'`);
-        });
-    });
-    Object.keys(defaults).forEach((key) => {
-        if (!settingsAll.hasOwnProperty(key)) {
-            settings.set(key, defaults[key]);
-        }
-    });
-    log.info(`Settings read`);
 
     if (serve) {
         require('electron-reload')(__dirname, {

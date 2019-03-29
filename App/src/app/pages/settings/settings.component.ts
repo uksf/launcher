@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import * as log from 'electron-log';
+import { AuthorizationService } from '../../services/authorization.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-settings',
@@ -7,7 +9,7 @@ import * as log from 'electron-log';
     styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent {
-    constructor() {
+    constructor(private authorizationService: AuthorizationService, private router: Router) {
         log.debug('Settings');
     }
 }

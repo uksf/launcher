@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { remote } from 'electron';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Permissions } from '../../services/permissions';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import * as settings from 'electron-settings';
+import { ElectronService } from '../../services/electron.service';
 
 @Component({
     selector: 'app-header-bar',
@@ -12,7 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HeaderBarComponent implements OnInit {
     settingsState = false;
 
-    constructor(private permissions: NgxPermissionsService, private router: Router) { }
+    constructor(private permissions: NgxPermissionsService, private router: Router, private electronService: ElectronService) { }
 
     ngOnInit(): void {
         if (window.location.hash === '#/settings') {
@@ -26,7 +27,7 @@ export class HeaderBarComponent implements OnInit {
 
     canToggleSettings() {
         const grantedPermissions = this.permissions.getPermissions();
-        return grantedPermissions[Permissions.MEMBER] || grantedPermissions[Permissions.CONFIRMED];
+        return settings.get('setupDone') && (grantedPermissions[Permissions.MEMBER] || grantedPermissions[Permissions.CONFIRMED]);
     }
 
     settings() {
@@ -35,10 +36,10 @@ export class HeaderBarComponent implements OnInit {
     }
 
     minimize() {
-        remote.getCurrentWindow().minimize();
+        this.electronService.remote.getCurrentWindow().minimize();
     }
 
     shut() {
-        remote.app.quit();
+        this.electronService.remote.app.quit();
     }
 }

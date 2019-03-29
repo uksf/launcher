@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SessionService } from './session.service';
 import { PermissionsService } from './permissions.service';
@@ -12,7 +12,6 @@ import { CredentialHelper } from './library/credential-helper.service';
 export class AuthorizationService {
 
     constructor(
-        private zone: NgZone,
         private httpClient: HttpClient,
         private sessionService: SessionService,
         private permissionService: PermissionsService,
@@ -27,16 +26,14 @@ export class AuthorizationService {
                 if (settings.has('login.email') && settings.has('login.password')) {
                     const email = settings.get('login.email');
                     this.credentialHelper.decrypt(settings.get('login.password'), (error, password: string) => {
-                        this.zone.run(() => {
-                            const details = { email: email, password: password };
-                            log.info('Found stored credentials');
-                            this.login(details, (loginError) => {
-                                if (loginError) {
-                                    reject();
-                                } else {
-                                    resolve();
-                                }
-                            });
+                        const details = { email: email, password: password };
+                        log.info('Found stored credentials');
+                        this.login(details, (loginError) => {
+                            if (loginError) {
+                                reject();
+                            } else {
+                                resolve();
+                            }
                         });
                     });
                 } else {
@@ -60,13 +57,11 @@ export class AuthorizationService {
             this.sessionService.setToken(response);
             settings.set('login.email', details.email);
             this.credentialHelper.encrypt(details.password, (error, password: string) => {
-                this.zone.run(() => {
-                    settings.set('login.password', password);
-                    this.permissionService.refresh().then(() => {
-                        if (callback) {
-                            callback();
-                        }
-                    });
+                settings.set('login.password', password);
+                this.permissionService.refresh().then(() => {
+                    if (callback) {
+                        callback();
+                    }
                 });
             });
         }, (error) => {
@@ -80,8 +75,7 @@ export class AuthorizationService {
 
     logout() {
         log.info('Logging out');
-        settings.set('login.email', '');
-        settings.set('login.password', '');
+        settings.delete('login');
         this.sessionService.removeToken();
         this.accountService.clear();
         this.permissionService.refresh();

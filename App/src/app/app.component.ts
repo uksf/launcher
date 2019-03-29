@@ -12,7 +12,6 @@ import { AppConfig } from '../environments/environment';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    displayState = 0;
     isDev = true;
 
     constructor(private themeService: ThemeService) {

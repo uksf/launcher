@@ -1,0 +1,42 @@
+.step-container {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    height: 100%;
+
+    .instructions-container {
+        padding: 10px 0;
+
+        p {
+            white-space: pre-wrap;
+        }
+    }
+
+    .input-container {
+        padding: 20px 0;
+        display: grid;
+        grid-template-columns: auto min-content;
+        grid-template-rows: auto auto;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            padding-right: 10px;
+
+            .mat-form-field {
+                height: 45px;
+            }
+        }
+
+        .invalid-message {
+            text-align: center;
+            grid-row: 2;
+        }
+
+        .mat-raised-button {
+            grid-column: 2;
+            height: fit-content;
+            align-self: center;
+        }
+    }
+}

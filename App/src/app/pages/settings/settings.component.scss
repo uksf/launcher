@@ -3,8 +3,22 @@
 }
 
 .background {
-    height: 100%;
     background-image: url(assets/images/watermark_settings.png);
     background-position: center;
-    background-blend-mode: color-dodge;
+    mix-blend-mode: color-dodge;
+    z-index: 0;
+    position: fixed;
+    width: 100%;
+    height: 470px;
+}
+
+.settings-container {
+    display: flex;
+
+    .footer {
+        display: flex;
+        flex-direction: row;
+        position: fixed;
+        bottom: 0px;
+    }
 }

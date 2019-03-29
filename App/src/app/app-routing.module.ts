@@ -1,14 +1,22 @@
-import { Routes, ActivatedRouteSnapshot, RouterStateSnapshot, RouterModule } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { SettingsComponent } from './pages/settings/settings.component';
-import { LoginComponent } from './pages/login/login.component';
+import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { NgxPermissionsGuard } from 'ngx-permissions';
 import { Permissions } from './services/permissions';
-import * as log from 'electron-log';
-import { NgModule } from '@angular/core';
+import { HomeComponent } from './pages/home/home.component';
+import { SetupComponent } from './pages/setup/setup.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '', redirectTo: 'setup', pathMatch: 'full' },
+    {
+        path: 'setup', component: SetupComponent, data: {
+            permissions: {
+                except: Permissions.UNLOGGED,
+                redirectTo: 'login'
+            }
+        }, canActivate: [NgxPermissionsGuard]
+    },
     {
         path: 'home', component: HomeComponent, data: {
             permissions: {
@@ -41,10 +49,3 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
-
-export function loginRedirect(rejectedPermissionName: string, routeSnapshot: ActivatedRouteSnapshot, routerSnapshot: RouterStateSnapshot) {
-    log.info(rejectedPermissionName);
-    log.info(routeSnapshot);
-    log.info(routerSnapshot);
-    return 'login';
-}

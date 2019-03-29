@@ -1,19 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from '../electron.service';
+import { LibraryService } from './library.service';
 
 @Injectable()
 export class CredentialHelper {
-    constructor(private electronService: ElectronService) { }
+    constructor(private libraryService: LibraryService) { }
 
-    encrypt = this.electronService.edge.func({
-        assemblyFile: this.electronService.extraResourcesPath + 'Library.dll',
-        typeName: 'Library.CredentialHelper',
-        methodName: 'Encrypt'
-    });
-
-    decrypt = this.electronService.edge.func({
-        assemblyFile: this.electronService.extraResourcesPath + 'Library.dll',
-        typeName: 'Library.CredentialHelper',
-        methodName: 'Decrypt'
-    });
+    encrypt = this.libraryService.createZonedLibraryFunction('CredentialHelper', 'Encrypt');
+    decrypt = this.libraryService.createZonedLibraryFunction('CredentialHelper', 'Decrypt');
 }

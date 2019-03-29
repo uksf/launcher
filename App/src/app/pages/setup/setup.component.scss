@@ -1,0 +1,49 @@
+:host {
+    height: 100%;
+}
+
+.background {
+    background-image: url(assets/images/watermark_home.png);
+    background-position: center;
+    mix-blend-mode: color-dodge;
+    z-index: 0;
+    position: fixed;
+    top: 30px;
+    width: 100%;
+    height: 470px;
+}
+
+.setup-container {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    height: 100%;
+    justify-content: space-between;
+
+    .body-container {
+        padding: 5px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            margin: 10px;
+        }
+
+        .steps-container {
+            flex: 1;
+        }
+    }
+
+    .footer {
+        display: flex;
+        flex-direction: row;
+        margin: 10px;
+
+        .mat-raised-button {
+            margin-left: 5px;
+            width: 75px;
+            line-height: 35px;
+        }
+    }
+}

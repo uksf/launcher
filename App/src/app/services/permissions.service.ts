@@ -26,15 +26,6 @@ export class PermissionsService {
                         if (account.membershipState === MembershipState.MEMBER) {
                             // member
                             this.ngxPermissionsService.addPermission(Permissions.MEMBER);
-                            if (account.sr1) {
-                                this.ngxPermissionsService.addPermission(Permissions.SR1);
-                            }
-                            if (account.sr10) {
-                                this.ngxPermissionsService.addPermission(Permissions.SR10);
-                            }
-                            if (account.sr1Lead) {
-                                this.ngxPermissionsService.addPermission(Permissions.SR1_LEAD);
-                            }
                             if (account.command) {
                                 this.ngxPermissionsService.addPermission(Permissions.COMMAND);
                             }

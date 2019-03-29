@@ -1,0 +1,18 @@
+<div class="setup-container">
+    <div class="body-container">
+        <h3>{{heading}}</h3>
+        <div class="steps-container">
+            <app-setup-exe *ngIf="step == 0" (blocking)="blocking($event)"></app-setup-exe>
+        </div>
+    </div>
+
+    <div class="footer">
+        <app-flex-filler></app-flex-filler>
+        <button mat-raised-button (click)="cancel()" color="primary">Cancel</button>
+        <button mat-raised-button (click)="back()" color="primary" *ngIf="step > 0">Back</button>
+        <button mat-raised-button (click)="next()" color="primary" *ngIf="step != 2" [disabled]="blocked">Next</button>
+        <button mat-raised-button (click)="finish()" color="primary" *ngIf="step == 2" [disabled]="blocked">Finish</button>
+    </div>
+</div>
+<!-- <div class="background">
+</div> -->

@@ -12,6 +12,8 @@
 @import "app/app.component.scss-theme.scss";
 @import "app/components/header-bar/header-bar.component.scss-theme.scss";
 @import "app/pages/login/login.component.scss-theme.scss";
+@import "app/pages/setup/setup.component.scss-theme.scss";
+@import "app/components//setup//exe/setup-exe.component.scss-theme.scss";
 @import "app/pages/home/home.component.scss-theme.scss";
 @import "app/pages/settings/settings.component.scss-theme.scss";
 
@@ -21,6 +23,8 @@
     @include header-bar-component-theme($theme);
 
     @include login-component-theme($theme);
+    @include setup-component-theme($theme);
+    @include setup-exe-component-theme($theme);
     @include home-component-theme($theme);
     @include settings-component-theme($theme);
 }
@@ -31,6 +35,7 @@
 
     $foreground: map-get($dark-theme, foreground);
     $background: map-get($dark-theme, background);
+    $primary: map-get($dark-theme, primary);
 
     .nav-bar {
         display: block;
@@ -46,6 +51,10 @@
 
     b {
         filter: blur(0px);
+    }
+
+    a {
+        color: mat-color($primary);
     }
 
     .mat-button {
@@ -64,6 +73,7 @@
 
     $foreground: map-get($light-theme, foreground);
     $background: map-get($light-theme, background);
+    $primary: map-get($light-theme, primary);
 
     .nav-bar {
         display: block;
@@ -79,6 +89,10 @@
 
     b {
         filter: blur(0px);
+    }
+
+    a {
+        color: mat-color($primary);
     }
 
     .mat-button {

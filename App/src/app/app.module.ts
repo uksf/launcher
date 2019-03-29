@@ -60,7 +60,35 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { LoginComponent } from './pages/login/login.component';
 import { CredentialHelper } from './services/library/credential-helper.service';
 
-export function login(authorizationService: AuthorizationService) {
+import * as log from 'electron-log';
+import * as settings from 'electron-settings';
+import { AppConfig } from '../environments/environment';
+import { LibraryService } from './services/library/library.service';
+import { SetupComponent } from './pages/setup/setup.component';
+import { SetupExeComponent } from './components/setup/exe/setup-exe.component';
+import { RegistryHelper } from './services/library/registry-helper.service';
+import { ArmaExeService } from './services/armaexe.service';
+import { FilesService } from './services/files.service';
+
+export function preInit(authorizationService: AuthorizationService) {
+    log.info(`Reading settings from '${settings.file()}'`);
+    if (Object.keys(settings.getAll()).length === 0) {
+        log.info(`No settings found, setting defaults`);
+        settings.setAll(AppConfig.defaults);
+    }
+
+    const settingsAll = settings.getAll();
+    Object.keys(settings.getAll()).forEach((key) => {
+        settings.watch(key, newValue => {
+            log.info(`Setting '${key}' updated to '${JSON.stringify(newValue)}'`);
+        });
+    });
+    Object.keys(AppConfig.defaults).forEach((key) => {
+        if (!settingsAll.hasOwnProperty(key)) {
+            settings.set(key, AppConfig.defaults[key]);
+        }
+    });
+    log.info(`Settings read`);
     return () => authorizationService.startup();
 }
 
@@ -76,7 +104,9 @@ export function tokenGetter() {
         HeaderBarComponent,
         HomeComponent,
         SettingsComponent,
-        LoginComponent
+        LoginComponent,
+        SetupComponent,
+        SetupExeComponent
     ],
     imports: [
         JwtModule.forRoot({
@@ -138,7 +168,7 @@ export function tokenGetter() {
         ThemeService,
         {
             provide: APP_INITIALIZER,
-            useFactory: login,
+            useFactory: preInit,
             deps: [AuthorizationService],
             multi: true
         },
@@ -147,7 +177,12 @@ export function tokenGetter() {
             useClass: HttpInterceptorService,
             multi: true
         },
-        CredentialHelper
+        FilesService,
+        ArmaExeService,
+
+        LibraryService,
+        CredentialHelper,
+        RegistryHelper
     ],
     bootstrap: [AppComponent]
 })

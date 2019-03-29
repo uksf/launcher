@@ -9,8 +9,12 @@ export class ThemeService {
     otherTheme = 'light';
 
     constructor() {
-        const storedTheme = settings.get('theme').toString();
-        this.updateTheme(storedTheme);
+        if (settings.has('theme')) {
+            const storedTheme = settings.get('theme').toString();
+            this.updateTheme(storedTheme);
+        } else {
+            this.updateTheme(this.theme);
+        }
         // HeaderBarComponent.themeUpdateEvent = new EventEmitter();
         // HeaderBarComponent.themeUpdateEvent.subscribe(() => {
         //     this.updateTheme(this.otherTheme);
