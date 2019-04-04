@@ -6,12 +6,5 @@
     $warn: map-get($theme, warn);
 
     app-setup-exe {
-        .step-container {
-            .input-container {
-                .invalid-message {
-                    color: mat-color($warn);
-                }
-            }
-        }
     }
 }

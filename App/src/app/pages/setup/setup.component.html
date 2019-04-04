@@ -3,6 +3,8 @@
         <h3>{{heading}}</h3>
         <div class="steps-container">
             <app-setup-exe *ngIf="step == 0" (blocking)="blocking($event)"></app-setup-exe>
+            <app-setup-mods *ngIf="step == 1" (blocking)="blocking($event)"></app-setup-mods>
+            <app-setup-profile *ngIf="step == 2" (blocking)="blocking($event)"></app-setup-profile>
         </div>
     </div>
 

@@ -41,7 +41,7 @@ export class SetupComponent {
 
     cancel() {
         this.matDialog.open(ConfirmationModalComponent, {
-            data: { message: `Are you sure you want to cancel the setup?\nIf yes, your progress will be saved` }
+            data: { message: `Are you sure you want to cancel the setup?` }
         }).componentInstance.confirmEvent.subscribe(() => {
             this.electronService.remote.app.quit();
         });

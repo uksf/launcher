@@ -70,6 +70,10 @@ import { RegistryHelper } from './services/library/registry-helper.service';
 import { ArmaExeService } from './services/armaexe.service';
 import { FilesService } from './services/files.service';
 import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
+import { SetupModsComponent } from './components/setup/mods/setup-mods.component';
+import { ModsLocationService } from './services/modslocation.service';
+import { FileHelper } from './services/library/file-helper.service';
+import { SetupProfileComponent } from './components/setup/profile/setup-profile.component';
 
 export function preInit(authorizationService: AuthorizationService) {
     log.info(`Reading settings from '${settings.file()}'`);
@@ -108,6 +112,8 @@ export function tokenGetter() {
         LoginComponent,
         SetupComponent,
         SetupExeComponent,
+        SetupModsComponent,
+        SetupProfileComponent,
         ConfirmationModalComponent
     ],
     imports: [
@@ -181,10 +187,12 @@ export function tokenGetter() {
         },
         FilesService,
         ArmaExeService,
+        ModsLocationService,
 
         LibraryService,
         CredentialHelper,
-        RegistryHelper
+        RegistryHelper,
+        FileHelper
     ],
     entryComponents: [
         ConfirmationModalComponent

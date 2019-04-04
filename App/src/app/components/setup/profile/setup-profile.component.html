@@ -1,0 +1,21 @@
+<div class="step-container">
+    <div class="instructions-container">
+        <p>{{instruction}}</p>
+    </div>
+    <div class="input-container">
+        <form [formGroup]="form">
+            <mat-form-field>
+                <mat-select placeholder="Profile" formControlName="profile">
+                    <mat-option *ngFor="let profile of profile;" [value]="profile.name">
+                        {{profile.displayName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+        <div class="invalid-message">
+            <span>{{errorMessage}}</span>
+        </div>
+        <button mat-raised-button color="primary" (click)="browse()">Copy</button>
+    </div>
+    <app-flex-filler></app-flex-filler>
+</div>

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { LibraryService } from './library.service';
 
 @Injectable()
-export class RegistryHelper {
+export class FileHelper {
     constructor(private libraryService: LibraryService) { }
 
-    getArmaInstallLocation = this.libraryService.createLibraryFunction('RegistryHelper', 'GetArmaInstallLocation');
+    getDriveSpace = this.libraryService.createLibraryFunction('FileHelper', 'GetDriveSpace');
 }

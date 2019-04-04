@@ -36,6 +36,9 @@ export class SetupExeComponent {
         private zone: NgZone,
         formBuilder: FormBuilder
     ) {
+        this.form = formBuilder.group({
+            path: ['', Validators.required]
+        });
         this.registryHelper.getArmaInstallLocation({}, async (_, result: string) => {
             this.gameLocation = result;
             if (settings.has('gameLocation')) {
@@ -49,11 +52,9 @@ export class SetupExeComponent {
                 } else {
                     log.info('Could not find Arma 3 location');
                     this.instruction = instructionNotFound;
+                    this.blocking.emit(this.block);
                 }
             }
-        });
-        this.form = formBuilder.group({
-            path: ['', Validators.required]
         });
     }
 
@@ -66,6 +67,7 @@ export class SetupExeComponent {
                 { name: 'Exe Files', extensions: ['exe'] }
             ]
         }, (files) => {
+            if (files.length === 0) { return; }
             const path = files[0];
             this.form.controls['path'].setValue(path);
             this.checkExe(path);
